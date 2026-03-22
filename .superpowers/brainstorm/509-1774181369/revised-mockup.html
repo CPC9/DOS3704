@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOS3704 · Operations Strategy</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #1c2d4a;
+    --bg-card:   #243556;
+    --bg-sub:    #1a2840;
+    --bg-deep:   #142036;
+    --border:    rgba(120,160,220,0.15);
+    --border-hi: rgba(120,160,220,0.3);
+    --text:      #dde6f5;
+    --text-mute: #8fa8cc;
+    --text-dim:  #5c7a9e;
+    --accent:    #6a9fd8;
+    --accent-hi: #8fb8f0;
+    --white:     #f0f4fb;
+    --formula-bg:#111f35;
+    --formula-border: rgba(100,160,255,0.25);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Calibri', 'Trebuchet MS', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  /* ════════════════════════════════════════
+     PAGES
+  ════════════════════════════════════════ */
+  .page { display: none; padding: 28px 32px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ════════════════════════════════════════
+     NAV BAR
+  ════════════════════════════════════════ */
+  .topbar {
+    background: #162338;
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    padding: 14px 0;
+    margin-right: 28px;
+    letter-spacing: 0.3px;
+  }
+  .topbar-brand span { color: var(--accent); }
+  .topbar-nav {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+  }
+  .nav-btn {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--text-mute);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--white); border-bottom-color: var(--accent); }
+
+  /* ════════════════════════════════════════
+     STUDY MAP PAGE
+  ════════════════════════════════════════ */
+  .page-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 5px;
+  }
+  .page-header p { color: var(--text-mute); font-size: 14px; }
+
+  /* Central questions */
+  .central-questions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .cq-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    position: relative;
+  }
+  .cq-number {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .cq-question {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .cq-tool {
+    font-size: 12px;
+    color: var(--text-mute);
+  }
+  .cq-tool strong { color: var(--accent-hi); }
+
+  /* Topic blocks */
+  .topic-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .topic-block:hover { border-color: var(--border-hi); }
+
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .topic-header:hover { background: rgba(255,255,255,0.03); }
+
+  .topic-icon {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-deep);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .topic-text { flex: 1; }
+  .topic-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 3px;
+  }
+  .topic-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+  .topic-desc { font-size: 12.5px; color: var(--text-mute); }
+
+  .topic-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .topic-pill {
+    font-size: 10.5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: var(--bg-deep);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .chevron { font-size: 12px; color: var(--text-dim); transition: transform 0.25s; }
+  .topic-block.open .chevron { transform: rotate(90deg); }
+
+  .topic-body { display: none; padding: 0 16px 16px; }
+  .topic-block.open .topic-body { display: block; }
+
+  /* Sub-topic grid */
+  .subtopic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .subtopic {
+    background: var(--bg-sub);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .subtopic-hdr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .subtopic-hdr:hover { background: rgba(255,255,255,0.03); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .dot.case { background: #c89a40; }
+  .subtopic-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.3;
+  }
+  .sub-chev { font-size: 10px; color: var(--text-dim); transition: transform 0.2s; }
+  .subtopic.open .sub-chev { transform: rotate(90deg); }
+
+  .subtopic-body {
+    display: none;
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .subtopic.open .subtopic-body { display: block; }
+
+  /* Content elements */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  .prose {
+    font-size: 13px;
+    color: var(--text-mute);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .prose strong { color: var(--text); font-weight: 600; }
+
+  ul.bullets {
+    list-style: none;
+    margin-bottom: 10px;
+  }
+  ul.bullets li {
+    font-size: 13px;
+    color: var(--text-mute);
+    padding: 3px 0 3px 16px;
+    position: relative;
+    line-height: 1.55;
+  }
+  ul.bullets li::before {
+    content: '·';
+    position: absolute;
+    left: 5px;
+    color: var(--accent);
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  ul.bullets li strong { color: var(--text); font-weight: 600; }
+
+  .formula-wrap {
+    background: var(--formula-bg);
+    border: 1px solid var(--formula-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .formula {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    color: #9ecfff;
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+  .formula-explain {
+    font-size: 12px;
+    color: var(--text-mute);
+    line-height: 1.6;
+    border-top: 1px solid rgba(100,160,255,0.12);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+  .formula-explain strong { color: #9ecfff; }
+
+  .insight-box {
+    background: rgba(100, 159, 216, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .insight-box p { font-size: 12.5px; color: var(--text); line-height: 1.5; }
+  .insight-box .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+
+  .link-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 100px;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    margin: 3px 3px 0 0;
+  }
+  .link-tag::before { content: '↔'; color: var(--accent); }
+
+  /* ════════════════════════════════════════
+     FLASHCARD PAGE
+  ════════════════════════════════════════ */
+  .fc-page { }
+
+  .deck-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .deck-btn {
+    padding: 9px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-mute);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .deck-btn:hover { border-color: var(--border-hi); color: var(--text); }
+  .deck-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .deck-btn.master { border-style: dashed; }
+
+  .fc-arena {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .fc-progress-bar-wrap {
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .fc-progress-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--bg-deep);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .fc-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 10px;
+    transition: width 0.3s;
+  }
+  .fc-counter {
+    font-size: 12px;
+    color: var(--text-mute);
+    white-space: nowrap;
+  }
+
+  /* Card */
+  .fc-card-wrap {
+    width: 580px;
+    max-width: 100%;
+    height: 240px;
+    perspective: 900px;
+  }
+  .fc-card {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.45s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  .fc-card.flipped { transform: rotateY(180deg); }
+
+  .fc-front, .fc-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 28px 32px;
+    text-align: center;
+  }
+  .fc-front {
+    background: var(--bg-card);
+    border: 1px solid var(--border-hi);
+  }
+  .fc-back {
+    background: #1a2e45;
+    border: 1px solid var(--border-hi);
+    transform: rotateY(180deg);
+  }
+  .fc-front .term {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .fc-front .hint {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .fc-back .class-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .fc-back .definition {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .fc-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .fc-btn {
+    padding: 10px 24px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--border-hi);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg-card);
+    color: var(--text);
+  }
+  .fc-btn:hover { background: var(--bg-deep); }
+  .fc-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .fc-btn.primary:hover { filter: brightness(1.1); }
+  .fc-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .fc-done-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 48px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+  }
+  .fc-done-screen.visible { display: flex; }
+  .fc-done-screen h2 { font-size: 22px; color: var(--white); }
+  .fc-done-screen p { font-size: 14px; color: var(--text-mute); }
+
+  .mockup-notice {
+    text-align: center;
+    font-size: 11px;
+    color: #2a3f5c;
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- Top navigation bar -->
+<nav class="topbar">
+  <div class="topbar-brand">DOS<span>3704</span> · Operations Strategy</div>
+  <div class="topbar-nav">
+    <button class="nav-btn active" onclick="showPage('study')">Study Map</button>
+    <button class="nav-btn" onclick="showPage('flashcards')">Flashcard Decks</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     PAGE 1: STUDY MAP
+═══════════════════════════════════════════ -->
+<div class="page active" id="page-study">
+
+  <div class="page-header">
+    <h1>Operations Strategy — Full Course Map</h1>
+    <p>Click any block to expand · Drill into sub-topics to reveal formulas, intuition, and case details</p>
+  </div>
+
+  <!-- Three Central Questions -->
+  <div class="central-questions">
+    <div class="cq-card">
+      <div class="cq-number">Question 1</div>
+      <div class="cq-question">What should operations be good at?</div>
+      <div class="cq-tool">Tool: <strong>Alignment</strong> — connect capabilities to business strategy via SOA & PPM (Class 1)</div>
+    </div>
+    <div class="cq-card">
+      <div class="cq-number">Question 2</div>
+      <div class="cq-question">Which operational system best provides those capabilities?</div>
+      <div class="cq-tool">Tool: <strong>Trade-off analysis + 8 resource/process decisions</strong> (Classes 2–7)</div>
+    </div>
+    <div class="cq-card">
+      <div class="cq-number">Question 3</div>
+      <div class="cq-question">Does this create value?</div>
+      <div class="cq-tool">Tool: <strong>NPV</strong> — every decision is ultimately evaluated by whether it maximizes NPV (throughout)</div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 1: FOUNDATIONS ── -->
+  <div class="topic-block open" id="t-foundations">
+    <div class="topic-header" onclick="toggleTopic('t-foundations')">
+      <div class="topic-icon">🏛</div>
+      <div class="topic-text">
+        <div class="topic-eyebrow">Classes 1–2 · Foundation Layer</div>
+        <div class="topic-title">The Framework, Alignment & Trade-offs</div>
+        <div class="topic-desc">Strategy hierarchy · 3 views of operations · SOA · PPM · Efficient frontier · NPV · Cost decomposition</div>
+      </div>
+      <div class="topic-right">
+        <span class="topic-pill">8 sub-topics</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-grid">
+
+        <!-- Strategy Hierarchy -->
+        <div class="subtopic" id="s-hierarchy">
+          <div class="subtopic-hdr" onclick="toggleSub('s-hierarchy')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Strategy Hierarchy (Class 1)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="section-label">The Big Picture</div>
+            <div class="prose">All strategy in large organizations flows through three nested levels. Operations strategy lives at the bottom — but it <strong>executes</strong> what the levels above decide. Getting that alignment right is the whole point of this course.</div>
+            <div class="section-label">Three Levels</div>
+            <ul class="bullets">
+              <li><strong>Corporate Strategy:</strong> Which industries will we compete in? Allocates resources across business units. Highest abstraction.</li>
+              <li><strong>Business Strategy:</strong> How do we win in our chosen industry? Characterized by four dimensions: <strong>Price, Quality, Responsiveness, Variety</strong>. This is what the customer feels.</li>
+              <li><strong>Functional Strategy (Operations):</strong> How do we actually execute the business strategy? This is where OS lives — designing and developing the systems that deliver the promise.</li>
+            </ul>
+            <div class="insight-box">
+              <div class="label">Key Insight</div>
+              <p>Business strategy defines the <em>what</em>; operations strategy defines the <em>how</em>. A brilliant business strategy fails if operations can't deliver it — and great operations go to waste if they're delivering the wrong thing.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- OS Definition -->
+        <div class="subtopic" id="s-osdef">
+          <div class="subtopic-hdr" onclick="toggleSub('s-osdef')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Operations Strategy — Formal Definition</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="insight-box">
+              <div class="label">Definition</div>
+              <p>"Operations Strategy is a <strong>long-term plan</strong> for <strong>developing resources</strong> and <strong>configuring processes</strong> such that the resulting capabilities <strong>maximize NPV</strong>."</p>
+            </div>
+            <div class="prose">Every word matters here. "Long-term" means these are not daily decisions — they are capital-intensive commitments that are hard to reverse. "Resources" and "processes" are the two levers (the 8 decision areas). "Capabilities" is what you get. "NPV" is how you measure success.</div>
+            <div class="section-label">Two Questions OS Answers</div>
+            <ul class="bullets">
+              <li><strong>Q1:</strong> What should operations be good at? (Which capabilities to build — the alignment question)</li>
+              <li><strong>Q2:</strong> Which system of resources and processes best provides those capabilities? (The design question)</li>
+            </ul>
+            <div class="section-label">OS vs. OM</div>
+            <div class="prose"><strong>Operations Management (OM)</strong> = day-to-day tactical execution (schedules, routing, quality control). <strong>Operations Strategy (OS)</strong> = long-run strategic investment decisions (plant locations, technology choices, sourcing partnerships). OS sets the system; OM operates within it.</div>
+          </div>
+        </div>
+
+        <!-- 3 Views -->
+        <div class="subtopic" id="s-3views">
+          <div class="subtopic-hdr" onclick="toggleSub('s-3views')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Three Complementary Views of Operations</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">To fully analyze any operation, you need all three lenses simultaneously. Each view asks a different question and reveals a different set of strategic levers.</div>
+            <div class="section-label">View 1 — Process View (HOW is the work done?)</div>
+            <ul class="bullets">
+              <li>Looks at the transformation process / activity network</li>
+              <li>4 decisions: <strong>Supply</strong> (make/buy), <strong>Technology</strong> (what process tech?), <strong>Innovation</strong> (how to improve?), <strong>Demand</strong> (how to match supply with demand?)</li>
+            </ul>
+            <div class="section-label">View 2 — Resource View (WHAT assets perform the work?)</div>
+            <ul class="bullets">
+              <li>Looks at the physical asset portfolio</li>
+              <li>4 decisions: <strong>Size</strong> (how much capacity?), <strong>Timing</strong> (when to invest?), <strong>Type</strong> (dedicated vs. flexible?), <strong>Location</strong> (where?)</li>
+            </ul>
+            <div class="section-label">View 3 — Competency / Capability View (WHAT CAN ops do?)</div>
+            <ul class="bullets">
+              <li>Looks at the resulting capabilities — the interface between operations and strategy</li>
+              <li>4 dimensions: <strong>Cost</strong>, <strong>Quality</strong>, <strong>Lead-Time (Responsiveness)</strong>, <strong>Flexibility</strong></li>
+              <li>These map 1:1 to Business Strategy: Cost↔Price · Quality↔Quality · Lead-Time↔Responsiveness · Flexibility↔Variety</li>
+            </ul>
+            <div class="insight-box">
+              <div class="label">Why This Matters</div>
+              <p>Classes 3–5 cover the Resource View (size, timing, type, location). Classes 6–7 cover the Process View (supply, technology, innovation, demand). The Capability View connects them both to business strategy. This structure IS the course.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOA -->
+        <div class="subtopic" id="s-soa">
+          <div class="subtopic-hdr" onclick="toggleSub('s-soa')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Strategic Operational Audit (SOA)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">The SOA is the diagnostic tool for alignment. It asks: does what we <em>promise</em> customers match what we <em>deliver</em>, and do our resources and processes actually support it? Three gaps can exist:</div>
+            <ul class="bullets">
+              <li><strong>Strategy Gap:</strong> Value Proposition (what we promise) ≠ Deliverable Value (what we actually produce). The market-facing misalignment — customers expect X, we give them Y.</li>
+              <li><strong>Competency Gap:</strong> Current competencies (Cost/Quality/Lead-Time/Flexibility we have today) ≠ Needed competencies (what the VP requires). The middle layer of the framework is broken.</li>
+              <li><strong>Resource & Process Gap:</strong> Current resources and processes ≠ what is needed to produce the required competencies. The operational root cause of misalignment.</li>
+            </ul>
+            <div class="insight-box">
+              <div class="label">How to Use It in an Exam</div>
+              <p>Start at the top: what is the firm's value proposition? What does it actually deliver? Is there a gap? Then work down: what competencies are needed? What does the firm have? What resources/processes would close the gap?</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PPM -->
+        <div class="subtopic" id="s-ppm">
+          <div class="subtopic-hdr" onclick="toggleSub('s-ppm')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Product-Process Matrix (PPM)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">The PPM is the visual alignment check between what you're making (product variety) and how you're making it (process type/flexibility). The <strong>zone of alignment runs diagonally</strong> from bottom-left to top-right.</div>
+            <div class="section-label">5 Process Types (top to bottom = decreasing flexibility)</div>
+            <ul class="bullets">
+              <li><strong>Project:</strong> One-of-a-kind (e.g., a skyscraper, a custom ship)</li>
+              <li><strong>Job Shop:</strong> Different path for each job; highly flexible (e.g., machine shop, hospital)</li>
+              <li><strong>Batch:</strong> Products made in groups; intermediate flexibility (e.g., bakeries)</li>
+              <li><strong>Repetitive/Line:</strong> Continuous identical output; low flexibility (e.g., auto assembly)</li>
+              <li><strong>Continuous:</strong> Non-stop process flow (e.g., petroleum, chemicals)</li>
+            </ul>
+            <div class="section-label">Misalignment Positions</div>
+            <ul class="bullets">
+              <li><strong>Too flexible for what you make (above diagonal):</strong> Overspending on flexible capacity for standardized products. Paying a premium for capability you don't use.</li>
+              <li><strong>Too rigid for what you make (below diagonal):</strong> Trying to deliver variety through inflexible processes. High cost, poor quality, long lead times.</li>
+            </ul>
+            <div class="link-tag">SOA (three gaps)</div>
+            <div class="link-tag">Trade-off Curves (Class 2)</div>
+          </div>
+        </div>
+
+        <!-- NPV -->
+        <div class="subtopic" id="s-npv">
+          <div class="subtopic-hdr" onclick="toggleSub('s-npv')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Net Present Value (NPV)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="formula-wrap">
+              <div class="formula">NPV = C₀ + Σ [ Cₜ / (1 + r)ᵗ ]   for t = 1 to T</div>
+              <div class="formula-explain">
+                <strong>C₀</strong> = initial investment (negative cash outflow at t=0)<br>
+                <strong>Cₜ</strong> = net cash flow in period t (revenues minus costs)<br>
+                <strong>r</strong> = discount rate (opportunity cost of capital; reflects risk)<br>
+                <strong>T</strong> = total number of time periods
+              </div>
+            </div>
+            <div class="section-label">Intuition — Why Discount?</div>
+            <div class="prose">A dollar today is worth more than a dollar next year — because today's dollar can be invested. The discount rate (r) captures this: it's the return you're giving up by investing in this project instead of something else. Higher r = more "impatient" → future cash flows matter less.</div>
+            <div class="section-label">How It's Used in OS</div>
+            <ul class="bullets">
+              <li>Every capacity, sourcing, location, and technology decision ultimately gets tested against NPV</li>
+              <li>Eli Lilly case: used to compare specialized vs. flexible facility over 15 years</li>
+              <li>Bigger levers: the <em>timing</em> and <em>magnitude</em> of cash flows (launching a year earlier is enormous); and the discount rate's sensitivity to uncertainty</li>
+            </ul>
+            <div class="section-label">Decision Rule</div>
+            <div class="prose">If NPV > 0: investment creates value (do it). If NPV < 0: destroys value (don't). When comparing alternatives, choose the highest NPV.</div>
+          </div>
+        </div>
+
+        <!-- Trade-offs & Efficient Frontier -->
+        <div class="subtopic" id="s-tradeoffs">
+          <div class="subtopic-hdr" onclick="toggleSub('s-tradeoffs')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Trade-offs & Efficient Frontier (Class 2)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">The core insight of Class 2: <strong>you cannot be simultaneously best at everything</strong>. Competing on low cost requires standardization — which sacrifices flexibility. Competing on variety requires flexibility — which adds cost. These constraints define the "trade-off curve."</div>
+            <div class="section-label">The Efficient Frontier</div>
+            <div class="prose">The frontier is the boundary of what is achievable given current technology and practices. Firms on the frontier are "efficient" — they're extracting maximum performance from their chosen position. Firms inside the frontier are inefficient — they're underperforming even relative to their own strategic position.</div>
+            <div class="section-label">Two Ways to Improve Competitive Position</div>
+            <ul class="bullets">
+              <li><strong>Move toward the frontier (Operational Efficiency):</strong> Close the gap between where you are and the frontier. Same strategy, better execution. Lean, Six Sigma, process improvement.</li>
+              <li><strong>Shift the frontier (Operational Focus / Innovation):</strong> Change what's achievable. Technology investment, new processes, innovation. Creates durable advantage because competitors can't easily copy it.</li>
+            </ul>
+            <div class="insight-box">
+              <div class="label">Strategic vs. Operational Improvement</div>
+              <p>OE improvement (moving to the frontier) is necessary but not sufficient — competitors can copy it. Shifting the frontier through genuine innovation creates the gap that strategy is built on.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cost Decomposition -->
+        <div class="subtopic" id="s-costdecomp">
+          <div class="subtopic-hdr" onclick="toggleSub('s-costdecomp')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Cost Decomposition: ΔC = Cv + COE + CS (Class 2)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="formula-wrap">
+              <div class="formula">ΔC = Cv + COE + CS</div>
+              <div class="formula-explain">
+                <strong>ΔC</strong> = total observed cost difference between you and a competitor (positive = they're cheaper)<br>
+                <strong>Cv</strong> = variable cost / volume difference — their cheaper inputs or higher utilization (scale advantage)<br>
+                <strong>COE</strong> = operational efficiency gap — they're closer to the frontier for the same strategy<br>
+                <strong>CS</strong> = strategy-driven cost differential — cost of your differentiation (e.g., you offer customization; they don't)
+              </div>
+            </div>
+            <div class="section-label">Why It Matters</div>
+            <div class="prose">This formula forces you to diagnose <em>why</em> a rival has lower costs — not just observe that they do. The three components point to very different responses:</div>
+            <ul class="bullets">
+              <li><strong>Large COE:</strong> Internal inefficiency problem. Fix your execution. Get closer to the frontier.</li>
+              <li><strong>Large Cv:</strong> Scale or input cost problem. Get bigger, outsource inputs, or relocate.</li>
+              <li><strong>Large CS:</strong> Strategy problem — your differentiation is costing more than it's worth. Or it's exactly what you should be paying for premium positioning.</li>
+            </ul>
+            <div class="section-label">Used In</div>
+            <div class="prose">American Connector Co. (ACC) vs. DJC case — decompose DJC's apparent cost advantage into its three components to determine where ACC is truly vulnerable.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 2: CAPACITY STRATEGY ── -->
+  <div class="topic-block" id="t-capacity">
+    <div class="topic-header" onclick="toggleTopic('t-capacity')">
+      <div class="topic-icon">🏗</div>
+      <div class="topic-text">
+        <div class="topic-eyebrow">Classes 3–5 · Resource Decisions</div>
+        <div class="topic-title">Capacity Strategy: Size · Timing · Type · Location</div>
+        <div class="topic-desc">Marginal analysis · Critical ratio · EOS · Option value of waiting · Flexibility · Resource chaining · Ferdows · Network design</div>
+      </div>
+      <div class="topic-right">
+        <span class="topic-pill">10 sub-topics</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-grid">
+
+        <div class="subtopic" id="s-sizing">
+          <div class="subtopic-hdr" onclick="toggleSub('s-sizing')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Capacity Sizing — How Much? (Class 3)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">The fundamental question: if you build too much, you waste money on idle assets; if too little, you lose customers and revenue. The goal is to find the optimal trade-off.</div>
+            <div class="formula-wrap">
+              <div class="formula">Critical Ratio: CR = (m + c_p − c_K) / (m + c_p)
+Optimal K: P(D ≤ K*) = CR
+For Normal demand: K* = NORMINV(CR, μ, σ)</div>
+              <div class="formula-explain">
+                <strong>m</strong> = unit margin (revenue − variable cost)<br>
+                <strong>c_p</strong> = unit penalty for unmet demand (lost goodwill, emergency cost)<br>
+                <strong>c_K</strong> = cost of one unit of excess capacity (capital cost)<br>
+                <strong>CR</strong> = optimal service level — the fraction of demand to satisfy
+              </div>
+            </div>
+            <div class="section-label">Intuition — The Logic Behind the Formula</div>
+            <div class="prose">Think of it as a newsvendor problem: add one more unit of capacity if the probability of needing it × the margin from using it exceeds the cost of having it sit idle. High margins (m) and high shortage penalties (c_p) push CR up → build more capacity. Expensive capacity (high c_K) pushes CR down → build less. The formula exactly captures this balance.</div>
+            <div class="section-label">Economies of Scale</div>
+            <ul class="bullets">
+              <li>Larger plants have lower per-unit cost: CapEx(K) = c₀ + (c_K/α) × K^α, where α &lt; 1</li>
+              <li>α &lt; 1 means doubling capacity costs less than double → economies of scale</li>
+              <li>This creates pressure toward centralization and larger facilities</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-timing">
+          <div class="subtopic-hdr" onclick="toggleSub('s-timing')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Capacity Timing — When? (Class 3)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="section-label">5 Capacity Strategies</div>
+            <ul class="bullets">
+              <li><strong>Leading:</strong> Build capacity ahead of demand. Bet on growth; accept excess early on. Seiko did this to capture the low-end market.</li>
+              <li><strong>Lagging:</strong> Build only after demand materializes. Conserves capital; risks losing customers to faster competitors.</li>
+              <li><strong>Chasing:</strong> Add capacity exactly as needed, in small increments. Minimizes excess but may miss economies of scale.</li>
+              <li><strong>Hybrid/Straddle:</strong> Combination approach — lead on some decisions, lag on others.</li>
+              <li><strong>Follow-Your-Competitor:</strong> Match competitor moves to maintain market share. Reduces strategic risk but forgoes first-mover advantage.</li>
+            </ul>
+            <div class="section-label">Option Value of Waiting</div>
+            <div class="prose">Sometimes the right answer is <em>don't build yet</em>. If demand is highly uncertain and you'll learn more over time, delaying the decision is valuable — you avoid building in the wrong direction. The option value of waiting = NPV(wait) − NPV(build now). It is high when: (1) uncertainty is high; (2) you will learn a lot by waiting; (3) the investment opportunity doesn't expire.</div>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-flexibility">
+          <div class="subtopic-hdr" onclick="toggleSub('s-flexibility')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Capacity Flexibility — Dedicated vs. Flexible (Class 4)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">The "type" decision: should your capacity be laser-focused on one product (cheap per unit, fragile) or able to handle multiple products (more expensive, resilient)?</div>
+            <div class="section-label">4 Sources of Flexibility Value</div>
+            <ul class="bullets">
+              <li><strong>Economies of Scale:</strong> A flexible plant aggregates volume across products, achieving scale that dedicated small plants can't reach individually.</li>
+              <li><strong>Risk Pooling:</strong> When one product's demand is low, another's may be high. Flexible capacity absorbs both. Mathematically: σ_pool ≤ σ₁ + σ₂ (the pooled variability is no worse than the sum). The benefit is largest when correlations between demands are negative.</li>
+              <li><strong>Information Updating:</strong> Flexibility lets you delay committing to a specific product until demand becomes clearer — the capacity is a real option.</li>
+              <li><strong>Contingent Allocation:</strong> Even beyond risk pooling, you can actively <em>choose</em> to allocate capacity to the most profitable products in real time, increasing revenue and reducing profit variance.</li>
+            </ul>
+            <div class="section-label">3 Types of Flexibility</div>
+            <ul class="bullets">
+              <li><strong>Scope:</strong> Breadth of activities — how many different products/tasks can you handle?</li>
+              <li><strong>Agility:</strong> Speed of changeover — how quickly can you switch between products?</li>
+              <li><strong>Robustness:</strong> Consistency of performance across activities — quality/cost maintained regardless of what you're making</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-chaining">
+          <div class="subtopic-hdr" onclick="toggleSub('s-chaining')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Resource Chaining — "A Little Goes a Long Way"</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Full flexibility (every plant can make every product) is expensive and often unnecessary. Research shows that a <strong>long chain of partial flexibility</strong> achieves ~90–96% of the benefit of full flexibility at a fraction of the cost.</div>
+            <div class="section-label">The Key Configurations (10 plants, 10 products)</div>
+            <ul class="bullets">
+              <li><strong>No flexibility:</strong> Each plant makes exactly 1 product. 10 dedicated links. Zero pooling.</li>
+              <li><strong>Long chain:</strong> Each plant makes 2 products, connected in one long loop. 20 links. Gets ~90% of full flexibility benefit.</li>
+              <li><strong>Full flexibility:</strong> Every plant can make every product. 100 links. 100% benefit, but 5× the cost of long chain.</li>
+            </ul>
+            <div class="section-label">Design Rules for Chaining</div>
+            <ul class="bullets">
+              <li>Form ONE long chain — not many short disconnected ones (disconnected subgroups lose pooling benefit)</li>
+              <li>Each plant should produce ≥ 2 products</li>
+              <li>Each product should be producible in ≥ 2 plants</li>
+            </ul>
+            <div class="insight-box">
+              <div class="label">Why This Is Powerful</div>
+              <p>It changes the capacity investment conversation: instead of "full flexibility vs. dedicated," you can get most of the benefit with much less investment. The marginal return on flexibility decreases rapidly — invest just enough to form the long chain.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-masscust">
+          <div class="subtopic-hdr" onclick="toggleSub('s-masscust')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Mass Customization</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Mass customization is the strategy of delivering <strong>high variety at low cost</strong> — escaping the traditional trade-off between cost efficiency and product variety. As the course says: "It's not mass production customers want to escape; it's mass products."</div>
+            <div class="section-label">How It Works — Three Technologies</div>
+            <ul class="bullets">
+              <li><strong>Product technology:</strong> Modularity (5 modules × 5 variants = 25 combinations), platform sharing (one platform, many models), adaptable design (software-updatable products)</li>
+              <li><strong>Process technology:</strong> Postponement / delayed differentiation — common production as long as possible, customize at the last step. Last step must be MTO (Make-to-Order) or ATO (Assemble-to-Order) with near-zero changeover cost.</li>
+              <li><strong>Information technology:</strong> Customers self-design → data flows automatically to production → billing and tracking integrated</li>
+            </ul>
+            <div class="section-label">The Prerequisite</div>
+            <div class="prose">For MC to work: (1) postpone differentiation as long as possible in the process; (2) have information capability to handle customized final steps; (3) customers must be willing to wait (or the wait must be very short).</div>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-location">
+          <div class="subtopic-hdr" onclick="toggleSub('s-location')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Location Drivers & Network Design (Class 5)</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="section-label">6 Categories of Location Drivers</div>
+            <ul class="bullets">
+              <li><strong>Competitive Strategy:</strong> Cost leader → locate near cheap inputs. Differentiator → locate near customers or talent.</li>
+              <li><strong>Product Markets:</strong> Proximity premium (customers pay more for local), demand geography, market distinctiveness</li>
+              <li><strong>Supply Markets:</strong> Cost and availability of labor, energy, materials — especially relevant for resource-intensive industries</li>
+              <li><strong>Technology:</strong> Economies of scale (large EOS → centralize), transportation costs (high → distribute)</li>
+              <li><strong>Macro/Non-Market Factors:</strong> Tariffs, tax incentives, exchange rate volatility, IP protection, political stability</li>
+              <li><strong>Existing Resources:</strong> Current network constrains new choices; switching costs and capabilities lock-in</li>
+            </ul>
+            <div class="section-label">3 Network Design Choices</div>
+            <ul class="bullets">
+              <li><strong>Centralized vs. Distributed:</strong> Centralized → scale and risk pooling; Distributed → proximity and responsiveness. Optimal point balances falling production costs against rising transport costs.</li>
+              <li><strong>Separated vs. Integrated:</strong> Integrated networks allow capacity pooling across markets — valuable when demand and exchange rates are volatile</li>
+              <li><strong>Standardized vs. Localized:</strong> Standardization enables purchasing scale and consistent quality; Localization enables regulatory compliance and local market fit</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-ferdows">
+          <div class="subtopic-hdr" onclick="toggleSub('s-ferdows')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Ferdows' 6 Strategic Facility Roles</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Each facility in a global network has a specific strategic role. Ferdows' matrix classifies plants on two dimensions: <strong>primary reason for location</strong> (cost / knowledge / market) × <strong>scope of activities and competencies</strong> (narrow vs. broad).</div>
+            <div class="section-label">Low Scope (narrow mandate, limited authority)</div>
+            <ul class="bullets">
+              <li><strong>Offshore Plant:</strong> Cost-access; exports output for further processing. Minimal authority. Think: labor-cost arbitrage with a tight mandate.</li>
+              <li><strong>Outpost Plant:</strong> Knowledge-access; primary role is intelligence gathering — a "listening post" near advanced suppliers, competitors, or research labs. Secondary role may be offshore.</li>
+              <li><strong>Server Plant:</strong> Market-access; serves a specific regional market to avoid tariffs, taxes, and logistics barriers. Limited local modification authority.</li>
+            </ul>
+            <div class="section-label">High Scope (broad mandate, high authority)</div>
+            <ul class="bullets">
+              <li><strong>Source Plant:</strong> Cost-access with full capabilities — procurement, production, planning, and logistics authority. The network's most capable low-cost producer.</li>
+              <li><strong>Lead Plant:</strong> Knowledge-access with global innovation mandate. Full authority over all activities. Taps local expertise to drive company-wide product and process innovation. Highest strategic value.</li>
+              <li><strong>Contributor Plant:</strong> Market-access with development authority — serves its regional market AND competes with other plants for new product/process development.</li>
+            </ul>
+            <div class="insight-box">
+              <div class="label">Key Point</div>
+              <p>Plants can evolve from lower to higher roles over time. The matrix helps managers articulate strategic purpose and ensure that mandate, investment, and authority are aligned with the intended role.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-lilly">
+          <div class="subtopic-hdr" onclick="toggleSub('s-lilly')">
+            <div class="dot case"></div>
+            <div class="subtopic-title">📋 Case: Eli Lilly (1993) — Flexible vs. Specialized Facility</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Eli Lilly needs manufacturing capacity for three new drugs (Alfatine, Betazine, Clorazine) launching in 1996. Decision: build specialized facility per drug, one large flexible facility, or something hybrid?</div>
+            <div class="section-label">The Numbers</div>
+            <div class="formula-wrap">
+              <div class="formula">Specialized: $387.50/kg · PV cost = $89.22M (15 yr, 10%)
+Flexible:    $1,332/kg   · PV cost = $222.11M
+Break-even:  1,164 kg/yr per product</div>
+              <div class="formula-explain">Below 1,164 kg/yr → flexible cheaper. Above → specialized cheaper.<br>
+              Flexible is ~3.4× more expensive per kg due to: more rigs needed, lower productivity (7,500 vs. 20,000 kg/rig), lower utilization (65% vs. 80%).</div>
+            </div>
+            <div class="section-label">Why Flexible Has Value Beyond Cost</div>
+            <ul class="bullets">
+              <li><strong>Risk reduction:</strong> Failed product → capacity reallocated, not stranded as a useless dedicated plant</li>
+              <li><strong>Time-to-market:</strong> Takes facility construction off the critical path — processes don't need to be finalized before building starts. Worth ~1 year of earlier launch for subsequent products.</li>
+              <li><strong>Information value:</strong> Learn demand before committing to a dedicated plant</li>
+            </ul>
+            <div class="section-label">The Insight: It's Not Binary</div>
+            <div class="insight-box">
+              <div class="label">Hybrid "Launch then Transfer" Strategy</div>
+              <p>Use the flexible plant as a launch platform for the first 2–3 years while demand is uncertain and volume is low. Transfer to specialized plants as demand grows and processes mature. Captures flexibility benefits early, efficiency benefits later.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 3: PROCESS DECISIONS ── -->
+  <div class="topic-block" id="t-process">
+    <div class="topic-header" onclick="toggleTopic('t-process')">
+      <div class="topic-icon">🔄</div>
+      <div class="topic-text">
+        <div class="topic-eyebrow">Class 6 · Process Decisions</div>
+        <div class="topic-title">Supply & Demand Management</div>
+        <div class="topic-desc">Revenue management · Littlewood's Rule · Overbooking · Strategic sourcing · TCO · Make-or-buy · Contract types</div>
+      </div>
+      <div class="topic-right">
+        <span class="topic-pill">7 sub-topics</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-grid">
+
+        <div class="subtopic" id="s-rm">
+          <div class="subtopic-hdr" onclick="toggleSub('s-rm')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Revenue Management — Overview</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Revenue management (RM) is the answer to a specific problem: when your supply is <strong>fixed and perishable</strong>, how do you extract maximum revenue from it? Airlines, hotels, and rental car companies pioneered this — but the principles apply anywhere these conditions hold.</div>
+            <div class="section-label">3 Conditions for RM to Apply</div>
+            <ul class="bullets">
+              <li><strong>Constrained, perishable supply:</strong> You can't store unsold capacity (an empty seat tonight can't be sold tomorrow)</li>
+              <li><strong>Dynamic, volatile demand:</strong> Decisions are made before demand is known; uncertainty exists at booking time</li>
+              <li><strong>Segmentable customers:</strong> Different customers have meaningfully different WTP (willingness to pay)</li>
+            </ul>
+            <div class="section-label">Two Tool Categories</div>
+            <ul class="bullets">
+              <li><strong>Price Controls:</strong> Vary prices to move demand → Price Customization (charge different customers differently), Dynamic Pricing (prices change over time)</li>
+              <li><strong>Capacity Controls:</strong> Restrict who can buy what → Yield Management (allocate seats per fare class), Overbooking (accept more than capacity to hedge no-shows)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-littlewood">
+          <div class="subtopic-hdr" onclick="toggleSub('s-littlewood')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Littlewood's Rule — Optimal Seat Protection</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">You have a flight with 300 seats. Cheap tickets ($600) sell first; expensive tickets ($2,400) sell later. How many cheap tickets should you sell now vs. hold back (protect) for expensive customers?</div>
+            <div class="formula-wrap">
+              <div class="formula">Deny cheap booking if: P(D_high > Q) > p_low / p_high
+Protection Level Q: P(D_high ≤ Q) = 1 − (p_low / p_high)
+For Normal D_high: Q = NORMINV(1 − p_low/p_high, μ, σ)
+Booking Limit = Total Capacity − Q</div>
+              <div class="formula-explain">
+                <strong>Q</strong> = seats to protect (reserve) for high-fare customers<br>
+                <strong>p_low</strong> = low fare price ($600); <strong>p_high</strong> = high fare price ($2,400)<br>
+                <strong>D_high</strong> = uncertain future demand from high-fare customers<br>
+                <strong>Example:</strong> Q = NORMINV(1 − 600/2400, 50, 20) = NORMINV(0.75, 50, 20) ≈ 63 seats
+              </div>
+            </div>
+            <div class="section-label">Intuition</div>
+            <div class="prose">You keep an extra seat unsold (protecting it) as long as there's a good enough chance a high-paying customer will want it. "Good enough" means: the probability of high demand × (p_high − p_low) > p_low. Rearranged: protect if P(D_high > Q) > p_low/p_high. The threshold is the ratio of prices — the lower the ratio, the more you protect.</div>
+            <div class="section-label">Three-Fare Extension</div>
+            <div class="prose">With three classes (A, B, C from expensive to cheap): compute protections for A and B against C separately, sum them for total protected seats. Then recompute A's protection against B when C closes.</div>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-sourcing">
+          <div class="subtopic-hdr" onclick="toggleSub('s-sourcing')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Strategic Sourcing & Make-or-Buy</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Sourcing is about deciding which activities in your value chain to do yourself vs. outsource — and how. It's the biggest single cost lever: sourcing accounts for ~60% of COGS for the average company.</div>
+            <div class="section-label">The Spectrum</div>
+            <ul class="bullets">
+              <li><strong>Market Buy (Transactional):</strong> Buy on the open market. Benefits: focus on core, access to specialist scale, easy to switch. Risk: no control over quality/timing, IP leakage, supply disruption.</li>
+              <li><strong>Long-Term Relationship:</strong> Partnership with a preferred supplier. Intermediate level of integration, responsibility, and risk sharing.</li>
+              <li><strong>Vertical Integration:</strong> Do it yourself. Benefits: full control, aligned incentives, learning and IP protection. Costs: capital-intensive, management complexity, less flexibility.</li>
+            </ul>
+            <div class="section-label">5-Question Decision Framework</div>
+            <ul class="bullets">
+              <li><strong>Q1:</strong> Is outsourcing feasible? (Is there a capable supplier? Is it politically viable?)</li>
+              <li><strong>Q2:</strong> Is outsourcing necessary? (Do we lack internal capability? If yes, must outsource.)</li>
+              <li><strong>Q3:</strong> Is outsourcing strategically aligned? (Is this activity non-core? Is the risk tolerable?)</li>
+              <li><strong>Q4:</strong> Is it cost-effective? (Full TCO comparison, not just sticker price)</li>
+              <li><strong>Q5:</strong> What relationship type is optimal? (Transaction, partnership, or something in between?)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 4: TECHNOLOGY & INNOVATION ── -->
+  <div class="topic-block" id="t-tech">
+    <div class="topic-header" onclick="toggleTopic('t-tech')">
+      <div class="topic-icon">🧬</div>
+      <div class="topic-text">
+        <div class="topic-eyebrow">Class 7 · Process Decisions</div>
+        <div class="topic-title">Technology, Innovation & Learning</div>
+        <div class="topic-desc">Learning curves · Learning before/by doing · Concurrent engineering · Platform strategy · Moderna</div>
+      </div>
+      <div class="topic-right">
+        <span class="topic-pill">5 sub-topics</span>
+        <span class="chevron">▶</span>
+      </div>
+    </div>
+    <div class="topic-body">
+      <div class="subtopic-grid">
+
+        <div class="subtopic" id="s-learning">
+          <div class="subtopic-hdr" onclick="toggleSub('s-learning')">
+            <div class="dot"></div>
+            <div class="subtopic-title">Learning Curves</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">One of the most powerful empirical regularities in operations: as cumulative production doubles, unit cost falls by a predictable percentage. This is why first-movers often dominate — they accumulate experience that is very hard to catch up with.</div>
+            <div class="formula-wrap">
+              <div class="formula">C(Q) = C₁ × Q^(−β)
+β = log(1 − LR) / log(2)
+LR = learning rate (e.g., 20% → costs drop 20% per doubling)</div>
+              <div class="formula-explain">
+                <strong>C(Q)</strong> = unit cost at cumulative volume Q<br>
+                <strong>C₁</strong> = cost of the very first unit<br>
+                <strong>β</strong> = learning curve exponent (higher β = faster learning)<br>
+                <strong>LR</strong> = fraction by which cost drops each time cumulative volume doubles
+              </div>
+            </div>
+            <div class="section-label">Two Learning Modes</div>
+            <ul class="bullets">
+              <li><strong>Learning Before Doing:</strong> Invest in knowledge <em>before</em> production — R&D, prototyping, simulation, pilot plants. Reduces cost and failure rate when production begins. Moderna's mRNA platform is a prime example.</li>
+              <li><strong>Learning By Doing:</strong> Improve through actual production experience. Cost falls as you accumulate volume. Inevitable regardless of approach — but can be accelerated.</li>
+            </ul>
+            <div class="section-label">Two Learning Types</div>
+            <ul class="bullets">
+              <li><strong>Conceptual Learning (Why):</strong> Understanding the science, principles, mechanisms. Enables radical improvement and transfer to new contexts.</li>
+              <li><strong>Operational Learning (How):</strong> Knowing how to execute. Tacit, embedded in routines. Basis for incremental improvement.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="subtopic" id="s-moderna">
+          <div class="subtopic-hdr" onclick="toggleSub('s-moderna')">
+            <div class="dot case"></div>
+            <div class="subtopic-title">📋 Case: Moderna — The AI Factory & mRNA Platform</div>
+            <span class="sub-chev">▶</span>
+          </div>
+          <div class="subtopic-body">
+            <div class="prose">Moderna's COVID-19 vaccine went from sequence to first human dose in <strong>42 days</strong> — versus 8–12 years for traditional vaccine development. This wasn't luck. It was the result of years of deliberate operations strategy investment.</div>
+            <div class="section-label">The Platform Advantage</div>
+            <ul class="bullets">
+              <li><strong>mRNA as an "operating system":</strong> Once you know how to deliver mRNA safely, you can point it at any target — COVID, flu, cancer, HIV. The platform itself is reusable; only the sequence changes.</li>
+              <li><strong>Learning before doing at scale:</strong> Moderna ran 21 programs before COVID. Each taught them about mRNA design, manufacturing, regulatory interaction, and clinical trials. The platform accumulated conceptual and operational knowledge.</li>
+              <li><strong>Relationship capital:</strong> Pre-existing relationships with FDA, clinical sites, and manufacturing partners. When COVID hit, the networks were ready.</li>
+            </ul>
+            <div class="section-label">The AI Factory Architecture</div>
+            <ul class="bullets">
+              <li>Cloud-first infrastructure (AWS) integrated across design, manufacturing, and clinical operations</li>
+              <li>Automation layer: automated assay development, manufacturing optimization, supply chain coordination</li>
+              <li>AI layer built on top: predictive modeling, sequence optimization</li>
+              <li>Key: "Digitization must start with process redesign. Simply digitizing bad analog processes creates bad digital processes."</li>
+            </ul>
+            <div class="section-label">Vertical Integration Decision</div>
+            <div class="prose">Moderna invested $95M in the Norwood, MA manufacturing facility before commercializing a single product. Why? Because no external manufacturer had the expertise — the process was too novel. This is "learning before doing" as strategic capacity investment: build the capability yourself, then use it as a competitive moat.</div>
+            <div class="link-tag">Capacity Flexibility (Class 4)</div>
+            <div class="link-tag">Vertical Integration (Class 6)</div>
+            <div class="link-tag">Learning Curves</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup-notice">⚠️ Design mockup — content is representative, not exhaustive. Full implementation will include all depth from all 7 class notes.</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE 2: FLASHCARDS
+═══════════════════════════════════════════ -->
+<div class="page" id="page-flashcards">
+
+  <div class="page-header">
+    <h1>Flashcard Decks</h1>
+    <p>Select a deck below · Click any card to flip it · Work through all cards to complete the deck</p>
+  </div>
+
+  <!-- Deck selector -->
+  <div class="deck-selector">
+    <button class="deck-btn active" onclick="loadDeck('c1')">Class 1 — Foundations</button>
+    <button class="deck-btn" onclick="loadDeck('c2')">Class 2 — Trade-offs</button>
+    <button class="deck-btn" onclick="loadDeck('c3')">Class 3 — Capacity Size & Timing</button>
+    <button class="deck-btn" onclick="loadDeck('c4')">Class 4 — Flexibility</button>
+    <button class="deck-btn" onclick="loadDeck('c5')">Class 5 — Location</button>
+    <button class="deck-btn" onclick="loadDeck('c6')">Class 6 — Supply & Demand</button>
+    <button class="deck-btn" onclick="loadDeck('c7')">Class 7 — Technology</button>
+    <button class="deck-btn master" onclick="loadDeck('master')">🔀 Master Deck (All Classes)</button>
+  </div>
+
+  <!-- Card arena -->
+  <div class="fc-arena" id="fc-arena">
+
+    <div class="fc-progress-bar-wrap">
+      <div class="fc-progress-bar">
+        <div class="fc-progress-fill" id="fc-progress" style="width:0%"></div>
+      </div>
+      <div class="fc-counter" id="fc-counter">Card 1 of 25</div>
+    </div>
+
+    <div class="fc-card-wrap">
+      <div class="fc-card" id="fc-card" onclick="flipCard()">
+        <div class="fc-front">
+          <div class="term" id="fc-term">Operations Strategy</div>
+          <div class="hint">Click to reveal definition</div>
+        </div>
+        <div class="fc-back">
+          <div class="class-tag" id="fc-class-tag">Class 1</div>
+          <div class="definition" id="fc-definition">A long-term plan for developing resources and configuring processes such that the resulting capabilities maximize Net Present Value (NPV).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-controls">
+      <button class="fc-btn" id="btn-prev" onclick="prevCard()" disabled>← Prev</button>
+      <button class="fc-btn primary" id="btn-next" onclick="nextCard()">Next →</button>
+    </div>
+
+    <div class="fc-done-screen" id="fc-done">
+      <div style="font-size: 48px;">✓</div>
+      <h2>Deck Complete!</h2>
+      <p id="fc-done-msg">You've reviewed all 25 cards in this deck.</p>
+      <button class="fc-btn primary" onclick="shuffleAndRestart()">🔀 Shuffle & Go Again</button>
+    </div>
+
+  </div>
+
+  <div class="mockup-notice">⚠️ Mockup — the full implementation will pull every term from every class's "Key Terms and Definitions Glossary" section. The master deck will shuffle all cards together.</div>
+</div>
+
+
+<script>
+// ── Page switching ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── Topic & sub-topic expand/collapse ──
+function toggleTopic(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function toggleSub(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ── Flashcard Data ──
+const decks = {
+  c1: [
+    { term: 'Operations Strategy', def: 'A long-term plan for developing resources and configuring processes such that the resulting capabilities maximize NPV.', cls: 'Class 1' },
+    { term: 'Corporate Strategy', def: 'Highest-level strategy defining which industries the organization will be active in. Configures and allocates resources to business units.', cls: 'Class 1' },
+    { term: 'Business Strategy', def: 'Strategy formulated by a business unit to seek a favorable competitive position. Characterized by Price, Quality, Responsiveness, and Variety.', cls: 'Class 1' },
+    { term: 'Alignment Principle', def: 'Operations capabilities must be connected to the competitive position (defined by business strategy) that a firm seeks over time.', cls: 'Class 1' },
+    { term: 'Strategic Operational Audit (SOA)', def: 'Diagnostic tool identifying three gaps: Strategy Gap (promise vs. delivery), Competency Gap (current vs. needed), and Resource & Process Gap.', cls: 'Class 1' },
+    { term: 'Product-Process Matrix (PPM)', def: 'A tool mapping process flexibility (Y-axis) against product variety (X-axis). The zone of alignment runs diagonally from bottom-left to top-right.', cls: 'Class 1' },
+    { term: 'NPV (Net Present Value)', def: 'NPV = C₀ + Σ[Cₜ/(1+r)ᵗ]. The financial metric for evaluating strategic investments. Positive NPV creates value; negative destroys value.', cls: 'Class 1' },
+    { term: 'Process View', def: 'One of three views of operations. Looks at the transformation process/activity network. Four decisions: Supply, Technology, Innovation, Demand.', cls: 'Class 1' },
+    { term: 'Resource View', def: 'One of three views of operations. Looks at the physical assets. Four decisions: Size, Timing, Type, Location.', cls: 'Class 1' },
+    { term: 'Competency / Capability View', def: 'One of three views of operations. Looks at what operations can and cannot do. Four dimensions: Cost, Quality, Lead-Time, Flexibility.', cls: 'Class 1' },
+    { term: 'Vertical Integration', def: 'A firm owning and performing multiple stages of the supply chain internally rather than outsourcing them to external suppliers.', cls: 'Class 1' },
+    { term: 'Job Shop', def: 'A flexible process type where each job follows a different path. High flexibility, low volume, suited for customized/one-of-a-kind products.', cls: 'Class 1' },
+    { term: 'Revenue Management (RM)', def: 'Demand management practices that maximize revenue from limited, perishable supply through price controls and capacity controls.', cls: 'Class 1' },
+  ],
+  c2: [
+    { term: 'Operational Trade-off', def: 'The fundamental constraint that you cannot simultaneously maximize all capabilities (cost, quality, speed, flexibility). Improving one requires sacrificing another.', cls: 'Class 2' },
+    { term: 'Efficient Frontier', def: 'The boundary of achievable performance combinations given current technology and practices. Firms on the frontier are executing their strategy optimally.', cls: 'Class 2' },
+    { term: 'Operational Efficiency (OE)', def: 'How close a firm operates to its efficient frontier. Improving OE = moving toward the frontier without shifting it.', cls: 'Class 2' },
+    { term: 'Operational Focus', def: 'Strategic specialization in specific capabilities, deliberately accepting trade-offs to excel at what the business strategy demands.', cls: 'Class 2' },
+    { term: 'ΔC = Cv + COE + CS', def: 'Cost decomposition formula. ΔC = total cost gap vs. competitor. Cv = variable cost/volume difference. COE = operational efficiency gap. CS = strategy-driven cost differential.', cls: 'Class 2' },
+    { term: 'COE (Cost of Operational Efficiency)', def: 'Component of cost decomposition representing how much of a cost gap is due to being farther from the efficient frontier than a competitor. A true inefficiency signal.', cls: 'Class 2' },
+    { term: 'CS (Cost of Strategy)', def: 'The cost premium paid for the differentiation choices in your strategy (e.g., variety, customization, premium quality). May be justified if customers value it.', cls: 'Class 2' },
+  ],
+  c6: [
+    { term: 'Littlewood\'s Rule', def: 'Protect Q seats for high-fare class where P(D_high ≤ Q) = (p_high − p_low)/p_high. Booking limit = Total capacity − Q.', cls: 'Class 6' },
+    { term: 'Protection Level', def: 'The number of capacity units reserved for a higher-fare class. = Total capacity − Booking limit for the lower class.', cls: 'Class 6' },
+    { term: 'Booking Limit', def: 'Maximum units available for sale to a particular fare class. = Total capacity − Protection level.', cls: 'Class 6' },
+    { term: 'Displacement Cost', def: 'The opportunity cost of selling a unit to a low-fare customer — the expected revenue lost from a future high-fare customer who can\'t be served.', cls: 'Class 6' },
+    { term: 'TCO (Total Cost of Ownership)', def: 'Total cost of sourcing from a supplier: purchase price + all indirect costs (quality failure, delivery, management overhead, risk, switching costs).', cls: 'Class 6' },
+    { term: 'Price Customization', def: '2nd degree price discrimination: design differentiated products with features and fences so customers self-select, partially revealing their willingness to pay.', cls: 'Class 6' },
+    { term: 'Perishable Product', def: 'A product or capacity unit whose revenue opportunity is lost if not sold within a finite window (e.g., an empty airline seat after departure).', cls: 'Class 6' },
+    { term: 'WTP (Willingness to Pay)', def: 'The maximum price a customer is willing to pay for a product or service. Also called "reservation price." Usually unobservable — hence the need for fences.', cls: 'Class 6' },
+  ],
+  master: []
+};
+
+// Build master deck
+decks.master = Object.keys(decks).filter(k => k !== 'master').flatMap(k => decks[k]);
+
+// ── Flashcard state ──
+let currentDeck = [];
+let currentIndex = 0;
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function loadDeck(id) {
+  document.querySelectorAll('.deck-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('fc-done').classList.remove('visible');
+  document.getElementById('fc-arena').style.display = 'flex';
+  currentDeck = id === 'master' ? shuffleArray(decks.master) : [...decks[id]];
+  currentIndex = 0;
+  renderCard();
+}
+
+function renderCard() {
+  const card = document.getElementById('fc-card');
+  card.classList.remove('flipped');
+  const c = currentDeck[currentIndex];
+  document.getElementById('fc-term').textContent = c.term;
+  document.getElementById('fc-definition').textContent = c.def;
+  document.getElementById('fc-class-tag').textContent = c.cls;
+  const total = currentDeck.length;
+  document.getElementById('fc-counter').textContent = `Card ${currentIndex + 1} of ${total}`;
+  document.getElementById('fc-progress').style.width = `${((currentIndex) / total) * 100}%`;
+  document.getElementById('btn-prev').disabled = currentIndex === 0;
+  document.getElementById('btn-next').textContent = currentIndex === total - 1 ? 'Finish ✓' : 'Next →';
+}
+
+function flipCard() {
+  document.getElementById('fc-card').classList.toggle('flipped');
+}
+
+function nextCard() {
+  if (currentIndex < currentDeck.length - 1) {
+    currentIndex++;
+    renderCard();
+  } else {
+    // Done!
+    document.getElementById('fc-progress').style.width = '100%';
+    document.getElementById('fc-counter').textContent = `${currentDeck.length} of ${currentDeck.length} — Complete!`;
+    document.getElementById('fc-done-msg').textContent = `You've reviewed all ${currentDeck.length} cards in this deck.`;
+    document.getElementById('fc-done').classList.add('visible');
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderCard();
+  }
+}
+
+function shuffleAndRestart() {
+  currentDeck = shuffleArray(currentDeck);
+  currentIndex = 0;
+  document.getElementById('fc-done').classList.remove('visible');
+  renderCard();
+}
+
+// Initialize
+loadDeck('c1');
+document.querySelector('.deck-btn').classList.add('active');
+</script>
+</body>
+</html>

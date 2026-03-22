@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOS3704 — Operations Strategy Map (Mockup)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080c14;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  /* ── Header ── */
+  .course-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 28px;
+    background: linear-gradient(135deg, #0f1b35 0%, #1a0f35 100%);
+    border-radius: 20px;
+    border: 1px solid #2a3a5a;
+    position: relative;
+    overflow: hidden;
+  }
+  .course-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px; right: -40px;
+    height: 120px;
+    background: radial-gradient(ellipse, rgba(99,102,241,0.15) 0%, transparent 70%);
+  }
+  .course-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #818cf8, #c4b5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .course-header .subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 6px;
+    position: relative;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .badge {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Core Question ── */
+  .core-question {
+    background: linear-gradient(135deg, #0f1b2d, #0f1b2d);
+    border: 1px solid #1e3a5a;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .core-question::before {
+    content: 'THE CENTRAL QUESTION';
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    color: #3b82f6;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .core-question p {
+    font-size: 15px;
+    color: #93c5fd;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .core-question .sub {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .core-question .sub-q {
+    background: #0a1525;
+    border: 1px solid #1e3050;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: #7dd3fc;
+    flex: 1;
+    min-width: 200px;
+  }
+  .core-question .sub-q::before {
+    content: '→ ';
+    color: #3b82f6;
+    font-weight: bold;
+  }
+
+  /* ── Topic Block ── */
+  .topic-block {
+    margin-bottom: 14px;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .topic-block:hover { border-color: rgba(255,255,255,0.06); }
+
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 14px;
+    transition: filter 0.15s;
+    position: relative;
+  }
+  .topic-header:hover { filter: brightness(1.08); }
+
+  .topic-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .topic-title-group { flex: 1; }
+  .topic-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    opacity: 0.7;
+  }
+  .topic-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .topic-subtitle {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: 2px;
+  }
+  .topic-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topic-count {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(0,0,0,0.3);
+    opacity: 0.7;
+  }
+  .chevron {
+    font-size: 14px;
+    transition: transform 0.25s ease;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+  .topic-block.open .chevron { transform: rotate(90deg); }
+
+  .topic-body {
+    display: none;
+    padding: 0 14px 14px;
+  }
+  .topic-block.open .topic-body { display: block; }
+
+  /* ── Sub-topic grid ── */
+  .subtopic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+  }
+
+  .subtopic-block {
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    background: rgba(0,0,0,0.25);
+  }
+  .subtopic-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px 10px 0 0;
+    transition: background 0.15s;
+  }
+  .subtopic-header:hover { background: rgba(255,255,255,0.04); }
+  .subtopic-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .subtopic-title {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+  }
+  .sub-chevron {
+    font-size: 11px;
+    transition: transform 0.2s;
+    opacity: 0.5;
+  }
+  .subtopic-block.open .sub-chevron { transform: rotate(90deg); }
+
+  .subtopic-body {
+    display: none;
+    padding: 10px 14px 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .subtopic-block.open .subtopic-body { display: block; }
+
+  /* Detail bullets */
+  .detail-list {
+    list-style: none;
+    margin-bottom: 12px;
+  }
+  .detail-list li {
+    font-size: 11.5px;
+    color: #94a3b8;
+    padding: 3px 0 3px 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .detail-list li::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  .detail-list li strong {
+    color: #cbd5e1;
+    font-weight: 600;
+  }
+
+  .formula-box {
+    background: #080f1a;
+    border: 1px solid #1e2d40;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: #7dd3fc;
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  .formula-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #3b82f6;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-family: inherit;
+  }
+
+  /* ── Flashcards ── */
+  .flashcard-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #a78bfa;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .flashcard-label::after {
+    content: 'click to flip';
+    font-size: 8px;
+    color: #4b5563;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+  }
+
+  .flashcards-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .flashcard {
+    width: 130px;
+    height: 68px;
+    perspective: 600px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .flashcard-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease;
+  }
+  .flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .flashcard-front {
+    background: #1a1040;
+    border: 1px solid #4c1d95;
+  }
+  .flashcard-back {
+    background: #0f2a1a;
+    border: 1px solid #065f46;
+    transform: rotateY(180deg);
+  }
+  .flashcard-front .term {
+    font-size: 11px;
+    font-weight: 700;
+    color: #c4b5fd;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .flashcard-front .hint {
+    font-size: 8px;
+    color: #6d28d9;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .flashcard-back .def {
+    font-size: 9.5px;
+    color: #6ee7b7;
+    line-height: 1.4;
+  }
+
+  /* Color themes per topic */
+  /* Foundations — indigo */
+  .t-foundations .topic-header { background: linear-gradient(135deg, #12154f, #0f1340); }
+  .t-foundations .topic-icon { background: rgba(99,102,241,0.2); }
+  .t-foundations .topic-label, .t-foundations .topic-title { color: #a5b4fc; }
+  .t-foundations .subtopic-dot { background: #6366f1; }
+  .t-foundations .subtopic-title { color: #c7d2fe; }
+
+  /* Competitive — cyan */
+  .t-competitive .topic-header { background: linear-gradient(135deg, #0c2233, #0c1f2e); }
+  .t-competitive .topic-icon { background: rgba(6,182,212,0.2); }
+  .t-competitive .topic-label, .t-competitive .topic-title { color: #67e8f9; }
+  .t-competitive .subtopic-dot { background: #06b6d4; }
+  .t-competitive .subtopic-title { color: #a5f3fc; }
+
+  /* Capacity — blue */
+  .t-capacity .topic-header { background: linear-gradient(135deg, #0c1a3a, #0a1830); }
+  .t-capacity .topic-icon { background: rgba(59,130,246,0.2); }
+  .t-capacity .topic-label, .t-capacity .topic-title { color: #93c5fd; }
+  .t-capacity .subtopic-dot { background: #3b82f6; }
+  .t-capacity .subtopic-title { color: #bfdbfe; }
+
+  /* Process — emerald */
+  .t-process .topic-header { background: linear-gradient(135deg, #061a14, #061a14); }
+  .t-process .topic-icon { background: rgba(16,185,129,0.2); }
+  .t-process .topic-label, .t-process .topic-title { color: #6ee7b7; }
+  .t-process .subtopic-dot { background: #10b981; }
+  .t-process .subtopic-title { color: #a7f3d0; }
+
+  /* Innovation — violet */
+  .t-innovation .topic-header { background: linear-gradient(135deg, #1a0f35, #150c2a); }
+  .t-innovation .topic-icon { background: rgba(168,85,247,0.2); }
+  .t-innovation .topic-label, .t-innovation .topic-title { color: #d8b4fe; }
+  .t-innovation .subtopic-dot { background: #a855f7; }
+  .t-innovation .subtopic-title { color: #e9d5ff; }
+
+  /* ── Connection hint ── */
+  .connection-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #64748b;
+    margin-top: 6px;
+    cursor: default;
+  }
+  .connection-tag .dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  .connections-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  /* Mockup notice */
+  .mockup-notice {
+    text-align: center;
+    font-size: 10px;
+    color: #374151;
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #111827;
+  }
+
+  .section-divider {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #374151;
+    margin: 12px 0 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Course header -->
+<div class="course-header">
+  <h1>DOS3704 · Operations Strategy</h1>
+  <div class="subtitle">Interactive Study Map — Click any box to expand · Flip cards to test yourself</div>
+  <div class="badge-row">
+    <span class="badge" style="background:#1e2a5f;color:#a5b4fc;">7 Classes</span>
+    <span class="badge" style="background:#1a2f1a;color:#86efac;">Case Studies</span>
+    <span class="badge" style="background:#2a1540;color:#d8b4fe;">Frameworks</span>
+    <span class="badge" style="background:#1a2a1a;color:#6ee7b7;">Formulas</span>
+  </div>
+</div>
+
+<!-- Central question -->
+<div class="core-question">
+  <p>How does a firm design its operations to create competitive advantage?</p>
+  <div class="sub">
+    <div class="sub-q">What should operations be good at? (connect to business strategy)</div>
+    <div class="sub-q">Which system of resources & processes best delivers these capabilities?</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TOPIC 1: FOUNDATIONS -->
+<!-- ══════════════════════════════════════ -->
+<div class="topic-block t-foundations open" id="block-foundations">
+  <div class="topic-header" onclick="toggleBlock('block-foundations')">
+    <div class="topic-icon">🏛</div>
+    <div class="topic-title-group">
+      <div class="topic-label">Class 1 · Foundations</div>
+      <div class="topic-title">What is Operations Strategy?</div>
+      <div class="topic-subtitle">Strategy hierarchy · 3 views of operations · Alignment tools · NPV</div>
+    </div>
+    <div class="topic-meta">
+      <span class="topic-count">6 sub-topics</span>
+      <span class="chevron">▶</span>
+    </div>
+  </div>
+  <div class="topic-body">
+    <div class="subtopic-grid">
+
+      <!-- Sub 1: Strategy hierarchy -->
+      <div class="subtopic-block open" id="sub-strategy">
+        <div class="subtopic-header" onclick="toggleSub('sub-strategy')">
+          <div class="subtopic-dot" style="background:#6366f1"></div>
+          <div class="subtopic-title">Strategy Hierarchy</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Corporate:</strong> Which industries to compete in?</li>
+            <li><strong>Business:</strong> How to compete? (Price, Quality, Responsiveness, Variety)</li>
+            <li><strong>Functional:</strong> How to execute? (Finance, Marketing, <em>Operations</em>)</li>
+          </ul>
+          <div class="formula-label">Definition</div>
+          <div class="formula-box">OS = long-term plan for developing resources &<br>configuring processes to maximize NPV</div>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div class="term">Operational Strategy</div>
+                  <div class="hint">tap to define</div>
+                </div>
+                <div class="flashcard-back">
+                  <div class="def">Long-term plan to develop resources & configure processes to maximize NPV through competitive capabilities.</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front">
+                  <div class="term">Value Proposition</div>
+                  <div class="hint">tap to define</div>
+                </div>
+                <div class="flashcard-back">
+                  <div class="def">What the firm promises customers — the basis for competitive differentiation (cost, quality, speed, or variety).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub 2: 3 Views -->
+      <div class="subtopic-block" id="sub-3views">
+        <div class="subtopic-header" onclick="toggleSub('sub-3views')">
+          <div class="subtopic-dot" style="background:#6366f1"></div>
+          <div class="subtopic-title">3 Views of Operations</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Process View:</strong> How work is done (Supply, Tech, Innovation, Demand)</li>
+            <li><strong>Resource View:</strong> What assets perform the work (Size, Timing, Type, Location)</li>
+            <li><strong>Competency View:</strong> What ops can/can't do (Cost, Quality, Lead-Time, Flexibility)</li>
+          </ul>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">OM vs OS</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">OM = day-to-day operational execution. OS = long-term strategic choices about which capabilities to build.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub 3: PPM -->
+      <div class="subtopic-block" id="sub-ppm">
+        <div class="subtopic-header" onclick="toggleSub('sub-ppm')">
+          <div class="subtopic-dot" style="background:#6366f1"></div>
+          <div class="subtopic-title">Product-Process Matrix (PPM)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>Maps product variety (X) vs. process flexibility (Y)</li>
+            <li><strong>Zone of alignment = diagonal</strong></li>
+            <li>Off-diagonal = strategic misalignment</li>
+            <li>5 process types: Project → Job Shop → Batch → Line → Continuous</li>
+          </ul>
+          <div class="connections-row">
+            <div class="connection-tag"><div class="dot" style="background:#06b6d4"></div>→ Trade-offs (Class 2)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub 4: SOA -->
+      <div class="subtopic-block" id="sub-soa">
+        <div class="subtopic-header" onclick="toggleSub('sub-soa')">
+          <div class="subtopic-dot" style="background:#6366f1"></div>
+          <div class="subtopic-title">Strategic Operational Audit (SOA)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Gap 1 — Strategy:</strong> VP promised vs. value delivered</li>
+            <li><strong>Gap 2 — Competency:</strong> Current vs. needed competencies</li>
+            <li><strong>Gap 3 — Resource/Process:</strong> Current vs. needed resources</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sub 5: NPV -->
+      <div class="subtopic-block" id="sub-npv">
+        <div class="subtopic-header" onclick="toggleSub('sub-npv')">
+          <div class="subtopic-dot" style="background:#6366f1"></div>
+          <div class="subtopic-title">NPV Framework</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <div class="formula-label">Formula</div>
+          <div class="formula-box">NPV = C₀ + Σ [ Cₜ / (1 + r)ᵗ ]<br><br>C₀ = initial investment (negative)<br>Cₜ = cash flow in period t<br>r  = discount rate</div>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Discount Rate (r)</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">Rate used to convert future cash flows to present value; reflects time value of money & investment risk.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub 6: Swiss Watch -->
+      <div class="subtopic-block" id="sub-swiss">
+        <div class="subtopic-header" onclick="toggleSub('sub-swiss')">
+          <div class="subtopic-dot" style="background:#f59e0b"></div>
+          <div class="subtopic-title">📋 Case: Swiss Watch Industry</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>Crisis: Japanese quartz watches disrupted market</li>
+            <li><strong>Swatch response:</strong> Automated low-cost + fashion → dual-market</li>
+            <li><strong>Artisan high-end:</strong> Maintained craft, vertical integration</li>
+            <li>Illustrates: PPM alignment, dual strategy</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TOPIC 2: COMPETITIVE STRATEGY -->
+<!-- ══════════════════════════════════════ -->
+<div class="topic-block t-competitive" id="block-competitive">
+  <div class="topic-header" onclick="toggleBlock('block-competitive')">
+    <div class="topic-icon">⚖️</div>
+    <div class="topic-title-group">
+      <div class="topic-label">Class 2 · Competitive Positioning</div>
+      <div class="topic-title">Trade-offs & Operational Efficiency</div>
+      <div class="topic-subtitle">Efficient frontier · Focus strategy · Cost decomposition · COE</div>
+    </div>
+    <div class="topic-meta">
+      <span class="topic-count">4 sub-topics</span>
+      <span class="chevron">▶</span>
+    </div>
+  </div>
+  <div class="topic-body">
+    <div class="subtopic-grid">
+
+      <div class="subtopic-block" id="sub-tradeoffs">
+        <div class="subtopic-header" onclick="toggleSub('sub-tradeoffs')">
+          <div class="subtopic-dot" style="background:#06b6d4"></div>
+          <div class="subtopic-title">Operational Trade-offs</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>Cannot simultaneously maximize Cost, Quality, Speed, AND Flexibility</li>
+            <li><strong>Efficient frontier:</strong> Best achievable combinations</li>
+            <li>Moving <em>along</em> curve = efficiency; shifting curve = breakthrough</li>
+          </ul>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Operational Efficiency (OE)</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">How close a firm operates to its efficient frontier. OE improvement = moving toward frontier without shifting it.</div></div>
+              </div>
+            </div>
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Operational Focus</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">Strategic specialization in specific capabilities; accepting trade-offs to be truly excellent at what the strategy demands.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-coe">
+        <div class="subtopic-header" onclick="toggleSub('sub-coe')">
+          <div class="subtopic-dot" style="background:#06b6d4"></div>
+          <div class="subtopic-title">Cost Decomposition (ΔC)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <div class="formula-label">Formula</div>
+          <div class="formula-box">ΔC = Cv + COE + CS<br><br>Cv  = variable cost difference<br>COE = operational efficiency gap<br>CS  = cost-of-scale difference</div>
+          <ul class="detail-list">
+            <li>Explains <em>why</em> one firm has lower costs than another</li>
+            <li>Framework for competitive threat analysis</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-focus">
+        <div class="subtopic-header" onclick="toggleSub('sub-focus')">
+          <div class="subtopic-dot" style="background:#06b6d4"></div>
+          <div class="subtopic-title">Focus Strategy (3 Steps)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Step 1:</strong> Identify the target market & competitive priority</li>
+            <li><strong>Step 2:</strong> Design operations around that priority</li>
+            <li><strong>Step 3:</strong> Ruthlessly cut capabilities not serving that priority</li>
+          </ul>
+          <div class="connections-row">
+            <div class="connection-tag"><div class="dot" style="background:#6366f1"></div>↔ PPM / SOA (Class 1)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-accdj">
+        <div class="subtopic-header" onclick="toggleSub('sub-accdj')">
+          <div class="subtopic-dot" style="background:#f59e0b"></div>
+          <div class="subtopic-title">📋 Case: ACC vs. DJC</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>DJC = low-cost competitor with simpler product, higher volume</li>
+            <li>Decompose cost gap: Cv (input), COE (efficiency), CS (scale)</li>
+            <li>Shows ACC's response options on the trade-off curve</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TOPIC 3: CAPACITY STRATEGY -->
+<!-- ══════════════════════════════════════ -->
+<div class="topic-block t-capacity" id="block-capacity">
+  <div class="topic-header" onclick="toggleBlock('block-capacity')">
+    <div class="topic-icon">🏗</div>
+    <div class="topic-title-group">
+      <div class="topic-label">Classes 3–5 · Capacity Strategy</div>
+      <div class="topic-title">Sizing · Timing · Flexibility · Location</div>
+      <div class="topic-subtitle">Marginal analysis · Option value · Resource chaining · Ferdows · Network design</div>
+    </div>
+    <div class="topic-meta">
+      <span class="topic-count">8 sub-topics</span>
+      <span class="chevron">▶</span>
+    </div>
+  </div>
+  <div class="topic-body">
+    <div class="subtopic-grid">
+
+      <div class="subtopic-block" id="sub-sizing">
+        <div class="subtopic-header" onclick="toggleSub('sub-sizing')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Capacity Sizing (Class 3)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>Trade-off: Cost of excess capacity vs. cost of shortfall</li>
+            <li><strong>Tool:</strong> Marginal analysis (add capacity until MB = MC)</li>
+            <li>Economies of scale: larger plants have lower per-unit cost</li>
+          </ul>
+          <div class="formula-label">Marginal Rule</div>
+          <div class="formula-box">Add capacity if: E[MB of extra unit] ≥ E[MC]<br>i.e., P(demand > capacity) × margin ≥ capacity cost</div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-timing">
+        <div class="subtopic-header" onclick="toggleSub('sub-timing')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Capacity Timing (Class 3)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>5 strategies:</strong> Lead, Lag, Straddle, Chase, Smooth</li>
+            <li><strong>Option value of waiting:</strong> delay commitment when uncertainty high</li>
+            <li>Adjustment costs vs. excess/shortage costs drive optimal timing</li>
+          </ul>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Option Value of Waiting</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">The strategic benefit of delaying a capacity commitment to gather more info — valuable when uncertainty is high & costs are irreversible.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-flex">
+        <div class="subtopic-header" onclick="toggleSub('sub-flex')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Capacity Flexibility (Class 4)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>4 value sources:</strong> Scale, Risk Pooling, Info Updating, Allocation</li>
+            <li><strong>3 flexibility types:</strong> Scope (variety), Agility (speed), Robustness (disruptions)</li>
+            <li>Risk pooling: σ_pool ≤ σ₁ + σ₂ (negative correlation → big gains)</li>
+          </ul>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Risk Pooling</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">Aggregating variable demands so that highs and lows offset each other, reducing total safety capacity needed.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-chaining">
+        <div class="subtopic-header" onclick="toggleSub('sub-chaining')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Resource Chaining</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Key insight:</strong> "A little flexibility goes a long way"</li>
+            <li>Long chain (20 links) ≈ 90–96% of full flexibility (100 links)</li>
+            <li>Design rule: ONE long chain, not many short ones</li>
+            <li>Each plant: ≥2 products; each product: ≥2 plants</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-mc">
+        <div class="subtopic-header" onclick="toggleSub('sub-mc')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Mass Customization</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>High variety at low cost — "best of both worlds"</li>
+            <li><strong>Product tech:</strong> Modularity + platform sharing + adaptable design</li>
+            <li><strong>Process tech:</strong> Postponement (delayed differentiation)</li>
+            <li>Last step: MTO or ATO with batch size ≈ 1</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-location">
+        <div class="subtopic-header" onclick="toggleSub('sub-location')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Location Drivers (Class 5)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>6 drivers:</strong> Competitive Strategy, Product Markets, Supply Markets, Technology, Macro Factors, Existing Resources</li>
+            <li>3 network choices: Centralized/Distributed · Separated/Integrated · Standardized/Localized</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-ferdows">
+        <div class="subtopic-header" onclick="toggleSub('sub-ferdows')">
+          <div class="subtopic-dot" style="background:#3b82f6"></div>
+          <div class="subtopic-title">Ferdows' 6 Facility Roles</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Low scope:</strong> Offshore · Outpost · Server</li>
+            <li><strong>High scope:</strong> Source · Lead · Contributor</li>
+            <li>Reason: Cost access / Knowledge access / Market access</li>
+          </ul>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Lead Plant</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">Global hub for product/process innovation — full authority over all activities; taps local expertise to drive company-wide improvement.</div></div>
+              </div>
+            </div>
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Outpost Plant</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">Primary role is intelligence-gathering — a "listening post" near advanced suppliers, labs, or competitors.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-lilly">
+        <div class="subtopic-header" onclick="toggleSub('sub-lilly')">
+          <div class="subtopic-dot" style="background:#f59e0b"></div>
+          <div class="subtopic-title">📋 Case: Eli Lilly (1993)</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>Decision: Specialized vs. Flexible vs. Hybrid facility for 3 new drugs</li>
+            <li>Break-even: <strong>1,164 kg/yr</strong> — below this, flexible cheaper</li>
+            <li>Flexible 3.4× more expensive per kg but reduces risk & speeds launch</li>
+            <li>Insight: <strong>Hybrid "launch then transfer"</strong> captures both benefits</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TOPIC 4: PROCESS DECISIONS -->
+<!-- ══════════════════════════════════════ -->
+<div class="topic-block t-process" id="block-process">
+  <div class="topic-header" onclick="toggleBlock('block-process')">
+    <div class="topic-icon">🔄</div>
+    <div class="topic-title-group">
+      <div class="topic-label">Class 6 · Process Decisions</div>
+      <div class="topic-title">Supply & Demand Management</div>
+      <div class="topic-subtitle">Revenue management · Littlewood's rule · Strategic sourcing · TCO · Make-or-buy</div>
+    </div>
+    <div class="topic-meta">
+      <span class="topic-count">6 sub-topics</span>
+      <span class="chevron">▶</span>
+    </div>
+  </div>
+  <div class="topic-body">
+    <div class="subtopic-grid">
+
+      <div class="subtopic-block" id="sub-rm">
+        <div class="subtopic-header" onclick="toggleSub('sub-rm')">
+          <div class="subtopic-dot" style="background:#10b981"></div>
+          <div class="subtopic-title">Revenue Management Overview</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Price Controls:</strong> Price customization · Dynamic pricing</li>
+            <li><strong>Capacity Controls:</strong> Yield management · Service customization</li>
+            <li><strong>3 conditions:</strong> Perishable constrained supply · Dynamic demand · Segmentable customers</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-littlewood">
+        <div class="subtopic-header" onclick="toggleSub('sub-littlewood')">
+          <div class="subtopic-dot" style="background:#10b981"></div>
+          <div class="subtopic-title">Littlewood's Rule</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <div class="formula-label">Protection Level Formula</div>
+          <div class="formula-box">Q = NORMINV(1 − p_low/p_high, μ_high, σ_high)<br>Booking Limit = Capacity − Q</div>
+          <ul class="detail-list">
+            <li>Deny low-fare booking if: P(D_high > Q) > p_low / p_high</li>
+            <li>Multi-class: sum protections, re-compute at each stage</li>
+          </ul>
+          <div class="flashcard-label">Key Terms</div>
+          <div class="flashcards-row">
+            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+              <div class="flashcard-inner">
+                <div class="flashcard-front"><div class="term">Protection Level</div><div class="hint">tap to define</div></div>
+                <div class="flashcard-back"><div class="def">Seats reserved for higher-fare passengers; = total capacity minus booking limit for the lower fare class.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-sourcing">
+        <div class="subtopic-header" onclick="toggleSub('sub-sourcing')">
+          <div class="subtopic-dot" style="background:#10b981"></div>
+          <div class="subtopic-title">Strategic Sourcing</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li>~60% of COGS comes from sourcing — biggest single lever</li>
+            <li><strong>Spectrum:</strong> Market buy → Long-term relationship → Vertical integration</li>
+            <li><strong>5-Q framework:</strong> Feasible? → Necessary? → Strategic risk? → Cost? → Relationship type?</li>
+          </ul>
+          <div class="connections-row">
+            <div class="connection-tag"><div class="dot" style="background:#3b82f6"></div>↔ Make-or-buy (Capacity, Class 4)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- TOPIC 5: TECHNOLOGY & INNOVATION -->
+<!-- ══════════════════════════════════════ -->
+<div class="topic-block t-innovation" id="block-innovation">
+  <div class="topic-header" onclick="toggleBlock('block-innovation')">
+    <div class="topic-icon">🧬</div>
+    <div class="topic-title-group">
+      <div class="topic-label">Class 7 · Technology & Innovation</div>
+      <div class="topic-title">Learning Curves & Platform Strategy</div>
+      <div class="topic-subtitle">Learning by doing · Learning before doing · Moderna case · AI factory</div>
+    </div>
+    <div class="topic-meta">
+      <span class="topic-count">4 sub-topics</span>
+      <span class="chevron">▶</span>
+    </div>
+  </div>
+  <div class="topic-body">
+    <div class="subtopic-grid">
+
+      <div class="subtopic-block" id="sub-learning">
+        <div class="subtopic-header" onclick="toggleSub('sub-learning')">
+          <div class="subtopic-dot" style="background:#a855f7"></div>
+          <div class="subtopic-title">Learning Curves</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>Learning by doing:</strong> Cost falls as cumulative production increases</li>
+            <li><strong>Learning before doing:</strong> Invest in knowledge first (prototyping, R&D)</li>
+            <li>Conceptual (why) vs. Operational (how) learning</li>
+          </ul>
+          <div class="formula-label">Learning Curve</div>
+          <div class="formula-box">Cost(Q) = C₁ × Q^(−b)<br>b = log(1−LR) / log(2)<br>LR = learning rate (e.g. 20% = costs drop 20% per doubling)</div>
+        </div>
+      </div>
+
+      <div class="subtopic-block" id="sub-moderna">
+        <div class="subtopic-header" onclick="toggleSub('sub-moderna')">
+          <div class="subtopic-dot" style="background:#f59e0b"></div>
+          <div class="subtopic-title">📋 Case: Moderna</div>
+          <span class="sub-chevron">▶</span>
+        </div>
+        <div class="subtopic-body">
+          <ul class="detail-list">
+            <li><strong>mRNA platform:</strong> reusable "operating system" for drug development</li>
+            <li>COVID vaccine developed in <strong>42 days</strong> vs. 8–12 years traditional</li>
+            <li><strong>AI factory:</strong> cloud-based integration of design → manufacturing</li>
+            <li>Vertical integration of Norwood manufacturing ($95M investment)</li>
+            <li>Platform = learning before doing at scale</li>
+          </ul>
+          <div class="connections-row">
+            <div class="connection-tag"><div class="dot" style="background:#3b82f6"></div>↔ Capacity Flexibility (Class 4)</div>
+            <div class="connection-tag"><div class="dot" style="background:#10b981"></div>↔ Vertical Integration (Class 6)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="mockup-notice">
+  ⚠️ Mockup — this is a design prototype, not the final product. Tell me what to change in the terminal.
+</div>
+
+<script>
+function toggleBlock(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+function toggleSub(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>

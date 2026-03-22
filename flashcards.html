@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOS3704 · Flashcard Decks</title>
+  <style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #1c2d4a;
+    --bg-card:   #243556;
+    --bg-sub:    #1a2840;
+    --bg-deep:   #142036;
+    --border:    rgba(120,160,220,0.15);
+    --border-hi: rgba(120,160,220,0.3);
+    --text:      #dde6f5;
+    --text-mute: #8fa8cc;
+    --text-dim:  #5c7a9e;
+    --accent:    #6a9fd8;
+    --accent-hi: #8fb8f0;
+    --white:     #f0f4fb;
+    --formula-bg:#111f35;
+    --formula-border: rgba(100,160,255,0.25);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Calibri', 'Trebuchet MS', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  /* ════════════════════════════════════════
+     PAGES
+  ════════════════════════════════════════ */
+  .page { display: none; padding: 28px 32px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ════════════════════════════════════════
+     NAV BAR
+  ════════════════════════════════════════ */
+  .topbar {
+    background: #162338;
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    padding: 14px 0;
+    margin-right: 28px;
+    letter-spacing: 0.3px;
+  }
+  .topbar-brand span { color: var(--accent); }
+  .topbar-nav {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+  }
+  .nav-btn {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--text-mute);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--white); border-bottom-color: var(--accent); }
+
+  /* ════════════════════════════════════════
+     STUDY MAP PAGE
+  ════════════════════════════════════════ */
+  .page-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 5px;
+  }
+  .page-header p { color: var(--text-mute); font-size: 14px; }
+
+  /* Central questions */
+  .central-questions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .cq-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    position: relative;
+  }
+  .cq-number {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .cq-question {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .cq-tool {
+    font-size: 12px;
+    color: var(--text-mute);
+  }
+  .cq-tool strong { color: var(--accent-hi); }
+
+  /* Topic blocks */
+  .topic-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .topic-block:hover { border-color: var(--border-hi); }
+
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .topic-header:hover { background: rgba(255,255,255,0.03); }
+
+  .topic-icon {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-deep);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .topic-text { flex: 1; }
+  .topic-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 3px;
+  }
+  .topic-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+  .topic-desc { font-size: 12.5px; color: var(--text-mute); }
+
+  .topic-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .topic-pill {
+    font-size: 10.5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: var(--bg-deep);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .chevron { font-size: 12px; color: var(--text-dim); transition: transform 0.25s; }
+  .topic-block.open .chevron { transform: rotate(90deg); }
+
+  .topic-body { display: none; padding: 0 16px 16px; }
+  .topic-block.open .topic-body { display: block; }
+
+  /* Sub-topic grid */
+  .subtopic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .subtopic {
+    background: var(--bg-sub);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .subtopic-hdr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .subtopic-hdr:hover { background: rgba(255,255,255,0.03); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .dot.case { background: #c89a40; }
+  .subtopic-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.3;
+  }
+  .sub-chev { font-size: 10px; color: var(--text-dim); transition: transform 0.2s; }
+  .subtopic.open .sub-chev { transform: rotate(90deg); }
+
+  .subtopic-body {
+    display: none;
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .subtopic.open .subtopic-body { display: block; }
+
+  /* Content elements */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  .prose {
+    font-size: 13px;
+    color: var(--text-mute);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .prose strong { color: var(--text); font-weight: 600; }
+
+  ul.bullets {
+    list-style: none;
+    margin-bottom: 10px;
+  }
+  ul.bullets li {
+    font-size: 13px;
+    color: var(--text-mute);
+    padding: 3px 0 3px 16px;
+    position: relative;
+    line-height: 1.55;
+  }
+  ul.bullets li::before {
+    content: '·';
+    position: absolute;
+    left: 5px;
+    color: var(--accent);
+    font-size: 16px;
+    line-height: 1.15;
+  }
+  ul.bullets li strong { color: var(--text); font-weight: 600; }
+
+  .formula-wrap {
+    background: var(--formula-bg);
+    border: 1px solid var(--formula-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .formula {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    color: #9ecfff;
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+  .formula-explain {
+    font-size: 12px;
+    color: var(--text-mute);
+    line-height: 1.6;
+    border-top: 1px solid rgba(100,160,255,0.12);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+  .formula-explain strong { color: #9ecfff; }
+
+  .insight-box {
+    background: rgba(100, 159, 216, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .insight-box p { font-size: 12.5px; color: var(--text); line-height: 1.5; }
+  .insight-box .label { font-size: 9px; font-weight: 700; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+
+  .link-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 100px;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    margin: 3px 3px 0 0;
+  }
+  .link-tag::before { content: '↔'; color: var(--accent); }
+
+  /* ════════════════════════════════════════
+     FLASHCARD PAGE
+  ════════════════════════════════════════ */
+  .fc-page { }
+
+  .deck-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .deck-btn {
+    padding: 9px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-mute);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .deck-btn:hover { border-color: var(--border-hi); color: var(--text); }
+  .deck-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .deck-btn.master { border-style: dashed; }
+
+  .fc-arena {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .fc-progress-bar-wrap {
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .fc-progress-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--bg-deep);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .fc-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 10px;
+    transition: width 0.3s;
+  }
+  .fc-counter {
+    font-size: 12px;
+    color: var(--text-mute);
+    white-space: nowrap;
+  }
+
+  /* Card */
+  .fc-card-wrap {
+    width: 580px;
+    max-width: 100%;
+    height: 240px;
+    perspective: 900px;
+  }
+  .fc-card {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.45s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  .fc-card.flipped { transform: rotateY(180deg); }
+
+  .fc-front, .fc-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 28px 32px;
+    text-align: center;
+  }
+  .fc-front {
+    background: var(--bg-card);
+    border: 1px solid var(--border-hi);
+  }
+  .fc-back {
+    background: #1a2e45;
+    border: 1px solid var(--border-hi);
+    transform: rotateY(180deg);
+  }
+  .fc-front .term {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .fc-front .hint {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .fc-back .class-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .fc-back .definition {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .fc-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .fc-btn {
+    padding: 10px 24px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--border-hi);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg-card);
+    color: var(--text);
+  }
+  .fc-btn:hover { background: var(--bg-deep); }
+  .fc-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .fc-btn.primary:hover { filter: brightness(1.1); }
+  .fc-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .fc-done-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 48px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-align: center;
+    max-width: 480px;
+    width: 100%;
+  }
+  .fc-done-screen.visible { display: flex; }
+  .fc-done-screen h2 { font-size: 22px; color: var(--white); }
+  .fc-done-screen p { font-size: 14px; color: var(--text-mute); }
+
+  .mockup-notice {
+    text-align: center;
+    font-size: 11px;
+    color: #2a3f5c;
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+    /* Additional styles for standalone page */
+    .standalone-notice {
+      text-align: center; font-size: 11px; color: #2a3f5c;
+      margin-top: 32px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-brand">DOS<span>3704</span> · Operations Strategy</div>
+  <div class="topbar-nav">
+    <a href="study-map.html" style="text-decoration:none">
+      <button class="nav-btn">← Study Map</button>
+    </a>
+    <button class="nav-btn active">Flashcard Decks</button>
+  </div>
+</nav>
+
+<div class="page active" id="page-flashcards">
+
+  <div class="page-header">
+    <h1>Flashcard Decks</h1>
+    <p>Select a deck · Click card to flip · Use Prev/Next to navigate</p>
+  </div>
+
+  <!-- Deck selector buttons -->
+  <div class="deck-selector" id="deck-selector">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- Flashcard arena -->
+  <div class="fc-arena">
+
+    <!-- Progress bar -->
+    <div class="fc-progress-bar-wrap">
+      <div class="fc-progress-bar">
+        <div class="fc-progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <span class="fc-counter" id="card-counter">Card 1 of N</span>
+    </div>
+
+    <!-- The flip card -->
+    <div class="fc-card-wrap">
+      <div class="fc-card" id="fc-card" onclick="flipCard()">
+        <div class="fc-front">
+          <div class="term" id="card-term">Select a deck to begin</div>
+          <div class="hint" id="card-hint">Click to reveal definition</div>
+        </div>
+        <div class="fc-back">
+          <div class="class-tag" id="card-cls"></div>
+          <div class="definition" id="card-def"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation controls -->
+    <div class="fc-controls">
+      <button class="fc-btn" id="btn-prev" onclick="prevCard()" disabled>← Prev</button>
+      <button class="fc-btn primary" id="btn-next" onclick="nextCard()">Next →</button>
+    </div>
+
+    <!-- Completion screen -->
+    <div class="fc-done-screen" id="done-screen">
+      <h2>🎉 Deck Complete!</h2>
+      <p id="done-msg">You reviewed N cards.</p>
+      <button class="fc-btn primary" onclick="shuffleAndRestart()">🔀 Shuffle &amp; Go Again</button>
+    </div>
+
+  </div>
+
+  <p class="standalone-notice">DOS3704 Operations Strategy Study Tool · Flashcard Decks Page</p>
+</div>
+
+<!-- Load flashcard data (must come before the app script) -->
+<script src="build_flashcards.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DECK CONFIGURATION
+// ═══════════════════════════════════════════════════════
+const DECK_CONFIG = [
+  { key: 'c1', label: 'Class 1 — Foundations' },
+  { key: 'c2', label: 'Class 2 — Trade-offs & Positioning' },
+  { key: 'c3', label: 'Class 3 — Capacity: Size & Timing' },
+  { key: 'c4', label: 'Class 4 — Capacity: Flexibility' },
+  { key: 'c5', label: 'Class 5 — Capacity: Location' },
+  { key: 'c6', label: 'Class 6 — Supply & Demand' },
+  { key: 'c7', label: 'Class 7 — Technology & Innovation' },
+  { key: 'master', label: '🔀 Master Deck', isMaster: true }
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let currentDeck = [];
+let currentIndex = 0;
+let isFlipped = false;
+
+// ═══════════════════════════════════════════════════════
+// FISHER-YATES SHUFFLE
+// ═══════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ═══════════════════════════════════════════════════════
+// BUILD MASTER DECK
+// ═══════════════════════════════════════════════════════
+function buildMasterDeck() {
+  const all = [];
+  ['c1','c2','c3','c4','c5','c6','c7'].forEach(key => {
+    if (FLASHCARDS[key]) all.push(...FLASHCARDS[key]);
+  });
+  return shuffle(all);
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT DECK SELECTOR
+// ═══════════════════════════════════════════════════════
+function buildDeckSelector() {
+  const sel = document.getElementById('deck-selector');
+  sel.innerHTML = '';
+  DECK_CONFIG.forEach(cfg => {
+    const btn = document.createElement('button');
+    btn.className = 'deck-btn' + (cfg.isMaster ? ' master' : '');
+    btn.textContent = cfg.label;
+    // Show card count in label
+    const count = cfg.isMaster
+      ? (['c1','c2','c3','c4','c5','c6','c7'].reduce((n,k) => n + (FLASHCARDS[k]||[]).length, 0))
+      : (FLASHCARDS[cfg.key] || []).length;
+    btn.textContent += ` (${count})`;
+    btn.onclick = () => selectDeck(cfg.key, btn);
+    sel.appendChild(btn);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// SELECT DECK
+// ═══════════════════════════════════════════════════════
+function selectDeck(key, btnEl) {
+  // Update active button
+  document.querySelectorAll('.deck-btn').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+
+  // Load deck
+  if (key === 'master') {
+    currentDeck = buildMasterDeck();
+  } else {
+    currentDeck = [...(FLASHCARDS[key] || [])];
+  }
+
+  currentIndex = 0;
+  hideDoneScreen();
+  showCard();
+}
+
+// ═══════════════════════════════════════════════════════
+// SHOW CARD
+// ═══════════════════════════════════════════════════════
+function showCard() {
+  if (currentDeck.length === 0) return;
+
+  const card = currentDeck[currentIndex];
+  const total = currentDeck.length;
+
+  // Reset flip
+  isFlipped = false;
+  document.getElementById('fc-card').classList.remove('flipped');
+
+  // Populate front
+  document.getElementById('card-term').textContent = card.term;
+  document.getElementById('card-hint').textContent = 'Click to reveal definition';
+
+  // Populate back
+  document.getElementById('card-cls').textContent = card.cls;
+  document.getElementById('card-def').textContent = card.def;
+
+  // Update progress
+  const pct = Math.round(((currentIndex + 1) / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('card-counter').textContent = `Card ${currentIndex + 1} of ${total}`;
+
+  // Update buttons
+  document.getElementById('btn-prev').disabled = (currentIndex === 0);
+
+  const nextBtn = document.getElementById('btn-next');
+  if (currentIndex === total - 1) {
+    nextBtn.textContent = 'Finish ✓';
+  } else {
+    nextBtn.textContent = 'Next →';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// FLIP CARD
+// ═══════════════════════════════════════════════════════
+function flipCard() {
+  if (currentDeck.length === 0) return;
+  isFlipped = !isFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped');
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function nextCard() {
+  if (currentDeck.length === 0) return;
+  if (currentIndex < currentDeck.length - 1) {
+    currentIndex++;
+    showCard();
+  } else {
+    showDoneScreen();
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showCard();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// COMPLETION SCREEN
+// ═══════════════════════════════════════════════════════
+function showDoneScreen() {
+  document.getElementById('done-screen').classList.add('visible');
+  document.getElementById('done-msg').textContent =
+    `You reviewed all ${currentDeck.length} cards. Great work!`;
+  document.querySelector('.fc-card-wrap').style.display = 'none';
+  document.querySelector('.fc-controls').style.display = 'none';
+  document.querySelector('.fc-progress-bar-wrap').style.display = 'none';
+}
+
+function hideDoneScreen() {
+  document.getElementById('done-screen').classList.remove('visible');
+  document.querySelector('.fc-card-wrap').style.display = '';
+  document.querySelector('.fc-controls').style.display = '';
+  document.querySelector('.fc-progress-bar-wrap').style.display = '';
+}
+
+function shuffleAndRestart() {
+  currentDeck = shuffle(currentDeck);
+  currentIndex = 0;
+  hideDoneScreen();
+  showCard();
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildDeckSelector();
+  // Auto-load Class 1 deck on startup
+  const firstBtn = document.querySelector('.deck-btn');
+  if (firstBtn) selectDeck('c1', firstBtn);
+});
+</script>
+
+</body>
+</html>

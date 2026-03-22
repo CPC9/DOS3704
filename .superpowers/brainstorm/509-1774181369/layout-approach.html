@@ -1,0 +1,218 @@
+<h2>How should the mind map be structured?</h2>
+<p class="subtitle">Three different layout approaches — each with different strengths for exploring course content</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="radial" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f1117;padding:16px;height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <!-- Radial mind map mockup -->
+      <svg width="280" height="180" viewBox="0 0 280 180">
+        <!-- Center node -->
+        <circle cx="140" cy="90" r="28" fill="#6366f1" opacity="0.9"/>
+        <text x="140" y="87" text-anchor="middle" fill="white" font-size="7" font-weight="bold">Operations</text>
+        <text x="140" y="96" text-anchor="middle" fill="white" font-size="7" font-weight="bold">Strategy</text>
+
+        <!-- Branch 1: Foundations (top) -->
+        <line x1="140" y1="62" x2="140" y2="28" stroke="#818cf8" stroke-width="2"/>
+        <rect x="113" y="14" width="54" height="18" rx="9" fill="#312e81" stroke="#6366f1" stroke-width="1"/>
+        <text x="140" y="26" text-anchor="middle" fill="#a5b4fc" font-size="6">Foundations</text>
+
+        <!-- Branch 2: Competitive (top-right) -->
+        <line x1="164" y1="72" x2="210" y2="38" stroke="#818cf8" stroke-width="2"/>
+        <rect x="190" y="24" width="60" height="18" rx="9" fill="#312e81" stroke="#6366f1" stroke-width="1"/>
+        <text x="220" y="36" text-anchor="middle" fill="#a5b4fc" font-size="6">Competitive</text>
+
+        <!-- Branch 3: Capacity (right) -->
+        <line x1="168" y1="90" x2="218" y2="90" stroke="#818cf8" stroke-width="2"/>
+        <rect x="198" y="79" width="60" height="22" rx="11" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+        <text x="228" y="88" text-anchor="middle" fill="#93c5fd" font-size="6">Capacity</text>
+        <text x="228" y="96" text-anchor="middle" fill="#93c5fd" font-size="6">Strategy</text>
+
+        <!-- Branch 4: Process (bottom-right) -->
+        <line x1="164" y1="108" x2="210" y2="142" stroke="#818cf8" stroke-width="2"/>
+        <rect x="190" y="134" width="60" height="18" rx="9" fill="#1a3a2a" stroke="#10b981" stroke-width="1"/>
+        <text x="220" y="146" text-anchor="middle" fill="#6ee7b7" font-size="6">Process</text>
+
+        <!-- Branch 5: Technology (bottom) -->
+        <line x1="140" y1="118" x2="140" y2="152" stroke="#818cf8" stroke-width="2"/>
+        <rect x="113" y="148" width="54" height="18" rx="9" fill="#2d1f40" stroke="#a855f7" stroke-width="1"/>
+        <text x="140" y="160" text-anchor="middle" fill="#d8b4fe" font-size="6">Technology</text>
+
+        <!-- Branch 6: Cases (bottom-left) -->
+        <line x1="116" y1="108" x2="70" y2="142" stroke="#818cf8" stroke-width="2"/>
+        <rect x="30" y="134" width="60" height="18" rx="9" fill="#3a2a1a" stroke="#f59e0b" stroke-width="1"/>
+        <text x="60" y="146" text-anchor="middle" fill="#fcd34d" font-size="6">Case Studies</text>
+
+        <!-- Branch 7: left -->
+        <line x1="112" y1="90" x2="62" y2="90" stroke="#818cf8" stroke-width="2"/>
+        <rect x="22" y="79" width="60" height="22" rx="11" fill="#3a1a1a" stroke="#ef4444" stroke-width="1"/>
+        <text x="52" y="88" text-anchor="middle" fill="#fca5a5" font-size="6">Supply &amp;</text>
+        <text x="52" y="96" text-anchor="middle" fill="#fca5a5" font-size="6">Demand</text>
+
+        <!-- Sub-nodes on Capacity -->
+        <line x1="218" y1="82" x2="238" y2="60" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3"/>
+        <circle cx="244" cy="55" r="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+        <text x="244" y="58" text-anchor="middle" fill="#93c5fd" font-size="5">Size</text>
+
+        <line x1="218" y1="90" x2="242" y2="90" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3"/>
+        <circle cx="252" cy="90" r="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+        <text x="252" y="93" text-anchor="middle" fill="#93c5fd" font-size="5">Type</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>A — Radial Mind Map</h3>
+      <p>Classic mind map radiating from a center node. Major topics branch out, sub-topics branch further. Clean, intuitive, and familiar. Click any node to expand it and reveal deeper content. Cross-topic connections shown as dashed arcs.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Familiar mind map feel</li><li>Easy to grasp hierarchy</li><li>Elegant visual structure</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Can get crowded at depth</li><li>Cross-connections harder to show</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="network" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f1117;padding:16px;height:200px;display:flex;align-items:center;justify-content:center;">
+      <svg width="280" height="180" viewBox="0 0 280 180">
+        <!-- Network/force-directed graph mockup -->
+        <!-- Nodes floating with connections -->
+        <!-- Capacity cluster -->
+        <circle cx="140" cy="70" r="22" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+        <text x="140" y="67" text-anchor="middle" fill="#93c5fd" font-size="6.5" font-weight="bold">Capacity</text>
+        <text x="140" y="76" text-anchor="middle" fill="#93c5fd" font-size="6.5" font-weight="bold">Strategy</text>
+
+        <circle cx="80" cy="40" r="15" fill="#312e81" stroke="#6366f1" stroke-width="1.5"/>
+        <text x="80" y="43" text-anchor="middle" fill="#a5b4fc" font-size="6">Foundations</text>
+
+        <circle cx="200" cy="45" r="14" fill="#1a3a2a" stroke="#10b981" stroke-width="1.5"/>
+        <text x="200" y="48" text-anchor="middle" fill="#6ee7b7" font-size="6">Trade-offs</text>
+
+        <circle cx="60" cy="120" r="16" fill="#3a1a1a" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="60" y="117" text-anchor="middle" fill="#fca5a5" font-size="6">Revenue</text>
+        <text x="60" y="126" text-anchor="middle" fill="#fca5a5" font-size="6">Mgmt</text>
+
+        <circle cx="220" cy="120" r="16" fill="#3a2a1a" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="220" y="117" text-anchor="middle" fill="#fcd34d" font-size="6">Strategic</text>
+        <text x="220" y="126" text-anchor="middle" fill="#fcd34d" font-size="6">Sourcing</text>
+
+        <circle cx="140" cy="150" r="15" fill="#2d1f40" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="140" y="147" text-anchor="middle" fill="#d8b4fe" font-size="6">Tech &amp;</text>
+        <text x="140" y="156" text-anchor="middle" fill="#d8b4fe" font-size="6">Innovation</text>
+
+        <!-- Smaller sub-nodes -->
+        <circle cx="165" cy="28" r="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+        <text x="165" y="31" text-anchor="middle" fill="#93c5fd" font-size="5">Sizing</text>
+
+        <circle cx="108" cy="95" r="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+        <text x="108" y="98" text-anchor="middle" fill="#93c5fd" font-size="5">Location</text>
+
+        <circle cx="175" cy="95" r="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+        <text x="175" y="98" text-anchor="middle" fill="#93c5fd" font-size="5">Flex</text>
+
+        <!-- Edges -->
+        <line x1="120" y1="56" x2="90" y2="48" stroke="#6366f1" stroke-width="1.5" opacity="0.7"/>
+        <line x1="160" y1="56" x2="190" y2="52" stroke="#10b981" stroke-width="1.5" opacity="0.7"/>
+        <line x1="125" y1="86" x2="72" y2="108" stroke="#ef4444" stroke-width="1.5" opacity="0.7"/>
+        <line x1="155" y1="86" x2="210" y2="108" stroke="#f59e0b" stroke-width="1.5" opacity="0.7"/>
+        <line x1="140" y1="92" x2="140" y2="135" stroke="#a855f7" stroke-width="1.5" opacity="0.7"/>
+        <line x1="140" y1="48" x2="165" y2="34" stroke="#3b82f6" stroke-width="1" opacity="0.5" stroke-dasharray="3"/>
+        <line x1="127" y1="82" x2="112" y2="96" stroke="#3b82f6" stroke-width="1" opacity="0.5" stroke-dasharray="3"/>
+        <line x1="155" y1="82" x2="170" y2="96" stroke="#3b82f6" stroke-width="1" opacity="0.5" stroke-dasharray="3"/>
+        <!-- Cross-topic connection (highlight) -->
+        <line x1="72" y1="108" x2="210" y2="108" stroke="#ffffff" stroke-width="1" opacity="0.2" stroke-dasharray="4"/>
+        <line x1="80" y1="55" x2="140" y2="128" stroke="#ffffff" stroke-width="1" opacity="0.15" stroke-dasharray="4"/>
+
+        <!-- Highlight one node as "selected" with glow -->
+        <circle cx="140" cy="70" r="24" fill="none" stroke="#60a5fa" stroke-width="1" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>B — Network Graph (Force-Directed)</h3>
+      <p>Nodes float freely and are connected by edges. Shows cross-topic connections naturally (e.g., "risk pooling" linking Capacity Flexibility to Revenue Management). Hover/click to highlight a node's connections and see details in a panel.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Shows cross-concept links clearly</li><li>Dynamic, explorable feel</li><li>Highlights concept clusters</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Hierarchy less obvious</li><li>Can feel chaotic at full scale</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="dashboard" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f1117;padding:8px;height:200px;display:flex;align-items:stretch;gap:6px;overflow:hidden;">
+      <!-- Dashboard mockup -->
+      <!-- Left sidebar -->
+      <div style="width:72px;background:#0d1117;border:1px solid #1e2a3a;border-radius:6px;padding:6px;flex-shrink:0;overflow:hidden;">
+        <div style="font-size:5px;color:#60a5fa;font-weight:bold;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Topics</div>
+        <div style="background:#1e3a5f;border-left:2px solid #3b82f6;padding:3px 4px;border-radius:3px;margin-bottom:3px;">
+          <div style="font-size:5px;color:#93c5fd;">▶ Foundations</div>
+        </div>
+        <div style="padding:3px 4px;border-radius:3px;margin-bottom:3px;">
+          <div style="font-size:5px;color:#6b7280;">▶ Competitive</div>
+        </div>
+        <div style="padding:3px 4px;border-radius:3px;margin-bottom:3px;">
+          <div style="font-size:5px;color:#6b7280;">▶ Capacity</div>
+        </div>
+        <div style="padding:3px 4px;border-radius:3px;margin-bottom:3px;">
+          <div style="font-size:5px;color:#6b7280;">▶ Process</div>
+        </div>
+        <div style="padding:3px 4px;border-radius:3px;margin-bottom:3px;">
+          <div style="font-size:5px;color:#6b7280;">▶ Technology</div>
+        </div>
+      </div>
+      <!-- Center: mini radial for selected topic -->
+      <div style="flex:1;background:#0d1117;border:1px solid #1e2a3a;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+        <svg width="140" height="160" viewBox="0 0 140 160">
+          <circle cx="70" cy="80" r="20" fill="#312e81" stroke="#6366f1" stroke-width="1.5"/>
+          <text x="70" y="77" text-anchor="middle" fill="#a5b4fc" font-size="5.5" font-weight="bold">Foundations</text>
+          <text x="70" y="85" text-anchor="middle" fill="#a5b4fc" font-size="5.5" font-weight="bold">Class 1</text>
+          <line x1="70" y1="60" x2="70" y2="28" stroke="#6366f1" stroke-width="1"/>
+          <circle cx="70" cy="20" r="12" fill="#1a1f3a" stroke="#6366f1" stroke-width="1"/>
+          <text x="70" y="18" text-anchor="middle" fill="#818cf8" font-size="4.5">Strategy</text>
+          <text x="70" y="25" text-anchor="middle" fill="#818cf8" font-size="4.5">Hierarchy</text>
+          <line x1="88" y1="66" x2="115" y2="45" stroke="#6366f1" stroke-width="1"/>
+          <circle cx="122" cy="40" r="12" fill="#1a1f3a" stroke="#6366f1" stroke-width="1"/>
+          <text x="122" y="38" text-anchor="middle" fill="#818cf8" font-size="4.5">3 Views</text>
+          <text x="122" y="45" text-anchor="middle" fill="#818cf8" font-size="4.5">of Ops</text>
+          <line x1="90" y1="80" x2="120" y2="80" stroke="#6366f1" stroke-width="1"/>
+          <circle cx="128" cy="80" r="12" fill="#1a1f3a" stroke="#6366f1" stroke-width="1"/>
+          <text x="128" y="78" text-anchor="middle" fill="#818cf8" font-size="4.5">PPM /</text>
+          <text x="128" y="85" text-anchor="middle" fill="#818cf8" font-size="4.5">SOA</text>
+          <line x1="88" y1="94" x2="115" y2="115" stroke="#6366f1" stroke-width="1"/>
+          <circle cx="122" cy="120" r="12" fill="#1a1f3a" stroke="#6366f1" stroke-width="1"/>
+          <text x="122" y="118" text-anchor="middle" fill="#818cf8" font-size="4.5">NPV</text>
+          <text x="122" y="125" text-anchor="middle" fill="#818cf8" font-size="4.5">Framework</text>
+          <line x1="70" y1="100" x2="70" y2="130" stroke="#6366f1" stroke-width="1"/>
+          <circle cx="70" cy="138" r="12" fill="#1a1f3a" stroke="#6366f1" stroke-width="1"/>
+          <text x="70" y="136" text-anchor="middle" fill="#818cf8" font-size="4.5">Swiss</text>
+          <text x="70" y="143" text-anchor="middle" fill="#818cf8" font-size="4.5">Watch</text>
+          <line x1="52" y1="94" x2="25" y2="115" stroke="#6366f1" stroke-width="1"/>
+          <circle cx="18" cy="120" r="12" fill="#1a1f3a" stroke="#6366f1" stroke-width="1"/>
+          <text x="18" y="118" text-anchor="middle" fill="#818cf8" font-size="4.5">Align-</text>
+          <text x="18" y="125" text-anchor="middle" fill="#818cf8" font-size="4.5">ment</text>
+        </svg>
+      </div>
+      <!-- Right: detail panel -->
+      <div style="width:90px;background:#0d1117;border:1px solid #1e2a3a;border-radius:6px;padding:6px;flex-shrink:0;overflow:hidden;">
+        <div style="font-size:5px;color:#60a5fa;font-weight:bold;margin-bottom:4px;text-transform:uppercase;">Strategy Hierarchy</div>
+        <div style="font-size:5px;color:#9ca3af;line-height:1.5;margin-bottom:6px;">Three levels: Corporate → Business → Functional (Operations)</div>
+        <div style="font-size:5px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;">Key Concept</div>
+        <div style="font-size:5px;color:#d1d5db;line-height:1.5;margin-bottom:6px;">OS = long-term plan to configure processes &amp; resources to maximize NPV</div>
+        <div style="font-size:5px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;">Connected To</div>
+        <div style="background:#1a2a1a;border-radius:3px;padding:3px;margin-bottom:2px;">
+          <div style="font-size:4.5px;color:#6ee7b7;">→ PPM / SOA</div>
+        </div>
+        <div style="background:#1a1a2a;border-radius:3px;padding:3px;">
+          <div style="font-size:4.5px;color:#a5b4fc;">→ Competitive Trade-offs</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Dashboard (Sidebar + Map + Detail Panel)</h3>
+      <p>Three-panel layout: left sidebar shows all topics, center shows a mini-map for the selected topic, right panel shows details when you click a concept. Topics switch in the sidebar. Best for studying a specific topic in depth.</p>
+      <div class="pros-cons" style="margin-top:10px">
+        <div class="pros"><h4>Pros</h4><ul><li>Easiest to navigate by topic</li><li>Rich detail panel</li><li>Very structured & organized</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Less visual "big picture"</li><li>Cross-topic links harder to see</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;font-size:13px;">Click to select — or tell me in the terminal. You can also pick a hybrid (e.g., "A but with a detail panel like C")</p>

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_Preview__*",
+      "WebSearch",
+      "mcp__scheduled-tasks__list_scheduled_tasks",
+      "mcp__mcp-registry__search_mcp_registry",
+      "mcp__context-mode__ctx_execute",
+      "mcp__context-mode__ctx_search"
+    ]
+  },
+  "enabledPlugins": {}
+}
