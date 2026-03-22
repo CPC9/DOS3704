@@ -9,10 +9,10 @@
     .study-map-layout {
       display: grid;
       grid-template-columns: 240px 1fr;
-      gap: var(--spacing-md, 1.5rem);
-      max-width: 1200px;
+      gap: var(--spacing-lg);
+      max-width: var(--max-width);
       margin: 0 auto;
-      padding: var(--spacing-md, 1.5rem);
+      padding: var(--padding-page);
     }
 
     @media (max-width: 768px) {
@@ -28,22 +28,22 @@
     /* Sidebar table of contents */
     .toc-sidebar {
       position: sticky;
-      top: var(--spacing-md, 1.5rem);
+      top: var(--spacing-lg);
       align-self: start;
       max-height: calc(100vh - 3rem);
       overflow-y: auto;
-      padding: var(--spacing-sm, 0.75rem);
-      background: var(--color-surface, #f8f9fa);
-      border: 1px solid var(--color-border, #e0e0e0);
-      border-radius: var(--radius-md, 8px);
+      padding: var(--spacing);
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
     }
 
     .toc-sidebar h2 {
-      font-size: var(--font-size-sm, 0.9rem);
+      font-size: 0.9rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--color-text-muted, #555);
-      margin: 0 0 var(--spacing-xs, 0.5rem);
+      color: var(--text-mute);
+      margin: 0 0 var(--spacing);
     }
 
     .toc-sidebar ol {
@@ -59,15 +59,15 @@
     .toc-sidebar a {
       display: block;
       padding: 0.3rem 0.5rem;
-      font-size: var(--font-size-sm, 0.85rem);
-      color: var(--color-link, #2563eb);
+      font-size: 0.85rem;
+      color: var(--accent);
       text-decoration: none;
-      border-radius: var(--radius-sm, 4px);
+      border-radius: var(--radius-sm);
     }
 
     .toc-sidebar a:hover,
     .toc-sidebar a:focus-visible {
-      background: var(--color-hover, #e8ecf1);
+      background: var(--bg-deep);
     }
 
     .toc-sidebar .toc-subtopic {
@@ -76,30 +76,30 @@
 
     /* Main content area */
     .study-map-content section {
-      margin-bottom: var(--spacing-md, 1.5rem);
+      margin-bottom: var(--spacing-lg);
     }
 
     .study-map-content details {
-      border: 1px solid var(--color-border, #e0e0e0);
-      border-radius: var(--radius-md, 8px);
-      margin-bottom: var(--spacing-sm, 0.75rem);
-      background: var(--color-card-bg, #fff);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: var(--spacing);
+      background: var(--bg-card);
     }
 
     .study-map-content details[open] > summary {
-      border-bottom: 1px solid var(--color-border, #e0e0e0);
+      border-bottom: 1px solid var(--border);
     }
 
     .study-map-content summary {
-      padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+      padding: var(--spacing) var(--padding-card);
       font-weight: 600;
       cursor: pointer;
-      color: var(--color-heading, #1a1a2e);
+      color: var(--white);
       list-style: none;
     }
 
     .study-map-content summary::before {
-      content: "▶ ";
+      content: "\25B6 ";
       font-size: 0.75em;
       display: inline-block;
       transition: transform 0.2s ease;
@@ -114,15 +114,15 @@
     }
 
     .topic-body {
-      padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+      padding: var(--spacing) var(--padding-card);
     }
 
     /* Nested subtopics */
     .subtopic {
-      margin-left: var(--spacing-sm, 0.75rem);
-      border-left: 2px solid var(--color-accent, #2563eb);
-      padding-left: var(--spacing-sm, 0.75rem);
-      margin-top: var(--spacing-xs, 0.5rem);
+      margin-left: var(--spacing);
+      border-left: 2px solid var(--accent);
+      padding-left: var(--spacing);
+      margin-top: var(--spacing);
     }
 
     /* Relationship indicators */
@@ -130,23 +130,24 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
-      margin-top: var(--spacing-xs, 0.5rem);
-      padding-top: var(--spacing-xs, 0.5rem);
-      border-top: 1px dashed var(--color-border, #e0e0e0);
+      margin-top: var(--spacing);
+      padding-top: var(--spacing);
+      border-top: 1px dashed var(--border);
     }
 
     .related-tag {
-      font-size: var(--font-size-xs, 0.75rem);
+      font-size: 0.75rem;
       padding: 0.15rem 0.5rem;
-      background: var(--color-tag-bg, #e0ecff);
-      color: var(--color-tag-text, #1e40af);
-      border-radius: var(--radius-sm, 4px);
+      background: var(--bg-sub);
+      color: var(--accent);
+      border-radius: var(--radius-sm);
       text-decoration: none;
     }
 
     .related-tag:hover,
     .related-tag:focus-visible {
-      background: var(--color-tag-hover, #c7d9f7);
+      background: var(--bg-deep);
+      color: var(--accent-hi);
     }
   </style>
 </head>

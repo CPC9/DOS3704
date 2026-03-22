@@ -93,7 +93,7 @@ Generate questions following these rules:
 - **Question cap** — never exceed 60 questions per exam regardless of user
   request. If the user asks for more, explain the cap and proceed with 60.
 - **Balance** — no single lecture should account for more than 40% of total
-  questions unless it is the only lecture in the focus set.
+  questions unless there are only two or lectures in the focus set.
 
 Tag each question with: `sourceLecture`, `difficulty`, `type`, and an `id`
 following the `examId-q-NNN` format from `references/exam-format.md`.

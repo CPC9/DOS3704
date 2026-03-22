@@ -7,30 +7,30 @@
   <link rel="stylesheet" href="{{THEME_CSS}}">
   <style>
     .review-page {
-      max-width: 1100px;
+      max-width: var(--max-width);
       margin: 0 auto;
-      padding: var(--spacing-md, 1.5rem);
+      padding: var(--padding-page);
     }
 
     .review-page header {
-      margin-bottom: var(--spacing-md, 1.5rem);
+      margin-bottom: var(--spacing-lg);
     }
 
     .review-page h1 {
-      color: var(--color-heading, #1a1a2e);
-      margin-bottom: var(--spacing-xs, 0.5rem);
+      color: var(--white);
+      margin-bottom: var(--spacing);
     }
 
     .review-page > .subtitle {
-      color: var(--color-text-muted, #555);
-      font-size: var(--font-size-md, 1rem);
+      color: var(--text-mute);
+      font-size: 1rem;
     }
 
     /* Two-column layout on desktop */
     .review-columns {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-md, 1.5rem);
+      gap: var(--spacing-lg);
     }
 
     @media (max-width: 768px) {
@@ -41,16 +41,16 @@
 
     /* Content blocks */
     .review-section {
-      margin-bottom: var(--spacing-md, 1.5rem);
+      margin-bottom: var(--spacing-lg);
       break-inside: avoid;
     }
 
     .review-section h2 {
-      font-size: var(--font-size-lg, 1.2rem);
-      color: var(--color-heading, #1a1a2e);
-      border-bottom: 2px solid var(--color-accent, #2563eb);
-      padding-bottom: var(--spacing-xs, 0.25rem);
-      margin-bottom: var(--spacing-sm, 0.5rem);
+      font-size: 1.2rem;
+      color: var(--white);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: var(--spacing);
+      margin-bottom: var(--spacing);
     }
 
     .review-section ul {
@@ -65,21 +65,23 @@
 
     /* Formula reference cards */
     .formula-card {
-      background: var(--color-surface, #f8f9fa);
-      border: 1px solid var(--color-border, #e0e0e0);
-      border-radius: var(--radius-md, 8px);
-      padding: var(--spacing-sm, 0.75rem);
-      margin-bottom: var(--spacing-sm, 0.75rem);
-      font-family: var(--font-mono, monospace);
-      font-size: var(--font-size-sm, 0.9rem);
+      background: var(--formula-bg);
+      border: 1px solid var(--formula-border);
+      border-radius: var(--radius);
+      padding: var(--spacing);
+      margin-bottom: var(--spacing);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
     }
 
     /* Critical terms */
     .critical-term {
-      background: var(--color-highlight, #fff3cd);
+      background: var(--bg-sub);
       padding: 0.1rem 0.35rem;
-      border-radius: var(--radius-sm, 3px);
+      border-radius: var(--radius-sm);
       font-weight: 600;
+      color: var(--accent-hi);
+      border-bottom: 2px solid var(--accent);
     }
 
     /* Print styles */
@@ -102,6 +104,7 @@
 
       .review-section h2 {
         border-bottom-color: #000;
+        color: #000;
       }
 
       .formula-card {
@@ -113,6 +116,7 @@
         background: none;
         text-decoration: underline;
         font-weight: bold;
+        color: inherit;
       }
 
       nav, footer, .no-print {

@@ -8,20 +8,20 @@
   <style>
     .hero {
       text-align: center;
-      padding: var(--spacing-xl, 4rem) var(--spacing-md, 1.5rem);
-      background: var(--color-surface, #f8f9fa);
-      border-bottom: 1px solid var(--color-border, #e0e0e0);
+      padding: var(--spacing-lg) var(--padding-card);
+      background: var(--bg-sub);
+      border-bottom: 1px solid var(--border);
     }
 
     .hero h1 {
-      font-size: var(--font-size-xxl, 2.5rem);
-      color: var(--color-heading, #1a1a2e);
-      margin-bottom: var(--spacing-sm, 0.75rem);
+      font-size: 2.5rem;
+      color: var(--white);
+      margin-bottom: var(--spacing);
     }
 
     .hero p {
-      font-size: var(--font-size-lg, 1.2rem);
-      color: var(--color-text-muted, #555);
+      font-size: 1.2rem;
+      color: var(--text-mute);
       max-width: 640px;
       margin: 0 auto;
       line-height: 1.6;
@@ -30,55 +30,56 @@
     .quick-links {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: var(--spacing-md, 1.5rem);
-      padding: var(--spacing-lg, 2.5rem) var(--spacing-md, 1.5rem);
-      max-width: 1100px;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-lg) var(--padding-card);
+      max-width: var(--max-width);
       margin: 0 auto;
     }
 
     .quick-link-card {
       display: flex;
       flex-direction: column;
-      padding: var(--spacing-md, 1.5rem);
-      background: var(--color-card-bg, #fff);
-      border: 1px solid var(--color-border, #e0e0e0);
-      border-radius: var(--radius-md, 8px);
+      padding: var(--padding-card);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       text-decoration: none;
       color: inherit;
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
     }
 
     .quick-link-card:hover,
     .quick-link-card:focus-visible {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       transform: translateY(-2px);
+      border-color: var(--border-hi);
     }
 
     .quick-link-card .icon {
       font-size: 2rem;
-      margin-bottom: var(--spacing-xs, 0.5rem);
+      margin-bottom: var(--spacing);
     }
 
     .quick-link-card h2 {
-      font-size: var(--font-size-md, 1.1rem);
-      color: var(--color-heading, #1a1a2e);
-      margin: 0 0 var(--spacing-xs, 0.5rem);
+      font-size: 1.1rem;
+      color: var(--white);
+      margin: 0 0 var(--spacing);
     }
 
     .quick-link-card p {
-      font-size: var(--font-size-sm, 0.9rem);
-      color: var(--color-text-muted, #555);
+      font-size: 0.9rem;
+      color: var(--text-mute);
       margin: 0;
       line-height: 1.5;
     }
 
     footer {
       text-align: center;
-      padding: var(--spacing-md, 1.5rem);
-      color: var(--color-text-muted, #555);
-      font-size: var(--font-size-sm, 0.85rem);
-      border-top: 1px solid var(--color-border, #e0e0e0);
-      margin-top: var(--spacing-lg, 2.5rem);
+      padding: var(--padding-card);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: var(--spacing-lg);
     }
   </style>
 </head>
@@ -90,35 +91,7 @@
 
   <main>
     <nav class="quick-links" aria-label="Study resources">
-      <a class="quick-link-card" href="study-map.html">
-        <span class="icon" aria-hidden="true">🗺️</span>
-        <h2>Study Map</h2>
-        <p>Explore topics organized by lecture with connections between concepts.</p>
-      </a>
-
-      <a class="quick-link-card" href="flashcards.html">
-        <span class="icon" aria-hidden="true">🃏</span>
-        <h2>Flashcards</h2>
-        <p>Test your recall with interactive flip cards for key terms and concepts.</p>
-      </a>
-
-      <a class="quick-link-card" href="last-minute-review.html">
-        <span class="icon" aria-hidden="true">⚡</span>
-        <h2>Last-Minute Review</h2>
-        <p>A condensed single-page overview of everything you need to know.</p>
-      </a>
-
-      <a class="quick-link-card" href="sample-questions.html">
-        <span class="icon" aria-hidden="true">❓</span>
-        <h2>Sample Questions</h2>
-        <p>Quick self-test with curated questions and reveal-style answers.</p>
-      </a>
-
-      <a class="quick-link-card" href="practice-exam.html">
-        <span class="icon" aria-hidden="true">📝</span>
-        <h2>Practice Exams</h2>
-        <p>Full-length timed exams with scoring and answer review.</p>
-      </a>
+      {{QUICK_LINKS}}
     </nav>
   </main>
 
