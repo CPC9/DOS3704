@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sample Questions — {{SITE_NAME}}</title>
+  <link rel="stylesheet" href="{{THEME_CSS}}">
+  <style>
+    .questions-page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-md, 1.5rem);
+    }
+
+    .questions-page h1 {
+      color: var(--color-heading, #1a1a2e);
+      margin-bottom: var(--spacing-xs, 0.5rem);
+    }
+
+    .questions-page > .subtitle {
+      color: var(--color-text-muted, #555);
+      margin-bottom: var(--spacing-lg, 2rem);
+    }
+
+    /* Topic group */
+    .question-group {
+      margin-bottom: var(--spacing-lg, 2rem);
+    }
+
+    .question-group h2 {
+      font-size: var(--font-size-lg, 1.2rem);
+      color: var(--color-heading, #1a1a2e);
+      padding-bottom: var(--spacing-xs, 0.25rem);
+      border-bottom: 2px solid var(--color-accent, #2563eb);
+      margin-bottom: var(--spacing-sm, 0.75rem);
+    }
+
+    /* Individual question */
+    .question-item {
+      background: var(--color-card-bg, #fff);
+      border: 1px solid var(--color-border, #e0e0e0);
+      border-radius: var(--radius-md, 8px);
+      padding: var(--spacing-sm, 0.75rem) var(--spacing-md, 1rem);
+      margin-bottom: var(--spacing-sm, 0.75rem);
+    }
+
+    .question-item p.question-text {
+      font-weight: 600;
+      margin: 0 0 var(--spacing-sm, 0.5rem);
+      line-height: 1.5;
+    }
+
+    /* Spoiler-style answer reveal */
+    .question-item details {
+      margin-top: var(--spacing-xs, 0.5rem);
+    }
+
+    .question-item summary {
+      cursor: pointer;
+      font-size: var(--font-size-sm, 0.9rem);
+      color: var(--color-link, #2563eb);
+      font-weight: 500;
+      padding: 0.3rem 0;
+      list-style: none;
+    }
+
+    .question-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .question-item summary::before {
+      content: "▸ ";
+    }
+
+    .question-item details[open] > summary::before {
+      content: "▾ ";
+    }
+
+    .answer-content {
+      margin-top: var(--spacing-xs, 0.5rem);
+      padding: var(--spacing-sm, 0.75rem);
+      background: var(--color-surface, #f8f9fa);
+      border-radius: var(--radius-sm, 4px);
+      border-left: 3px solid var(--color-accent, #2563eb);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .questions-page {
+        padding: var(--spacing-sm, 0.75rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="questions-page">
+    <header role="banner">
+      <h1>Sample Questions</h1>
+      <p class="subtitle">Quick self-test — click "Show Answer" to check your understanding</p>
+    </header>
+
+    <main role="main">
+      {{SAMPLE_QUESTIONS_CONTENT}}
+    </main>
+  </div>
+
+  <script src="{{NAV_JS}}" defer></script>
+</body>
+</html>
