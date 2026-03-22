@@ -1,38 +1,47 @@
 ---
 name: concept-mapper
-description: "Phase 2: Synthesizes all study notes into a conceptual map, last-minute review, and flashcard data."
+description: "Use when study-notes/ contains completed markdown study notes and synthesis outputs (conceptual map, last-minute review, flashcards) are needed. Requires content-ingest to have finished first."
 ---
 
-# Concept Mapper — Phase 2
+# Concept Mapper
 
-You are the concept-mapper agent. Your job is to read all study notes produced in Phase 1 and synthesize them into three outputs: a conceptual map, a last-minute review sheet, and a flashcards JSON file. All outputs go in the `synthesis/` directory.
+Read all study notes produced by content-ingest and synthesize three outputs in `synthesis/`:
 
-## Step 1: Input Reading
+1. **Conceptual map** (`synthesis/conceptual-map.md`) — shows how lectures connect, what depends on what, and the course's narrative arc.
+2. **Last-minute review** (`synthesis/last-minute-review.md`) — a concise, exam-focused refresher.
+3. **Flashcards** (`synthesis/flashcards.json`) — every glossary term as a study card, per `references/flashcard-format.md`.
 
-1. Read ALL files in `study-notes/` using the Glob tool with pattern `study-notes/*.md`.
-2. For each file, read the complete contents. Pay special attention to:
-   - The `topics` field in the frontmatter (for identifying themes).
-   - The Key Concepts section (for understanding relationships).
-   - The Frameworks & Mental Models section (for identifying reusable mental models).
-   - The Key Terms and Definitions Glossary section (for flashcard extraction).
-3. Build a mental model of the entire course:
+## Step 0: Precondition Check
+
+1. Confirm `study-notes/` exists and contains at least one `.md` file (Glob `study-notes/*.md`). If empty or missing, stop and report: "No study notes found in study-notes/. Run content-ingest first."
+2. Read `references/flashcard-format.md` — this is the authoritative schema for flashcards.json. Hold it in context.
+3. Read `references/study-notes-format.md` — you need to know the section structure to parse study notes correctly.
+4. Create `synthesis/` if it does not already exist.
+
+## Step 1: Read and Model the Course
+
+1. Glob `study-notes/*.md` and read every file completely.
+2. For each file, extract:
+   - `topics` from frontmatter (for theme identification).
+   - Key Concepts section (for relationship mapping).
+   - Frameworks & Mental Models section (for reusable models).
+   - Key Terms and Definitions Glossary (for flashcard extraction).
+3. Build a mental model of the full course:
    - What is the overarching narrative or progression?
-   - Which lectures are foundational vs. which build on others?
-   - What are the major themes that span multiple lectures?
-   - Where do concepts from one lecture directly depend on or extend concepts from another?
-4. Create the `synthesis/` directory if it does not exist.
+   - Which lectures are foundational vs. which build on earlier ones?
+   - What major themes span multiple lectures?
+   - Where do concepts from one lecture depend on or extend concepts from another?
 
-## Step 2: Conceptual Map Generation
+## Step 2: Generate Conceptual Map
 
-Write `synthesis/conceptual-map.md` with the following structure:
+Write `synthesis/conceptual-map.md` with this structure:
 
 ```markdown
 # Conceptual Map: {Course Name}
 
 ## Course Narrative
-[2-3 paragraphs explaining the overall arc of the course — what it builds toward,
-how early topics lay groundwork for later ones, and what the student should understand
-as the "big picture" by the end.]
+[2-3 paragraphs: the arc of the course, how early topics lay groundwork
+for later ones, and what the student should understand as the big picture.]
 
 ## Lecture Progression
 
@@ -43,44 +52,36 @@ as the "big picture" by the end.]
 **Leads To:** [Subsequent lectures that depend on this material]
 **Key Relationships:**
 - [Concept A] connects to [Concept B] in Lecture N because [reason]
-- [Concept C] is a prerequisite for [Concept D] in Lecture N
 
-### Lecture 2: {Title}
-[Same structure repeated for each lecture]
-...
+[Repeat for every lecture]
 
 ## Cross-Cutting Themes
+
 ### Theme 1: {Theme Name}
 **Appears in:** Lectures [list]
 **Evolution:** [How this theme develops across the course]
 **Key Insight:** [The most important thing to understand about this theme]
 
-### Theme 2: {Theme Name}
-[Repeat for each identified theme]
-...
+[Repeat for each theme — identify at least 3 themes spanning 2+ lectures]
 
 ## Concept Dependency Graph
-[A text-based representation showing which concepts depend on which others.
-Use indentation and arrows to show dependencies.]
+[Text-based tree showing which concepts depend on which. Use indentation
+and arrows.]
 
-Example:
 - Time Value of Money (Lecture 2)
   → NPV Calculation (Lecture 5)
     → Project Valuation (Lecture 8)
-  → Bond Pricing (Lecture 6)
-    → Yield Curves (Lecture 9)
 ```
 
-Requirements for the conceptual map:
-- Every lecture from the study notes must have its own section under "Lecture Progression".
-- Headers must match lecture titles from the study notes frontmatter.
-- Every driving question must be answerable using the material from that lecture.
-- Cross-cutting themes should identify at least 3 themes that span 2+ lectures.
-- The dependency graph must be accurate — only show dependencies that are real based on the content.
+Guidelines:
+- Every lecture in study-notes/ gets its own section under Lecture Progression. No lecture is skipped.
+- Lecture titles match the `title` frontmatter from the study notes.
+- Every driving question is answerable from that lecture's material alone.
+- The dependency graph only shows real dependencies grounded in the content — do not fabricate connections.
 
-## Step 3: Last-Minute Review Generation
+## Step 3: Generate Last-Minute Review
 
-Write `synthesis/last-minute-review.md` with the following structure:
+Write `synthesis/last-minute-review.md` with this structure:
 
 ```markdown
 # Last-Minute Review: {Course Name}
@@ -91,8 +92,7 @@ Write `synthesis/last-minute-review.md` with the following structure:
 ## Lecture 1: {Title}
 
 ### Must-Remember Facts
-- [Crisp, single-sentence statements of the most testable facts]
-- [Each prefixed with a bold key term]
+- **[Key term]:** [Crisp, single-sentence testable statement]
 
 ### Key Formulas
 | Formula | Variables | When to Use |
@@ -102,86 +102,84 @@ Write `synthesis/last-minute-review.md` with the following structure:
 ### Critical Distinctions
 | Concept A | vs. | Concept B |
 |-----------|-----|-----------|
-| [key difference 1] | | [key difference 1] |
-| [key difference 2] | | [key difference 2] |
+| [difference 1] | | [difference 1] |
 
 ### Common Exam Traps
-> **Remember:** [A specific warning about a common mistake or tricky exam question pattern]
+> **Remember:** [A specific warning about a common mistake]
 
-[Repeat for each lecture]
-...
+[Repeat for every lecture]
 
 ## Quick-Reference Formula Sheet
-[All formulas from all lectures in one consolidated table, organized by topic]
+[All formulas from all lectures consolidated in one table, organized by topic]
 
 ## "Don't Forget" Checklist
-- [ ] [Item 1 — something students commonly overlook]
-- [ ] [Item 2]
-- [ ] [Item 3]
-...
+- [ ] [Something students commonly overlook]
 ```
 
-Requirements for the last-minute review:
-- Assume the student already knows the material — be concise, not explanatory.
+Guidelines:
+- Be concise — the student already knows the material. Explain nothing; remind everything.
 - Focus on what is most testable and most commonly confused.
-- Every lecture must be represented.
-- The formula sheet must consolidate ALL formulas from ALL lectures into one table.
-- Include at least 3 "Critical Distinctions" comparisons across the entire review.
-- Include at least 5 items in the "Don't Forget" checklist.
+- Every lecture is represented.
+- The formula sheet consolidates all formulas from all lectures into a single table.
+- Include at least 3 Critical Distinctions comparisons across the full review.
+- Include at least 5 items in the Don't Forget checklist.
 
-## Step 4: Flashcard Extraction
+## Step 4: Extract Flashcards
 
-Write `synthesis/flashcards.json` following the schema defined in `references/flashcard-format.md`.
+Write `synthesis/flashcards.json` following the schema in `references/flashcard-format.md`. That file is authoritative — if any detail below conflicts with it, the reference file wins.
 
-### Extraction Process
+### Process
 
-1. Read `references/flashcard-format.md` to understand the exact JSON schema required.
-2. For each study note file, extract EVERY term from the "Key Terms and Definitions Glossary" section.
-3. For each term, create a card object:
-   - `id`: Format `lecture-NN-NNN` (zero-padded lecture number + three-digit sequence, cards ordered alphabetically by term within each deck).
-   - `term`: The exact term name from the glossary.
-   - `definition`: The glossary definition, condensed to 300 characters maximum. If the original is longer, condense while preserving accuracy and key details.
-   - `relatedTerms`: Extract from the `[Related: ...]` annotations in the glossary. Only include terms that actually exist as cards in the flashcards file.
-   - `sourceLecture`: Format `"Lecture N"` (no zero-padding).
-4. Group cards into decks, one deck per study note file:
-   - `id`: Format `lecture-NN` (zero-padded lecture number).
-   - `title`: Exact match of the study note's `title` frontmatter field.
-   - `cards`: Array of card objects for this deck, ordered alphabetically by `term`.
-5. Order decks by lecture number (ascending).
-6. Calculate metadata:
-   - `totalCards`: Sum of all cards across all decks.
-   - `totalDecks`: Number of decks.
-   - `generatedFrom`: `"study-notes/"`.
-   - `generatedAt`: Current ISO 8601 UTC timestamp.
+1. For each study note, extract every term from the Key Terms and Definitions Glossary section.
+2. For each term, create a card:
+   - `id`: `lecture-NN-NNN` (zero-padded lecture + three-digit alphabetical sequence).
+   - `term`: exact term name from the glossary.
+   - `definition`: glossary definition condensed to 300 characters max. The 300-char limit exists because flashcard UIs truncate longer text, making excess content invisible to the student. Condense by removing examples and parentheticals while keeping accuracy.
+   - `relatedTerms`: from `[Related: ...]` annotations. Only include terms that actually exist as cards elsewhere in the file — dangling references break the cross-reference UI.
+   - `sourceLecture`: `"Lecture N"` (no zero-padding).
+3. Group cards into decks (one per study note):
+   - `id`: `lecture-NN`.
+   - `title`: exact match of the study note's `title` frontmatter.
+   - `cards`: alphabetical by `term`. Alphabetical ordering matters because the flashcard review UI supports "jump to letter" navigation.
+4. Order decks ascending by lecture number.
+5. Calculate metadata: `totalCards`, `totalDecks`, `generatedFrom` (`"study-notes/"`), `generatedAt` (ISO 8601 UTC).
 
-### Validation Before Writing
+### Validate Before Writing
 
-Before writing `flashcards.json`, run through the validation checklist from `references/flashcard-format.md`:
+Run through the validation checklist from `references/flashcard-format.md` (9 checks). Fix any failures before writing. Specifically watch for:
+- **Dangling relatedTerms** — if a referenced term has no card, remove the reference rather than inventing a card.
+- **Definition overflow** — if any definition exceeds 300 characters after condensing, trim further.
+- **Missing glossary terms** — if a study note's glossary section is empty or unparseable, report it as an error in the completion signal rather than silently skipping.
 
-- Every study notes file has exactly one corresponding deck.
-- Decks are ordered by lecture number (ascending).
-- Every glossary term from every study notes file has a card.
-- No card definition exceeds 300 characters.
-- All card IDs are globally unique.
-- All `relatedTerms` entries reference existing card terms.
-- Card ordering within decks is alphabetical by term.
-- `totalCards` and `totalDecks` metadata counts are accurate.
-- `generatedAt` is a valid ISO 8601 UTC timestamp.
+## Step 5: Cross-Reference Validation
 
-If any validation fails, fix the issue before writing the file.
+Cross-referencing catches drift between the three outputs. Without it, students see a term in the review sheet that has no flashcard, or a dependency in the map that contradicts the flashcard relationships.
 
-## Step 5: Cross-Referencing
+1. Check that every term in the conceptual map's dependency graph has a corresponding flashcard.
+2. Check that every term in the last-minute review's Must-Remember Facts has a corresponding flashcard.
+3. Check that cross-lecture relationships in the conceptual map are reflected in `relatedTerms` where applicable.
 
-As a final pass before completion:
+If inconsistencies are found:
+- **Missing flashcard for a referenced term**: add the card if the term appears in a study note glossary. If it does not appear in any glossary, remove the reference from the map/review rather than inventing a definition.
+- **Mismatched relationships**: update `relatedTerms` in flashcards.json to align with the conceptual map.
+- Log all corrections made.
 
-1. Review the conceptual map's dependency graph against the flashcard `relatedTerms` — ensure consistency.
-2. Verify that every term mentioned in the last-minute review's "Must-Remember Facts" has a corresponding flashcard.
-3. Check that cross-lecture relationships identified in the conceptual map are reflected in the flashcard `relatedTerms` where applicable.
+## Step 6: Update Pipeline Status
+
+Read `pipeline-status.json`. Update the `concept-mapper` phase entry:
+- Set `status` to `"completed"`.
+- Set `completedAt` to the current ISO 8601 UTC timestamp.
+- Populate `filesProduced` with the three output file paths.
+- Advance `currentPhase` to the next pipeline phase.
+
+Write the updated file back.
 
 ## Completion Signal
 
-When all three files have been written, report back with:
-- Confirmation that `synthesis/conceptual-map.md`, `synthesis/last-minute-review.md`, and `synthesis/flashcards.json` were created.
-- Number of cross-cutting themes identified.
-- Total flashcard count and deck count.
-- Any cross-referencing issues found and resolved.
+Report completion as a markdown bullet list:
+
+- Confirmation that all three files were created (with paths)
+- Number of cross-cutting themes identified
+- Total flashcard count and deck count
+- Any cross-referencing issues found and how they were resolved
+- Any errors (empty glossaries, malformed frontmatter, missing terms)

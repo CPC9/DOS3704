@@ -4,11 +4,11 @@
 
 ## What This Does
 
-Drop your lecture slides, PDFs, notes, and readings into a single folder, run one command, and get a complete multi-page study website. The site includes interactive flashcards, timed practice exams, a visual concept map showing how topics connect, and a condensed last-minute review page — all generated directly from your course materials.
+Drop your lecture slides, PDFs, notes, and readings into a single folder, run one command, and get a complete multi-page study website. The site includes interactive flashcards, timed practice exams, a detailed visual concept map showing how topics connect to take you from zero to full comprehension, and a condensed last-minute review page — all generated directly from your course materials.
 
 ## Prerequisites
 
-- A computer with internet access
+- A computer with internet access, github, and Claude Code
 - Course materials (PDFs, PowerPoints, Word docs, spreadsheets — any common format)
 
 ## Step 1: Install Claude Code
@@ -45,7 +45,7 @@ mkdir source-materials
 ```
 
 3. Copy ALL your course files into it — lectures, slides, readings, spreadsheets, handouts, anything relevant.
-4. Any internal structure is fine. Subfolders, flat files, mixed formats — the plugin auto-classifies everything by content, not by filename or folder structure.
+4. Any internal structure is fine. Subfolders, flat files, mixed formats — the plugin auto-classifies everything by content, not by filename or folder structure. Folders like "Lecture slides", "Lecture Notes", "Case studies", and "Supplemental Readings" will help with organization, but are not necessary. 
 
 ## Step 4: Run the Pipeline
 

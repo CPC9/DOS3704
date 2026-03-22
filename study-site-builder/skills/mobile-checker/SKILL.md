@@ -1,166 +1,171 @@
 ---
 name: mobile-checker
-description: "Phase 7: Verifies responsive behavior across all pages and fixes any issues found."
+description: "Use when the study site needs responsive/mobile verification, when `/study-site mobile-check` is invoked, or when Phase 7 of the pipeline runs. Audits every HTML page for mobile usability issues and fixes them."
 ---
 
 # Mobile Checker
 
-You verify that every page of the study site is fully responsive and usable on mobile devices. You operate in Phase 7 of the pipeline, after the site and exams have been built.
+Verify that every page of the study site is fully responsive and usable on mobile devices. Fix any issues found using CSS-first methodology. Write a report to `audit/mobile-report.md` and update `pipeline-status.json`.
 
-## Step 1: Determine Check Scope
+## Precondition Checks
 
-List all HTML files that need checking:
+Before doing anything else, verify the environment is ready:
+
+1. Confirm `site/` exists and contains at least one `.html` file. If not, stop and tell the user: "No site found. Run `/study-site build` first to generate the study site."
+2. Read `pipeline-status.json` if it exists to confirm prior phases completed. See `references/pipeline-status-format.md` for the schema. If the file is missing, proceed anyway — the mobile check can run standalone.
+3. Check whether `site/exams/` exists. If it does not, skip all exam-specific checks later. Do not treat a missing exams directory as an error.
+
+## Step 1: Discover Pages
+
+Build the complete list of HTML files to check:
+
 - All `.html` files in `site/` (home, flashcards, study-map, last-minute-review, sample-questions, etc.)
-- All `.html` files in `site/exams/` (practice exam pages)
+- All `.html` files in `site/exams/` (practice exam pages) — only if the directory exists
 
-Read each file path and build a checklist. Every file must pass all checks.
+Record this list. Every file must pass every applicable check.
 
-## Step 2: Read Theme CSS
+## Step 2: Read Theme and Interaction Code
 
-Read `site/css/theme.css` to understand existing responsive rules:
-- Look for `@media` queries and their breakpoints
-- Note existing mobile styles
-- Identify any gaps in responsive coverage
+Read these files to understand the current responsive landscape:
 
-Also read `site/js/nav.js` and `site/js/flashcards.js` to understand interactive behavior that may affect mobile usability.
+- `site/css/theme.css` — existing `@media` queries, breakpoints, and gaps in responsive coverage
+- `site/js/nav.js` — hamburger menu behavior, mobile nav logic
+- `site/js/flashcards.js` — touch/tap interaction handling
 
-## Step 3: Verification Checklist
+Note any theme-specific styles that responsive fixes must not conflict with. When adding responsive CSS later, check that new rules do not override theme-specific declarations (color schemes, branded spacing, component-specific styles) unintentionally. Use specific selectors when needed to avoid CSS conflicts.
 
-For each HTML file, verify ALL of the following:
+## Step 3: Responsive Verification Checklist
+
+For each HTML file, verify ALL of the following. Mark pass/fail for each.
 
 ### 3a. No Horizontal Overflow
-- Check that no element causes horizontal scrolling at 768px (tablet) and 480px (mobile) viewport widths
-- Common offenders: tables, pre/code blocks, wide images, fixed-width containers
-- Look for elements with explicit `width` values in pixels that exceed viewport width
-- Check for `overflow-x` handling on potentially wide content
+- No element causes horizontal scrolling at 768px (tablet) or 480px (mobile) viewports.
+- Check for: explicit pixel `width` values exceeding viewport, tables without overflow wrappers, `pre`/`code` blocks, fixed-width containers.
 
 ### 3b. Touch Target Sizes
-- All buttons must be at least 44x44px (Apple HIG) / 48x48px (Material Design) touch target
-- All links in navigation must have adequate padding for touch
-- Interactive elements (flashcard flip buttons, exam answer selections, expand/collapse toggles) must be easily tappable
-- Check for `min-height` and `min-width` or `padding` on interactive elements
+- All interactive elements (buttons, links, radio buttons, toggles, flashcard controls, exam answer selections) have at least 44x44px touch area.
+- Check for `min-height`, `min-width`, or `padding` on interactive elements.
 
 ### 3c. Readable Text
-- Body text must be at least 16px (1rem) on mobile to prevent forced zooming
-- Headings must scale appropriately
-- Line length should not exceed ~80 characters on mobile (use max-width or padding)
-- Check the `<meta name="viewport">` tag exists with `width=device-width, initial-scale=1`
+- Body text is at least 16px (1rem) on mobile to prevent forced zooming.
+- Line length does not exceed ~80 characters on mobile.
+- `<meta name="viewport" content="width=device-width, initial-scale=1">` exists in every HTML file.
 
 ### 3d. Navigation
-- Hamburger menu must be present and functional at mobile breakpoints
-- Navigation links must be accessible via the hamburger menu
-- Menu must be dismissible (tap outside or tap hamburger again)
-- Active page should be visually indicated in mobile nav
+- Hamburger menu is present and functional at mobile breakpoints.
+- Nav links are accessible through the hamburger menu and the menu is dismissible.
+- Active page is visually indicated in mobile nav.
 
 ### 3e. Flashcard Interactions
-- Flashcard flip animation must work with touch/tap (not just hover)
-- Card navigation (next/previous) buttons must be touch-friendly
-- Card content must not overflow the card container on small screens
-- Swipe gestures should work if implemented
+- Flip animation works with touch/tap, not only hover.
+- Navigation buttons (next/previous) are touch-friendly.
+- Card content does not overflow its container on small screens.
 
-### 3f. Exam Interactions
-- Answer selection (radio buttons, checkboxes) must be touch-friendly
-- Answer option text must be readable and not cramped
-- Submit/check buttons must be prominent and easily tappable
-- Score display and feedback must be readable on mobile
-- Question navigation must work on touch
+### 3f. Exam Interactions (skip if no exams exist)
+- Answer selection controls are touch-friendly with readable text.
+- Submit/check buttons are prominent and tappable.
+- Score display and feedback are readable on mobile.
 
 ### 3g. Tables
-- All tables must be wrapped in a container with `overflow-x: auto` to allow horizontal scrolling
-- Table text should not be too small to read on mobile
-- Consider whether tables could be reformatted for mobile (stacked layout)
+- All tables are wrapped in a container with `overflow-x: auto`.
+- Table text remains readable on mobile.
 
 ### 3h. Images
-- All images must have `max-width: 100%` and `height: auto`
-- Images must not cause horizontal overflow
-- Check for any fixed-dimension images that need responsive sizing
+- All images have `max-width: 100%; height: auto` (or equivalent).
+- No image causes horizontal overflow.
 
-## Step 4: Fix Methodology
+## Step 4: Fix Methodology — CSS First
 
-When issues are found, fix them using this priority order:
+Fix issues in this priority order. The rationale: CSS-only fixes are centralized in one file, easier to maintain, and do not break DOM assumptions that JavaScript or other pipeline phases depend on.
 
-### Prefer CSS-Only Fixes
-1. **Modify `site/css/theme.css`** — add or update `@media` queries for responsive fixes. Group fixes under clear comment blocks:
-   ```css
-   /* === Mobile Checker Fixes === */
-   @media (max-width: 768px) {
-     /* tablet fixes */
-   }
-   @media (max-width: 480px) {
-     /* mobile fixes */
-   }
-   ```
+**Priority 1 — Modify `site/css/theme.css`.** Add or update `@media` queries. Group all mobile-checker fixes under a clear comment block so future runs can identify them:
 
-2. **Add page-specific `<style>` blocks** — only if a fix is unique to one page and doesn't belong in the shared theme. Add the style block inside the `<head>` of the specific HTML file.
-
-3. **Modify HTML structure** — only as a last resort. For example, wrapping a table in a `<div class="table-wrapper">` with `overflow-x: auto`.
-
-### Common Fixes Reference
-
-| Issue | Fix |
-|-------|-----|
-| Table overflow | Wrap in `<div style="overflow-x:auto">` |
-| Small touch targets | Add `min-height: 44px; min-width: 44px; padding: 12px` |
-| Text too small | Set `font-size: 16px` minimum in mobile media query |
-| Image overflow | Add `img { max-width: 100%; height: auto; }` |
-| Fixed-width elements | Change `width: Npx` to `max-width: Npx; width: 100%` |
-| Flex/grid overflow | Add `min-width: 0` to flex children; use `grid-template-columns: 1fr` on mobile |
-| Missing viewport meta | Add `<meta name="viewport" content="width=device-width, initial-scale=1">` |
-| Hover-only interactions | Add touch event handlers or use `:active` pseudo-class alongside `:hover` |
-
-## Step 5: Verification Approach
-
-### If Preview Tools Are Available
-Use the preview tools for visual verification:
-1. Start a local server with `preview_start` pointing to `site/`
-2. Take screenshots at desktop (1280px), tablet (768px), and mobile (480px) using `preview_resize` and `preview_screenshot`
-3. Visually inspect each screenshot for layout issues
-4. Use `preview_inspect` to check computed CSS values (font sizes, padding, dimensions)
-5. Use `preview_click` to test interactive elements
-
-### If Preview Tools Are Not Available
-Inspect CSS rules directly:
-1. Read each HTML file and the theme CSS
-2. Analyze media queries for completeness
-3. Check that all interactive elements have adequate sizing
-4. Verify viewport meta tags exist
-5. Check for common responsive anti-patterns (fixed widths, missing overflow handling)
-6. Trace CSS selectors to confirm they match the HTML structure
-
-## Step 6: Report
-
-After completing all checks and fixes, output a report:
-
+```css
+/* ── Mobile Checker Fixes ── */
+@media (max-width: 768px) {
+  /* tablet fixes */
+}
+@media (max-width: 480px) {
+  /* mobile fixes */
+}
 ```
-## Mobile Responsiveness Report
 
-### Pages Checked
-- [list all HTML files checked]
+Before adding rules, check for existing theme-specific styles at the same breakpoints. Use sufficiently specific selectors to avoid overriding theme intent.
 
-### Issues Found and Fixed
-1. [page] — [issue description] — [fix applied]
+**Priority 2 — Page-specific `<style>` block in `<head>`.** Use only when a fix is unique to one page and does not belong in shared CSS.
+
+**Priority 3 — HTML structure changes.** Last resort only. Example: wrapping a `<table>` in `<div class="table-wrapper">` for overflow scrolling.
+
+### Quick-Reference Fix Table
+
+| Symptom | Fix |
+|---------|-----|
+| Table overflow | Wrap in `<div style="overflow-x:auto">` |
+| Small touch targets | `min-height: 44px; min-width: 44px; padding: 12px` |
+| Text too small | `font-size: 1rem` minimum in mobile media query |
+| Image overflow | `img { max-width: 100%; height: auto; }` |
+| Fixed-width elements | Change `width: Npx` to `max-width: Npx; width: 100%` |
+| Flex/grid overflow | `min-width: 0` on flex children; `grid-template-columns: 1fr` on mobile |
+| Missing viewport meta | `<meta name="viewport" content="width=device-width, initial-scale=1">` |
+| Hover-only interactions | Add `:active` alongside `:hover`; verify touch event handlers exist |
+
+## Step 5: Verification
+
+### With Preview Tools Available
+1. Start a local server with `preview_start` pointing to `site/`.
+2. Use `preview_resize` to test at desktop (1280px), tablet (768px), and mobile (375px).
+3. Take `preview_screenshot` at each breakpoint for each page.
+4. Use `preview_inspect` to verify computed CSS values (font sizes, padding, touch target dimensions).
+5. Use `preview_click` to test interactive elements (hamburger, flashcard flip, exam answers).
+
+### Without Preview Tools
+1. Read each HTML file and `site/css/theme.css`.
+2. Analyze media queries for completeness at both breakpoints.
+3. Verify all interactive elements have adequate sizing via CSS rules.
+4. Confirm viewport meta tags exist in every file.
+5. Trace CSS selectors to confirm they match actual HTML structure.
+6. Check for common anti-patterns: fixed widths, missing overflow handling, hover-only interactions.
+
+## Step 6: Write Report
+
+Create `audit/mobile-report.md` (create the `audit/` directory if it does not exist). Use this exact format:
+
+```markdown
+# Mobile Responsiveness Report
+
+Generated: [ISO 8601 timestamp]
+
+## Pages Checked
+- [list every HTML file checked, one per line]
+
+## Issues Found and Fixed
+1. **[filename]** — [issue description] — Fixed: [fix applied]
 2. ...
 
-### Issues Found (No Fix Needed)
-- [any issues that were already handled correctly]
+## Issues Not Applicable
+- [e.g., "Exam checks skipped — no site/exams/ directory"]
 
-### Verification Status
-- [ ] All pages pass horizontal overflow check
-- [ ] All touch targets meet 44px minimum
-- [ ] All text readable at 16px+ on mobile
-- [ ] Navigation hamburger menu functional
-- [ ] Flashcard touch interactions working
-- [ ] Exam touch interactions working
-- [ ] All tables have overflow handling
-- [ ] All images scale properly
+## Verification Checklist
+- [x/blank] All pages pass horizontal overflow check
+- [x/blank] All touch targets meet 44px minimum
+- [x/blank] All text readable at 16px+ on mobile
+- [x/blank] Navigation hamburger menu functional
+- [x/blank] Flashcard touch interactions working
+- [x/blank] Exam touch interactions working (or N/A)
+- [x/blank] All tables have overflow handling
+- [x/blank] All images scale properly
 
-### Files Modified
-- [list all files that were changed, with summary of changes]
+## Files Modified
+- [list every file changed with a one-line summary of what changed]
 ```
+
+Also output the report summary to the conversation so the user sees results immediately.
 
 ## Step 7: Update Pipeline Status
 
-Update `pipeline-status.json`:
-- Set `phase7` status to `complete`
-- Record the number of issues found and fixed
-- Record the list of files modified
+Update `pipeline-status.json` (see `references/pipeline-status-format.md` for schema):
+
+- Set the `mobile-checker` phase status to `completed` with a `completedAt` timestamp.
+- Populate `filesProduced` with the list of modified files plus `audit/mobile-report.md`.
+- Set `currentPhase` to `mobile-checker`.
+- If any check could not pass and was not fixable, set status to `failed` and populate the `error` field. Add the error to the top-level `errors` array.

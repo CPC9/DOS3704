@@ -1,135 +1,119 @@
 ---
 name: content-ingest
-description: "Phase 1: Parallel ingestion of course materials (PDFs, PPTXs, DOCXs, XLSX) into structured markdown study notes."
+description: "Use when source-materials/ contains course files (PDF, PPTX, DOCX, XLSX) that need to be converted into structured markdown study notes. This is always the first pipeline phase — run it before concept-mapper or any downstream skill."
 ---
 
-# Content Ingest — Phase 1
+# Content Ingest
 
-You are the content-ingest agent. Your job is to scan all course materials in `source-materials/`, classify them, and produce structured markdown study notes in `study-notes/` following the format specification in `references/study-notes-format.md`.
+Transform raw course materials into structured markdown study notes. Each source file group becomes one study note in `study-notes/`, formatted per `references/study-notes-format.md`.
 
-## Step 1: File Scanning
+## Step 0: Precondition Check
 
-1. List all files in the `source-materials/` directory using the Glob tool with pattern `source-materials/**/*`.
-2. Classify each file by type:
-   - **PDF** (`.pdf`): Lecture slides, readings, textbook chapters
-   - **PPTX** (`.pptx`): Presentation slide decks
-   - **DOCX** (`.docx`): Readings, handouts, assignment descriptions
-   - **XLSX** (`.xlsx`): Data tables, grade breakdowns, reference data
-3. Group files by lecture/topic. Use these strategies to determine groupings:
-   - **Naming patterns:** Files with matching lecture numbers (e.g., `lecture-05-slides.pdf` and `lecture-05-notes.docx` belong together).
-   - **Naming with topic keywords:** Files mentioning the same topic (e.g., `capital-budgeting-slides.pdf` and `NPV-reading.pdf`).
-   - **Sequential numbering:** Files numbered in sequence likely correspond to sequential lectures.
-   - **Content similarity:** If naming is ambiguous, read the first page of each file to determine topic alignment.
-4. For each group, assign a lecture number (1, 2, 3, ...) based on the apparent course sequence.
-5. Create the `study-notes/` directory if it does not exist.
+Before doing any work, verify the environment is ready.
 
-## Step 2: Agent Sizing
+1. Confirm `source-materials/` exists. If it does not, stop and report: "No source-materials/ directory found. Place course files there and re-run."
+2. Glob `source-materials/**/*` and confirm at least one supported file exists (`.pdf`, `.pptx`, `.docx`, `.xlsx`). If empty, stop and report: "source-materials/ contains no supported files."
+3. Read `references/study-notes-format.md` and hold it in context — this is the authoritative format contract. Every study note you produce conforms to it. If inline instructions here ever conflict with that file, the reference file wins.
+4. Create `study-notes/` if it does not already exist.
 
-Determine how to split the work across subagents:
+## Step 1: Scan and Classify
 
-- **Small lectures** (each source file is under ~20 slides or ~10 pages): Group 2 lectures per subagent.
-- **Dense lectures** (any source file is 20+ slides or 10+ pages of dense text): Assign 1 lecture per subagent.
-- **Maximum 5 parallel subagents.** If there are more lecture groups than 5 agents can handle, process in batches: dispatch the first batch, wait for completion, then dispatch the next.
+1. List every file in `source-materials/` (Glob pattern `source-materials/**/*`).
+2. Classify each file by extension:
+   - `.pdf` — lecture slides, readings, textbook chapters
+   - `.pptx` — presentation slide decks
+   - `.docx` — readings, handouts, assignment descriptions
+   - `.xlsx` — data tables, reference data
+3. Group files into lecture/topic clusters using these heuristics (try in order):
+   - **Naming patterns** — matching lecture numbers (e.g., `lecture-05-slides.pdf` + `lecture-05-notes.docx`).
+   - **Topic keywords** — files mentioning the same subject (e.g., `capital-budgeting-slides.pdf` + `NPV-reading.pdf`).
+   - **Sequential numbering** — files numbered in sequence map to sequential lectures.
+   - **Content sampling** — if naming is ambiguous, read the first page of each file to determine topic alignment.
+4. Assign each group a sequential lecture number (1, 2, 3, ...) based on apparent course order.
 
-To estimate file density without reading the entire file:
-- For PDFs: Read the first few pages. If heavily text-based with small font, treat as dense. If mostly bullet points and diagrams, treat as small.
-- For PPTXs: Check slide count if discernible. Under 20 slides = small, 20+ = dense.
-- For DOCXs: Check page count. Under 10 pages = small, 10+ = dense.
+## Step 2: File Reading Strategies
 
-## Step 3: Subagent Prompt Template
+Understand how to extract content from each format before dispatching subagents — subagents will use these same strategies.
 
-For each subagent, provide this exact prompt (fill in the bracketed values):
+**PDF** — Use the Read tool directly. For PDFs longer than 10 pages, read in chunks via the `pages` parameter (e.g., "1-10", "11-20"). Extract slide titles, bullet points, formulas, and diagram descriptions.
 
----
+**PPTX** — Use a pptx-reading skill if available; otherwise use the Read tool. Pay attention to slide titles, bullet content, speaker notes, and embedded text.
 
-**Subagent task: Produce study notes for [Lecture Title(s)]**
+**DOCX** — Use a docx-reading skill if available; otherwise use the Read tool. Extract body text, headings, tables, and footnotes.
+
+**XLSX** — Use the Read tool. Extract data tables relevant to course content (financial data, statistical tables). These typically belong in Case Studies or Formulas sections.
+
+## Step 3: Size Agents
+
+Determine how to distribute work across parallel subagents. The goal is to balance throughput against context-window limits — small lectures fit two-per-agent without crowding context, while dense lectures need a full agent's attention to avoid truncation or shallow coverage.
+
+- **Small lectures** (each source file under ~20 slides or ~10 pages): pair 2 lectures per subagent.
+- **Dense lectures** (any source file is 20+ slides or 10+ pages of heavy text): assign 1 lecture per subagent.
+- **Cap at 5 parallel subagents.** If lecture groups exceed what 5 agents can handle, process in sequential batches: dispatch the first batch, wait for all to complete, then dispatch the next.
+
+To estimate density without reading entire files:
+- PDFs: read the first few pages. Heavily text-based with small font = dense. Mostly bullet points and diagrams = small.
+- PPTXs: check slide count if discernible. Under 20 slides = small, 20+ = dense.
+- DOCXs: check page count. Under 10 pages = small, 10+ = dense.
+
+## Step 4: Dispatch Subagents
+
+For each subagent, provide the prompt below with bracketed values filled in. Use a fenced code block (not `---` delimiters) when embedding the prompt, to avoid YAML frontmatter confusion.
+
+Each subagent writes its output file immediately upon completion — do not accumulate files in memory. This preserves partial progress if the pipeline is interrupted and keeps memory usage manageable.
+
+````
+Subagent task: Produce study notes for [Lecture Title(s)]
 
 Read these source files:
-- [list each file path relative to the plugin root, e.g., `source-materials/lecture-05-slides.pdf`]
+- [list each file path, e.g., source-materials/lecture-05-slides.pdf]
 
-Read the format specification at `references/study-notes-format.md` before writing anything.
+Read the format specification at references/study-notes-format.md before writing anything.
+That file is the authoritative contract — follow it exactly.
 
-Produce a study note file following that specification exactly. Write the output to:
-- `study-notes/[filename].md` (e.g., `study-notes/lecture-05-capital-budgeting.md`)
-
-The filename should follow the pattern `lecture-NN-topic-slug.md` where NN is the zero-padded lecture number and topic-slug is a lowercase hyphenated version of the main topic.
+Write the output to:
+  study-notes/[filename].md
+using the naming pattern lecture-NN-topic-slug.md (zero-padded lecture number, lowercase hyphenated topic slug).
 
 Requirements:
-1. Include YAML frontmatter with `title`, `source_files`, `topics`, and `lecture_number`.
-2. Include ALL 7 required sections in the correct order:
-   - Overview (2-3 paragraphs, prose only)
-   - Key Concepts (grouped by subtopic, each with Definition/Context/Relationships)
-   - Frameworks & Mental Models (each with Visual Description/How to Apply/When to Use)
-   - Formulas & Quantitative Tools (each with Formula/Variables/Interpretation/Example/Common Mistakes)
-   - Case Studies (each with Company/Challenge/What Was Done/Takeaway)
-   - Key Takeaways (5-10 bullet points, most to least important)
-   - Key Terms and Definitions Glossary (alphabetical, every bolded term from Key Concepts must appear)
-3. The glossary MUST contain ALL significant terms from the source material. Include at minimum 10 terms per lecture. Every term must have a definition and [Related: ...] cross-references.
-4. Write the file immediately upon completion. Do not wait to batch with other files.
+1. Include YAML frontmatter with title, source_files, topics, and lecture_number (per the format spec).
+2. Include all 7 required sections in the order defined by references/study-notes-format.md.
+3. The glossary section contains every significant term from the source material.
+   Target at least 10 terms per lecture — this threshold exists because the glossary
+   is the sole input for flashcard generation downstream; missing terms mean missing flashcards.
+   Every term needs a definition and [Related: ...] cross-references.
+4. Write the file to disk immediately upon completion. Do not wait.
+````
 
----
+## Step 5: Verify Outputs
 
-## Step 4: File Format Handling
+After all subagents finish, verify every output file. The 7 required section headers are defined in `references/study-notes-format.md` — check against that list (do not maintain a separate list here).
 
-Use these strategies to read each file type:
+1. **File existence** — Glob `study-notes/*.md`. Confirm one file per lecture group from Step 1.
+2. **Frontmatter** — Read the first 15 lines of each file. Verify:
+   - YAML frontmatter block is present (opens and closes with `---`).
+   - Fields `title`, `source_files`, `topics`, `lecture_number` all exist.
+   - `title` follows the format "Lecture N: Topic Name".
+   - `lecture_number` is an integer.
+3. **Sections** — Search each file for all 7 required section headers from the format spec.
+4. **Glossary depth** — Count glossary entries (lines starting with `**` in the glossary section). Confirm at least 10 per lecture.
+5. **On failure** — Log which file and check failed. Re-read the source materials for that lecture, regenerate the study note, and re-verify.
 
-### PDFs
-- Use the Read tool directly on the PDF file. The Read tool supports PDF reading.
-- For large PDFs (more than 10 pages), use the `pages` parameter to read in chunks (e.g., pages "1-10", then "11-20").
-- Extract all text content, paying attention to slide titles, bullet points, formulas, and diagram descriptions.
+## Step 6: Update Pipeline Status
 
-### PPTXs
-- Attempt to use a pptx-reading skill if available in the plugin.
-- If no specialized skill is available, use the Read tool on the PPTX file.
-- Pay attention to slide titles, bullet content, speaker notes, and embedded text.
+Read `pipeline-status.json`. Update the `content-ingest` phase entry:
+- Set `status` to `"completed"`.
+- Set `completedAt` to the current ISO 8601 UTC timestamp.
+- Populate `filesProduced` with the relative path of every study note written.
+- Advance `currentPhase` to the next pipeline phase.
 
-### DOCXs
-- Attempt to use a docx-reading skill if available in the plugin.
-- If no specialized skill is available, use the Read tool on the DOCX file.
-- Extract all body text, headings, tables, and footnotes.
-
-### XLSX
-- Use the Read tool on the XLSX file.
-- Extract data tables that are relevant to course content (e.g., financial data examples, statistical tables).
-- Include relevant data tables in the Case Studies or Formulas sections of the study notes where appropriate.
-
-## Step 5: Output Verification
-
-After all subagents have completed their work, verify every output file:
-
-1. **File existence:** Use Glob to list all files in `study-notes/`. Confirm there is one `.md` file per lecture group identified in Step 1.
-2. **Frontmatter validation:** Read the first 15 lines of each file. Verify:
-   - YAML frontmatter is present (starts and ends with `---`).
-   - `title` field exists and follows the format "Lecture N: Topic Name".
-   - `source_files` field exists and lists the correct source files.
-   - `topics` field exists and contains at least 1 topic.
-   - `lecture_number` field exists and is an integer.
-3. **Section validation:** Search each file for all 7 required section headers:
-   - `## Overview`
-   - `## Key Concepts`
-   - `## Frameworks & Mental Models`
-   - `## Formulas & Quantitative Tools`
-   - `## Case Studies`
-   - `## Key Takeaways`
-   - `## Key Terms and Definitions Glossary`
-4. **Glossary completeness:** For each file, count the number of glossary entries (lines starting with `**` in the glossary section). Verify there are at least 10 terms per lecture.
-5. **If any check fails:**
-   - Log which file failed and which check.
-   - Re-read the source materials for that lecture.
-   - Regenerate the study note file, fixing the identified issues.
-   - Re-verify the regenerated file.
-
-## Step 6: Incremental Write
-
-Each subagent MUST write its output file immediately upon completing it. Do NOT accumulate all files in memory and write them at the end. This ensures:
-- Partial progress is preserved if the pipeline is interrupted.
-- The orchestrator can begin verification as files appear.
-- Memory usage stays manageable for large course material sets.
+Write the updated file back.
 
 ## Completion Signal
 
-When all study notes have been written and verified, report back to the orchestrator with:
-- Total number of study note files created.
-- Total number of glossary terms extracted across all files.
-- Any issues encountered and how they were resolved.
-- List of all output file paths.
+Report completion as a markdown bullet list:
+
+- Number of study note files created
+- Total glossary terms extracted across all files
+- Any issues encountered and how they were resolved
+- List of all output file paths
