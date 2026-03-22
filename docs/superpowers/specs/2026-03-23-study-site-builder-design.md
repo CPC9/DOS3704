@@ -42,9 +42,12 @@ The plugin follows the same pattern as the superpowers plugin: a single installa
 
 ```
 study-site-builder/
-├── plugin.json
+├── .claude-plugin/
+│   └── plugin.json
 ├── LICENSE
 ├── README.md
+├── hooks/
+│   └── hooks.json
 ├── skills/
 │   ├── start/                   # Orchestrator
 │   │   └── SKILL.md
@@ -74,17 +77,22 @@ study-site-builder/
 │   ├── exam-formats/
 │   │   ├── card-style/
 │   │   └── classic-style/
-│   └── page-templates/
-│       ├── index.html
-│       ├── study-map.html
-│       ├── flashcards.html
-│       ├── last-minute-review.html
-│       ├── sample-questions.html
-│       └── practice-exam.html
+│   ├── page-templates/
+│   │   ├── index.html
+│   │   ├── study-map.html
+│   │   ├── flashcards.html
+│   │   ├── last-minute-review.html
+│   │   ├── sample-questions.html
+│   │   └── practice-exam.html
+│   └── shared-js/
+│       ├── nav.js
+│       └── flashcards.js
 └── references/
     ├── study-notes-format.md
     ├── flashcard-format.md
-    └── exam-format.md
+    ├── exam-format.md
+    ├── theme-css-contract.md
+    └── nav-config-format.md
 ```
 
 ### User-Facing Commands
