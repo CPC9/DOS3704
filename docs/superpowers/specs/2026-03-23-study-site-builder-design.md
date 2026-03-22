@@ -24,6 +24,14 @@ A Claude Code plugin that bundles multiple specialized skills into an orchestrat
 - Real-time collaboration or multi-user editing
 - Dynamic server-side features (everything is static HTML)
 
+## Dependencies
+
+**None.** The plugin is fully self-contained — it requires only Claude Code itself.
+
+- **No runtime dependency on superpowers or ui-ux-pro-max.** The orchestration patterns needed for parallel agent dispatch, checkpoint management, and sub-PRD generation are adapted directly into the plugin's own skill prompts (both are MIT licensed, so incorporating their patterns is permitted with attribution).
+- **Pre-built themes eliminate the need for runtime design intelligence.** The 5 themes ship as polished, ready-to-copy CSS — the site-builder agent assembles, it doesn't design. (ui-ux-pro-max is useful as a dev-time tool when creating/refining themes, but is not needed by end users.)
+- **Attribution:** The plugin's LICENSE file should acknowledge that orchestration patterns were adapted from superpowers (MIT, Jesse Vincent) and that theme development was informed by ui-ux-pro-max (MIT, Next Level Builder).
+
 ---
 
 ## Plugin Architecture
@@ -101,7 +109,7 @@ All other skills (content-ingest, concept-mapper, etc.) are internal — called 
 
 Process:
 - The orchestrator scans the source folder and auto-classifies files by analyzing their content (no required folder naming conventions)
-- Dispatches 7-8 parallel subagents, each covering 1-2 lectures worth of content
+- Dispatches parallel subagents, each covering 1-2 lectures worth of content depending on file size (e.g., two small 15-slide lectures can be handled by one agent, while a dense 60-slide lecture warrants its own agent)
 - Each subagent produces a structured markdown study note file immediately upon completion (incremental writes, not batch)
 - Study notes follow a consistent structure defined in `references/study-notes-format.md`, tailored to the course topic, including:
   - Logical section breakdown
@@ -397,6 +405,41 @@ Multi-pass verification:
 - Pre-built templates eliminate CSS/JS generation
 - Sub-PRD architecture keeps each subagent's scope small (one page per agent)
 - Parallel subagent dispatch reduces wall-clock time
+
+---
+
+## Built-In Orchestration Patterns
+
+The orchestrator skill (`start/SKILL.md`) encodes the following patterns directly, adapted from superpowers (MIT). This eliminates any external plugin dependency.
+
+### Parallel Agent Dispatch
+
+The orchestrator instructs Claude to dispatch independent subagents for parallelizable work (content ingestion across lectures, site build across pages). Each skill that uses parallel dispatch specifies:
+- How to determine the number of agents (based on content volume and file sizes, not a fixed count)
+- What each agent's scope is (e.g., one study note file, one HTML page)
+- That each agent writes its output to disk immediately upon completion (not batched)
+
+### Checkpoint & Context Compaction
+
+At each phase boundary, the orchestrator:
+1. Verifies all expected output files exist on disk
+2. Updates `pipeline-status.json` with the completed phase
+3. Triggers context compaction (`/compact`) to free up the context window
+4. Reads only the artifacts needed for the next phase from disk
+
+The skill prompts explicitly instruct this behavior — the orchestrator knows the checkpoint contract for each phase transition.
+
+### Pipeline Resumption
+
+When `/study-site start` is invoked on a project with existing `pipeline-status.json`:
+1. The orchestrator reads the status file and checks which phases are complete
+2. For each completed phase, it verifies the expected output files still exist on disk
+3. It presents the user with the current state and asks whether to resume from the next incomplete phase
+4. If a phase partially completed (e.g., 5 of 8 study notes exist), it identifies the missing outputs and only re-dispatches work for those
+
+### Sub-PRD Generation
+
+The site-builder skill instructs the agent to decompose the website build into one sub-PRD per page. Each sub-PRD is written to `build/` as a standalone markdown file that contains everything a subagent needs to build that page — which template to use, what content to fill in, which theme CSS to copy. This keeps each subagent's context small and focused.
 
 ---
 
