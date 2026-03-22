@@ -507,6 +507,78 @@
     margin-top: 32px; padding-top: 14px;
     border-top: 1px solid var(--border);
   }
+
+  /* ════════════════════════════════════════
+     MOBILE / RESPONSIVE
+  ════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .page { padding: 20px 16px; }
+    .topbar { padding: 0 16px; }
+    .topbar-brand { font-size: 13px; margin-right: 16px; }
+    .nav-btn { padding: 12px 14px; font-size: 13px; }
+    .page-header h1 { font-size: 20px; }
+    .page-header { margin-bottom: 20px; padding-bottom: 16px; }
+    .central-questions { grid-template-columns: 1fr; gap: 10px; }
+    .topic-header { padding: 14px 16px; gap: 10px; }
+    .topic-icon { width: 34px; height: 34px; font-size: 17px; border-radius: 8px; }
+    .topic-title { font-size: 15px; }
+    .topic-pill { display: none; }
+    .subtopic-grid { grid-template-columns: 1fr; }
+    .fc-card-wrap { height: auto; min-height: 200px; }
+    .fc-card { position: relative; }
+    .fc-front, .fc-back { padding: 20px 16px; min-height: 180px; position: relative; }
+    .fc-back { position: absolute; inset: 0; }
+    .fc-front .term { font-size: 18px; }
+    .fc-back .definition { font-size: 14px; }
+    .fc-controls { gap: 8px; }
+    .fc-btn { padding: 10px 16px; font-size: 13px; }
+    .deck-btn { padding: 8px 14px; font-size: 12px; }
+    .deck-selector { gap: 6px; }
+    .fc-done-screen { padding: 32px 20px; }
+  }
+  @media (max-width: 480px) {
+    .page { padding: 16px 12px; }
+    .topbar { padding: 0 12px; }
+    .topbar-brand { font-size: 12px; margin-right: 10px; }
+    .nav-btn { padding: 12px 10px; font-size: 12.5px; }
+    .page-header h1 { font-size: 18px; }
+    .page-header p { font-size: 13px; }
+    .cq-card { padding: 12px 14px; }
+    .cq-question { font-size: 13px; }
+    .topic-header { padding: 12px 14px; gap: 8px; }
+    .topic-icon { width: 30px; height: 30px; font-size: 15px; }
+    .topic-title { font-size: 14px; }
+    .topic-desc { font-size: 11.5px; }
+    .topic-body { padding: 0 10px 12px; }
+    .subtopic-hdr { padding: 10px 12px; }
+    .subtopic-body { padding: 10px 12px 12px; }
+    .subtopic-title { font-size: 13px; }
+    .prose { font-size: 12.5px; }
+    ul.bullets li { font-size: 12.5px; }
+    .formula { font-size: 12px; }
+    .formula-wrap { padding: 10px 12px; }
+    .fc-card-wrap { min-height: 180px; }
+    .fc-front .term { font-size: 16px; }
+    .fc-back .definition { font-size: 13px; }
+    .fc-front, .fc-back { padding: 16px 14px; }
+    .fc-controls { width: 100%; justify-content: center; }
+    .fc-btn { padding: 10px 14px; font-size: 12.5px; flex: 1; text-align: center; }
+    .deck-btn { padding: 7px 12px; font-size: 11.5px; }
+    .fc-done-screen { padding: 24px 16px; max-width: 100%; }
+    .fc-done-screen h2 { font-size: 18px; }
+    .fc-done-screen p { font-size: 13px; }
+    .insight-box p { font-size: 12px; }
+    .link-tag { font-size: 10px; }
+  }
+  .formula { overflow-x: auto; word-break: break-word; }
+  .subtopic-body { overflow-x: hidden; }
+  @media (pointer: coarse) {
+    .nav-btn { min-height: 44px; }
+    .deck-btn { min-height: 44px; }
+    .fc-btn { min-height: 44px; }
+    .topic-header { min-height: 52px; }
+    .subtopic-hdr { min-height: 44px; }
+  }
   </style>
 </head>
 <body>
