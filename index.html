@@ -618,6 +618,102 @@
     .topic-header { min-height: 52px; }
     .subtopic-hdr { min-height: 44px; }
   }
+
+  /* ════ PRACTICE EXAM PAGE ════ */
+  .q-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-bottom:14px; transition:border-color 0.2s; }
+  .q-card.correct { border-color:#4caf7a; background:rgba(76,175,122,0.05); }
+  .q-card.incorrect { border-color:#e05c6e; background:rgba(224,92,110,0.05); }
+  .q-number { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+  .q-text { font-size:14.5px; font-weight:600; color:var(--white); line-height:1.45; margin-bottom:14px; }
+  .q-options { display:flex; flex-direction:column; gap:8px; }
+  .q-option { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border-radius:8px; background:var(--bg-sub); border:1px solid var(--border); cursor:pointer; transition:border-color 0.15s,background 0.15s; font-size:13.5px; color:var(--text); line-height:1.45; text-align:left; font-family:inherit; width:100%; }
+  .q-option:hover { border-color:var(--border-hi); background:rgba(255,255,255,0.03); }
+  .q-option.selected { border-color:var(--accent); background:rgba(106,159,216,0.1); }
+  .q-option.right { border-color:#4caf7a !important; background:rgba(76,175,122,0.1) !important; }
+  .q-option.wrong { border-color:#e05c6e !important; background:rgba(224,92,110,0.1) !important; text-decoration:line-through; color:#f0a0aa; }
+  .q-option-letter { width:22px; height:22px; border-radius:50%; background:var(--bg-deep); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--text-mute); flex-shrink:0; }
+  .q-option.selected .q-option-letter { background:var(--accent); border-color:var(--accent); color:white; }
+  .q-option.right .q-option-letter { background:#4caf7a !important; border-color:#4caf7a !important; color:white !important; }
+  .q-option.wrong .q-option-letter { background:#e05c6e !important; border-color:#e05c6e !important; color:white !important; }
+  .q-explanation { display:none; margin-top:12px; padding:10px 12px; background:rgba(100,159,216,0.08); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; font-size:12.5px; color:var(--text-mute); line-height:1.55; }
+  .q-explanation strong { color:var(--accent-hi); }
+  .q-explanation.visible { display:block; }
+  .exam-meta { display:flex; align-items:center; gap:16px; margin-bottom:24px; padding:12px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; font-size:13px; color:var(--text-mute); }
+  .exam-meta strong { color:var(--white); }
+  .exam-score-badge { margin-left:auto; font-size:13px; font-weight:700; color:var(--accent); }
+  .exam-submit-row { text-align:center; padding:24px 0; }
+  .exam-submit-btn { padding:13px 40px; background:var(--accent); color:white; border:none; border-radius:8px; font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; transition:opacity 0.15s; }
+  .exam-submit-btn:hover { opacity:0.85; }
+  .exam-result-card { display:none; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:28px 32px; text-align:center; margin-bottom:28px; }
+  .exam-result-card.visible { display:block; }
+  .exam-result-score { font-size:52px; font-weight:800; color:var(--white); line-height:1.1; }
+  .exam-result-score span { color:var(--accent); }
+  .exam-result-label { font-size:14px; color:var(--text-mute); margin:6px 0 16px; }
+  .exam-result-grade { display:inline-block; padding:5px 18px; border-radius:100px; font-size:13px; font-weight:700; margin-bottom:16px; }
+  .grade-a { background:rgba(76,175,122,0.15); color:#4caf7a; }
+  .grade-b { background:rgba(106,159,216,0.15); color:var(--accent-hi); }
+  .grade-c { background:rgba(200,154,64,0.15); color:#c8a840; }
+  .grade-d { background:rgba(224,92,110,0.15); color:#e05c6e; }
+  .exam-retry-btn { padding:9px 26px; background:none; color:var(--accent); border:1px solid var(--accent); border-radius:8px; font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+  .exam-retry-btn:hover { background:var(--accent); color:white; }
+
+  /* ════ SAMPLE QUESTIONS PAGE ════ */
+  .sq-filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  .sq-filter-btn { padding:7px 16px; font-family:inherit; font-size:12.5px; font-weight:600; background:var(--bg-card); border:1px solid var(--border); border-radius:100px; color:var(--text-mute); cursor:pointer; transition:all 0.15s; }
+  .sq-filter-btn:hover { border-color:var(--border-hi); color:var(--text); }
+  .sq-filter-btn.active { background:var(--accent); border-color:var(--accent); color:white; }
+  .sq-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; margin-bottom:12px; overflow:hidden; transition:border-color 0.2s; }
+  .sq-card:hover { border-color:var(--border-hi); }
+  .sq-header { display:flex; align-items:flex-start; gap:12px; padding:18px 20px; cursor:pointer; }
+  .sq-tag { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:100px; background:var(--bg-deep); color:var(--accent); border:1px solid var(--formula-border); white-space:nowrap; flex-shrink:0; margin-top:2px; }
+  .sq-question-text { font-size:14px; font-weight:600; color:var(--white); line-height:1.45; flex:1; }
+  .sq-toggle { font-size:11px; font-weight:700; color:var(--accent); white-space:nowrap; flex-shrink:0; padding:4px 12px; border:1px solid var(--formula-border); border-radius:6px; background:var(--bg-deep); margin-top:2px; }
+  .sq-answer { display:none; padding:0 20px 18px; border-top:1px solid var(--border); }
+  .sq-card.open .sq-answer { display:block; }
+  .sq-answer-inner { padding-top:14px; font-size:13px; color:var(--text-mute); line-height:1.65; }
+  .sq-answer-inner strong { color:var(--text); }
+  .sq-section { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--accent); margin:14px 0 6px; }
+  .sq-section:first-child { margin-top:0; }
+  .sq-answer-inner ul { list-style:none; margin-bottom:8px; }
+  .sq-answer-inner ul li { padding:3px 0 3px 16px; position:relative; }
+  .sq-answer-inner ul li::before { content:'·'; position:absolute; left:5px; color:var(--accent); font-size:16px; line-height:1; top:2px; }
+  .sq-formula { font-family:'Consolas','Courier New',monospace; font-size:12.5px; color:#9ecfff; background:var(--formula-bg); border:1px solid var(--formula-border); border-radius:6px; padding:10px 12px; margin:8px 0; line-height:1.7; }
+
+  /* ════ LAST-MINUTE REVIEW PAGE ════ */
+  .lmr-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:14px; }
+  .lmr-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+  .lmr-card.full { grid-column:1/-1; }
+  .lmr-title { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+  .lmr-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .lmr-table th { text-align:left; font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:var(--text-dim); padding:0 0 8px; border-bottom:1px solid var(--border); }
+  .lmr-table td { padding:6px 8px 6px 0; color:var(--text-mute); border-bottom:1px solid rgba(120,160,220,0.07); vertical-align:top; }
+  .lmr-table td:first-child { font-weight:600; color:var(--text); padding-right:14px; }
+  .lmr-table td.mono { font-family:'Consolas','Courier New',monospace; font-size:12px; color:#9ecfff; }
+  .lmr-list { list-style:none; margin:0; padding:0; }
+  .lmr-list li { font-size:13px; color:var(--text-mute); padding:4px 0 4px 14px; position:relative; border-bottom:1px solid rgba(120,160,220,0.07); line-height:1.45; }
+  .lmr-list li:last-child { border-bottom:none; }
+  .lmr-list li::before { content:'›'; position:absolute; left:2px; color:var(--accent); }
+  .lmr-list li strong { color:var(--text); }
+  .lmr-framework { font-family:'Consolas','Courier New',monospace; font-size:11.5px; color:var(--text-mute); line-height:1.9; background:var(--formula-bg); border:1px solid var(--formula-border); border-radius:8px; padding:14px 18px; }
+  .lmr-framework .hl { color:var(--accent-hi); font-weight:700; }
+  .lmr-framework .dim { color:var(--text-dim); }
+  .lmr-framework .gr { color:#4caf7a; }
+  .lmr-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
+  .lmr-pill { padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600; text-align:center; }
+  .lmr-pill.biz { background:rgba(106,159,216,0.18); color:var(--accent-hi); }
+  .lmr-pill.ops { background:rgba(200,154,64,0.15); color:#c8a840; }
+  .lmr-arrow { color:var(--text-dim); font-size:12px; }
+  .lmr-case-hdr { display:flex; align-items:center; gap:10px; padding-bottom:8px; margin-bottom:8px; border-bottom:1px solid var(--border); }
+  .lmr-case-tag { font-size:10px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; padding:2px 8px; border-radius:4px; background:var(--bg-deep); border:1px solid var(--border); color:var(--text-dim); white-space:nowrap; }
+  .lmr-case-title { font-size:13px; font-weight:600; color:var(--white); }
+  .lmr-case-body { font-size:12.5px; color:var(--text-mute); line-height:1.6; }
+  @media (max-width:640px) {
+    .lmr-grid { grid-template-columns:1fr; }
+    .lmr-card.full { grid-column:1; }
+    .sq-header { flex-wrap:wrap; }
+    .q-text { font-size:13.5px; }
+    .exam-result-score { font-size:40px; }
+  }
   </style>
 </head>
 <body>
@@ -628,6 +724,9 @@
   <div class="topbar-nav">
     <button class="nav-btn active" id="tab-study" onclick="showPage('study')">Study Map</button>
     <button class="nav-btn" id="tab-flashcards" onclick="showPage('flashcards')">Flashcard Decks</button>
+    <button class="nav-btn" id="tab-exam" onclick="showPage('exam')">Practice Exam</button>
+    <button class="nav-btn" id="tab-sample" onclick="showPage('sample')">Sample Questions</button>
+    <button class="nav-btn" id="tab-review" onclick="showPage('review')">Last-Minute Review</button>
   </div>
 </nav>
 
@@ -718,6 +817,228 @@
   </div>
 
 
+</div>
+
+<!-- PAGE 3: PRACTICE EXAM -->
+<div class="page" id="page-exam">
+  <div class="page-header">
+    <h1>Practice Exam</h1>
+    <p>25 multiple-choice questions &middot; All 7 classes &middot; Select answers and submit to see your score</p>
+  </div>
+  <div class="exam-meta">
+    <span><strong>25</strong> questions &nbsp;&middot;&nbsp; All topics</span>
+    <span id="exam-score-badge" class="exam-score-badge"></span>
+  </div>
+  <div class="exam-result-card" id="exam-result-card">
+    <div class="exam-result-score" id="exam-result-score"></div>
+    <div class="exam-result-label" id="exam-result-label"></div>
+    <div class="exam-result-grade" id="exam-result-grade"></div>
+    <button class="exam-retry-btn" onclick="resetExam()">&#8634; Reset &amp; Retry</button>
+  </div>
+  <div id="exam-questions-container"></div>
+  <div class="exam-submit-row" id="exam-submit-row">
+    <button class="exam-submit-btn" id="exam-submit-btn" onclick="submitExam()">Submit Exam</button>
+  </div>
+</div>
+
+<!-- PAGE 4: SAMPLE QUESTIONS -->
+<div class="page" id="page-sample">
+  <div class="page-header">
+    <h1>Sample Questions</h1>
+    <p>Exam-style questions with model answers &middot; Click "Show Answer" to reveal</p>
+  </div>
+  <div class="sq-filters">
+    <button class="sq-filter-btn active" onclick="filterSQ('all',this)">All</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c1',this)">Class 1 &middot; Framework</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c2',this)">Class 2 &middot; Trade-offs</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c3',this)">Class 3 &middot; Capacity</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c4',this)">Class 4 &middot; Flexibility</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c5',this)">Class 5 &middot; Location</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c6',this)">Class 6 &middot; RM &amp; Sourcing</button>
+    <button class="sq-filter-btn" onclick="filterSQ('c7',this)">Class 7 &middot; Tech &amp; Learning</button>
+  </div>
+  <div id="sq-container"></div>
+</div>
+
+<!-- PAGE 5: LAST-MINUTE REVIEW -->
+<div class="page" id="page-review">
+  <div class="page-header">
+    <h1>Last-Minute Review</h1>
+    <p>Quick-reference cheat sheet &middot; Everything you need the night before the exam</p>
+  </div>
+  <div class="lmr-grid">
+
+    <div class="lmr-card full">
+      <div class="lmr-title">The OS Framework &mdash; Course Spine</div>
+      <div class="lmr-framework"><span class="hl">BUSINESS STRATEGY</span>  <span class="dim">&mdash; what you compete on</span>
+   <span class="gr">Price</span> | <span class="gr">Quality</span> | <span class="gr">Responsiveness</span> | <span class="gr">Variety</span>
+        |  <span class="dim">Alignment Principle (SOA &middot; PPM)  [Class 1]</span>
+        v
+<span class="hl">CAPABILITIES</span>  <span class="dim">&mdash; what operations must deliver</span>
+   <span class="gr">Cost</span>  |  <span class="gr">Quality</span>  |  <span class="gr">Lead-Time</span>  |  <span class="gr">Flexibility</span>
+        |  <span class="dim">Trade-offs &middot; Efficient Frontier &middot; OE &middot; Focus  [Class 2]</span>
+        v
+<span class="hl">OPERATIONS STRATEGY</span>
+   +---------------------+----------------------+
+   |    <span class="hl">RESOURCES</span>         |     <span class="hl">PROCESSES</span>          |
+   |  (asset portfolio)  |  (activity network)  |
+   |                     |                      |
+   |  Size    [Class 3]  |  Supply   [Class 6]  |
+   |  Timing  [Class 3]  |  Technology [Class 7]|
+   |  Type    [Class 4]  |  Innovation [Class 7]|
+   |  Location [Class 5] |  Demand   [Class 6]  |
+   +---------------------+----------------------+
+        v
+   <span class="hl">NPV</span>  <span class="dim">&mdash; every decision evaluated here (throughout)</span></div>
+    </div>
+
+    <div class="lmr-card">
+      <div class="lmr-title">Alignment: 1-to-1 Mapping</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div class="lmr-row"><span class="lmr-pill biz">Price</span><span class="lmr-arrow">&harr;</span><span class="lmr-pill ops">Cost</span></div>
+        <div class="lmr-row"><span class="lmr-pill biz">Quality</span><span class="lmr-arrow">&harr;</span><span class="lmr-pill ops">Quality</span></div>
+        <div class="lmr-row"><span class="lmr-pill biz">Responsiveness</span><span class="lmr-arrow">&harr;</span><span class="lmr-pill ops">Lead-Time</span></div>
+        <div class="lmr-row"><span class="lmr-pill biz">Variety</span><span class="lmr-arrow">&harr;</span><span class="lmr-pill ops">Flexibility</span></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-mute);line-height:1.55;">Left = how customers perceive value. Right = capability ops must deliver. <strong style="color:var(--text)">A break in any link = misalignment.</strong></div>
+    </div>
+
+    <div class="lmr-card">
+      <div class="lmr-title">8 Decision Areas</div>
+      <table class="lmr-table">
+        <thead><tr><th>Decision</th><th>Key Question</th></tr></thead>
+        <tbody>
+          <tr><td>Size</td><td>How much capacity?</td></tr>
+          <tr><td>Timing</td><td>When to build / cut?</td></tr>
+          <tr><td>Type</td><td>Dedicated or flexible?</td></tr>
+          <tr><td>Location</td><td>Where to put it?</td></tr>
+          <tr><td>Supply</td><td>Make or buy?</td></tr>
+          <tr><td>Technology</td><td>Which process tech?</td></tr>
+          <tr><td>Innovation</td><td>How to improve over time?</td></tr>
+          <tr><td>Demand</td><td>How to match supply?</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lmr-card full">
+      <div class="lmr-title">Key Formulas</div>
+      <table class="lmr-table">
+        <thead><tr><th style="width:42%">Formula</th><th style="width:34%">What It Does</th><th>Class</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">NPV = C0 + &Sigma;[Ct/(1+r)^t]</td><td>Evaluates any strategic investment</td><td>1</td></tr>
+          <tr><td class="mono">&Delta;C = Cv + COE + CS</td><td>Decomposes cost gap between firms</td><td>2</td></tr>
+          <tr><td class="mono">Utilization = Flow Rate / Capacity</td><td>Measures capacity usage rate</td><td>3</td></tr>
+          <tr><td class="mono">CR = Cu / (Cu + Co)</td><td>Newsvendor optimal stocking qty</td><td>3</td></tr>
+          <tr><td class="mono">CapEx(K) = CapEx(K0)&middot;(K/K0)^&alpha;</td><td>Economies of scale in CapEx (&alpha;&lt;1)</td><td>3</td></tr>
+          <tr><td class="mono">P(D1 &gt; x) = r2/r1</td><td>Littlewood&rsquo;s Rule &mdash; seat protection</td><td>6</td></tr>
+          <tr><td class="mono">C(Q) = C1 &times; Q^(&minus;&beta;)</td><td>Learning curve unit cost</td><td>7</td></tr>
+          <tr><td class="mono">LR = 1 &minus; 2^(&minus;&beta;)</td><td>Learning rate per doubling of volume</td><td>7</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lmr-card">
+      <div class="lmr-title">Cost Decomposition (Class 2)</div>
+      <div class="lmr-framework" style="font-size:11px;padding:10px 14px;">&Delta;C + <span class="gr">Cv,rival</span> = <span class="gr">Cv,us</span> + <span class="hl">COE</span> + <span class="gr">CS</span>
+
+  -&gt; <span class="hl">COE</span> = &Delta;C + Cv,rival &minus; Cv,us &minus; CS
+
+<span class="dim">&Delta;C</span>  = raw observed cost difference
+<span class="dim">Cv</span>   = volume/utilization differential
+<span class="dim">CS</span>   = competitive strategy differential
+<span class="hl">COE</span>  = operational efficiency gap (the threat)</div>
+      <div style="font-size:12px;color:var(--text-mute);margin-top:8px;line-height:1.5;">
+        <strong style="color:#4caf7a">COE &le; 0</strong>: on or ahead of the efficient frontier.<br>
+        <strong style="color:#e05c6e">COE &gt; 0</strong>: operationally less efficient &mdash; existential threat.
+      </div>
+    </div>
+
+    <div class="lmr-card">
+      <div class="lmr-title">5 Capacity Strategies (Class 3)</div>
+      <ul class="lmr-list">
+        <li><strong>Lead</strong> &mdash; build ahead of demand; risk: excess capacity</li>
+        <li><strong>Lag</strong> &mdash; build after demand exceeds capacity; risk: shortfall</li>
+        <li><strong>Chase</strong> &mdash; incremental match; costly per unit, minimal mismatch</li>
+        <li><strong>Hybrid / Follow</strong> &mdash; balance lead + lag based on cost trade-offs</li>
+        <li><strong>Smooth</strong> &mdash; constant build rate regardless of demand swings</li>
+      </ul>
+      <div class="lmr-title" style="margin-top:14px;">4 Sources of Flexibility Value (Class 4)</div>
+      <ul class="lmr-list">
+        <li><strong>Scale economies</strong> &mdash; aggregate volume across products</li>
+        <li><strong>Risk pooling</strong> &mdash; &sigma;_pool &le; &sigma;1 + &sigma;2</li>
+        <li><strong>Information updating</strong> &mdash; delay decisions until better forecast</li>
+        <li><strong>Flexible allocation</strong> &mdash; shift to highest-value use in real time</li>
+      </ul>
+    </div>
+
+    <div class="lmr-card">
+      <div class="lmr-title">Ferdows&rsquo; 6 Facility Roles (Class 5)</div>
+      <table class="lmr-table" style="margin-bottom:14px;">
+        <tbody>
+          <tr><td>Offshore</td><td>Low-cost production for export</td></tr>
+          <tr><td>Source</td><td>Low-cost + some local autonomy</td></tr>
+          <tr><td>Server</td><td>Supply local market; little autonomy</td></tr>
+          <tr><td>Contributor</td><td>Local market + product/process dev.</td></tr>
+          <tr><td>Outpost</td><td>Gather tech/market/talent intelligence</td></tr>
+          <tr><td>Lead</td><td>Creates knowledge for the entire company</td></tr>
+        </tbody>
+      </table>
+      <div class="lmr-title">Revenue Management (Class 6)</div>
+      <ul class="lmr-list">
+        <li><strong>Perishable capacity</strong> &mdash; value lost if not sold</li>
+        <li><strong>Fixed short-run supply</strong> &mdash; can&rsquo;t quickly expand</li>
+        <li><strong>Heterogeneous WTP</strong> &mdash; customers differ in willingness to pay</li>
+        <li><strong>Ability to segment</strong> &mdash; prevent high-WTP buying at low price</li>
+        <li><strong>Littlewood</strong>: protect x s.t. P(D1 &gt; x) = r2/r1</li>
+      </ul>
+    </div>
+
+    <div class="lmr-card">
+      <div class="lmr-title">Key Tools &amp; Acronyms</div>
+      <table class="lmr-table" style="margin-bottom:14px;">
+        <tbody>
+          <tr><td>SOA</td><td>Diagnoses strategy, competency &amp; resource/process gaps</td></tr>
+          <tr><td>PPM/OMM</td><td>Process flexibility vs. product variety &mdash; diagonal = aligned</td></tr>
+          <tr><td>OE</td><td>Operational efficiency; COE = cost disadvantage vs. frontier</td></tr>
+          <tr><td>TCO</td><td>Total Cost of Ownership (full sourcing cost)</td></tr>
+          <tr><td>TLC</td><td>Total Landed Cost to destination market</td></tr>
+          <tr><td>DFM</td><td>Design for Manufacturability</td></tr>
+          <tr><td>CCC21</td><td>Toyota&rsquo;s 30% cost-reduction program with suppliers</td></tr>
+        </tbody>
+      </table>
+      <div class="lmr-title">Learning Curve (Class 7)</div>
+      <div class="lmr-framework" style="font-size:11px;padding:8px 12px;">C(Q) = C1 &times; Q^(<span class="hl">&minus;&beta;</span>)  <span class="dim">(higher &beta; = faster learning)</span>
+LR = 1 &minus; 2^(&minus;&beta;)  <span class="dim">(% drop per doubling)</span>
+
+<span class="dim">Conceptual learning</span> = understanding "why" (theory)
+<span class="dim">Operational learning</span> = understanding "how" (practice)
+<span class="dim">Before doing</span> = prototypes, pilots, simulations
+<span class="dim">By doing</span>     = repetition builds tacit knowledge</div>
+    </div>
+
+    <div class="lmr-card full">
+      <div class="lmr-title">Case Studies Reference</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;">
+        <div>
+          <div class="lmr-case-hdr"><span class="lmr-case-tag">Class 1</span><span class="lmr-case-title">Swiss Watch Industry</span></div>
+          <div class="lmr-case-body">Swiss = quality/variety, job shop, vertically integrated in Switzerland, ~60% labor. Seiko = price/cost, repetitive line, offshore assembly, ~35% labor. <strong>Hayek&rsquo;s Swatch:</strong> 51 parts, automated, labor &lt;10% &mdash; compete on cost AND Swiss brand. <strong>Lesson:</strong> Misalignment kills; realignment via a new operational system can save an industry.</div>
+        </div>
+        <div>
+          <div class="lmr-case-hdr"><span class="lmr-case-tag">Class 2</span><span class="lmr-case-title">American Connector Co. vs. DJC</span></div>
+          <div class="lmr-case-body">ACC (US, high-variety, higher cost) vs. DJC (Japan, standardized, low cost). Apply cost decomposition to isolate COE &mdash; the true efficiency gap. <strong>Lesson:</strong> Focus and OE improvement are the strategic responses to a positive COE threat.</div>
+        </div>
+        <div>
+          <div class="lmr-case-hdr"><span class="lmr-case-tag">Class 4</span><span class="lmr-case-title">Eli Lilly</span></div>
+          <div class="lmr-case-body">Flexible vs. dedicated pharma manufacturing. $325M facility abandoned when drug demand disappeared. Flexible capacity has option value: delay commitment + pool demand across drugs. <strong>Lesson:</strong> NPV(flexible) &gt; NPV(dedicated) when demand and pipeline uncertainty are both high.</div>
+        </div>
+        <div>
+          <div class="lmr-case-hdr"><span class="lmr-case-tag">Class 7</span><span class="lmr-case-title">Moderna</span></div>
+          <div class="lmr-case-body">mRNA as a tech platform ("OS for the cell"). Vertically integrated to control learning. Multiple drugs developed simultaneously with shared learning spillovers. COVID vaccine in ~10 months. <strong>Lesson:</strong> Platform strategy + learning + vertical integration = competitive speed advantage.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- \u2550\u2550\u2550 ALL JAVASCRIPT (inlined) \u2550\u2550\u2550 -->
@@ -4295,10 +4616,273 @@ function shuffleAndRestart() {
 // ═══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   buildDeckSelector();
+  buildExam();
+  buildSampleQuestions();
   // Auto-load Class 1 deck on startup
   const firstBtn = document.querySelector('.deck-btn');
   if (firstBtn) selectDeck('c1', firstBtn);
 });
+
+
+// ═══════════════════════════════════════════════════════
+// PRACTICE EXAM DATA
+// ═══════════════════════════════════════════════════════
+const EXAM_QUESTIONS = [
+  { id:0, tag:'Class 1 · Framework', q:'Operations Strategy is formally defined as:', options:['A short-term plan for managing day-to-day operational activities','A long-term plan for developing resources and configuring processes to maximize NPV','A marketing strategy for competing on price and quality dimensions','A financial plan for allocating capital across business units'], answer:1, exp:'The verbatim definition: "Operations Strategy is a long-term plan for developing resources and configuring processes such that the resulting capabilities maximize Net Present Value." Every word is deliberate — long-term, resources, processes, capabilities, NPV.' },
+  { id:1, tag:'Class 1 · Framework', q:'In the OS Framework, the business strategy dimension "Price" maps directly to which operational capability?', options:['Quality','Lead-Time','Cost','Flexibility'], answer:2, exp:'Price ↔ Cost. The 1-to-1 mapping is: Price/Cost, Quality/Quality, Responsiveness/Lead-Time, Variety/Flexibility. A firm competing on low price MUST build operational capabilities that minimize cost.' },
+  { id:2, tag:'Class 1 · Framework', q:'A Strategic Operational Audit (SOA) is used to:', options:['Calculate the NPV of a capacity investment','Identify gaps between value proposition, competencies, and resources/processes','Select the optimal process type for a given product','Determine the newsvendor optimal stocking quantity'], answer:1, exp:'The SOA is a diagnostic tool that examines three potential gaps: (1) Strategy Gap between value proposition and deliverable value, (2) Competency Gap, and (3) Resource & Process Gap. It tells you WHERE misalignment exists.' },
+  { id:3, tag:'Class 1 · Framework', q:'The Product-Process Matrix (PPM) shows alignment when:', options:['A job shop produces standardized, low-variety products','Process flexibility matches product variety — operating along the diagonal','All products use the same repetitive line regardless of variety','High process flexibility coincides with low product variety'], answer:1, exp:'The PPM diagonal runs from bottom-left (repetitive line, standardized products) to top-right (job shop, high variety). Any point on the diagonal is aligned. Positions off-diagonal represent misalignment — either over-invested in flexibility (top-left) or under-invested (bottom-right).' },
+  { id:4, tag:'Class 2 · Trade-offs', q:'In the cost decomposition formula ΔC = Cv + COE + CS, what does COE represent?', options:['The volume cost differential due to utilization differences','The competitive strategy-driven cost differential','The operational efficiency cost differential — the true efficiency gap','The total observed cost difference between two firms'], answer:2, exp:'COE is the operational efficiency cost differential — the cost advantage a rival would have even if both firms operated at their strategic utilization and offered the same value proposition. COE > 0 means the rival's operational systems are more efficient, making it an existential threat.' },
+  { id:5, tag:'Class 2 · Trade-offs', q:'The Efficient Frontier represents:', options:['The set of capabilities that no company in the industry has yet achieved','The industry's lowest-cost way to deliver specific non-cost capability bundles','The optimal capacity utilization level for a given firm','The trade-off curve of a single operational system at its best configuration'], answer:1, exp:'The efficient frontier is the envelope (outer boundary) of all operational systems' trade-off curves. It shows the industry-best cost for each level of a non-cost capability (e.g., flexibility). Points inside the frontier are attainable but inefficient; points outside are currently not attainable.' },
+  { id:6, tag:'Class 2 · Trade-offs', q:'A "focused operation" is one that:', options:['Uses a single process type for all products regardless of variety requirements','Has its required capabilities restricted to a narrow set in capability space','Competes simultaneously on all four dimensions: cost, quality, lead-time, and flexibility','Achieves maximum economies of scale through the highest possible volume'], answer:1, exp:'Operational focus means narrowing the range of capabilities the operation must deliver. "Simplicity and repetition breeds competence" — a focused operation avoids compromises in system design, enabling deeper expertise and less divergence of attention.' },
+  { id:7, tag:'Class 2 · Trade-offs', q:'OE improvement (improving operational efficiency) primarily:', options:['Moves the trade-off curve inward, closer to the origin','Moves the trade-off curve outward, creating new strategic options','Reduces the competitive strategy cost differential (CS)','Increases the gap between the firm and the efficient frontier'], answer:1, exp:'OE improvement pushes the trade-off curve outward (away from origin), meaning the firm can now achieve BETTER combinations of cost and non-cost capabilities. This creates new strategic options: the firm can choose more variety at the same cost, lower cost at the same variety, or a combination of both.' },
+  { id:8, tag:'Class 3 · Capacity', q:'The newsvendor critical ratio for optimal capacity/stocking quantity is:', options:['Fixed Cost / Variable Cost','Cu / (Cu + Co), where Cu = underage cost and Co = overage cost','Flow Rate / Capacity','NPV(wait) − NPV(invest now)'], answer:1, exp:'The critical ratio CR = Cu/(Cu+Co) gives P(D ≤ Q*) — the optimal percentile of the demand distribution. Cu = profit margin lost when demand exceeds capacity; Co = cost of excess capacity. Equivalently, CR = (p − c)/(p − s) where p=price, c=cost, s=salvage.' },
+  { id:9, tag:'Class 3 · Capacity', q:'Which capacity strategy involves building ahead of demand to ensure supply is always available?', options:['Lag strategy','Chase strategy','Lead strategy','Follow strategy'], answer:2, exp:'The Lead strategy builds capacity BEFORE demand reaches it. This avoids stockouts and lost sales but creates excess capacity in the short term. It is preferred when: capacity shortfall costs (lost revenue, lost customers) are high relative to excess capacity costs.' },
+  { id:10, tag:'Class 3 · Capacity', q:'The "option value of waiting" in capacity decisions refers to:', options:['Cost savings from delaying facility maintenance','The value of deferring an irreversible capacity investment when future demand is uncertain','The NPV benefit of choosing flexible over dedicated capacity','The revenue gained from adopting a lead capacity strategy'], answer:1, exp:'When demand is uncertain and investments are irreversible, waiting has value — it lets you observe more information before committing. Option Value = NPV(wait and invest later if demand materializes) − NPV(invest now). This is why firms may delay even when current NPV of investing is positive.' },
+  { id:11, tag:'Class 3 · Capacity', q:'Economies of scale in capacity investment are best expressed by:', options:['CapEx(K) = CapEx(K₀) × (K/K₀)^α, where α < 1','NPV = C₀ + Σ[Cₜ/(1+r)ᵗ]','Utilization = Flow Rate / Capacity','C(Q) = C₁ × Q^(−β)'], answer:0, exp:'The economies of scale formula CapEx(K) = CapEx(K₀)×(K/K₀)^α with α < 1 means a larger facility costs less per unit of capacity than a smaller one. If you double capacity (K/K₀ = 2), CapEx increases by only 2^α < 2 (since α < 1). This favors building large rather than multiple small facilities.' },
+  { id:12, tag:'Class 4 · Flexibility', q:'Resource chaining is strategically important because:', options:['It requires full flexibility across all products to deliver any benefit','A small amount of flexible capacity shared appropriately captures most of the benefit of full flexibility','It entirely replaces the need for risk pooling in capacity planning','It is only useful in make-to-order production environments'], answer:1, exp:'"A little flexibility goes a long way." Resource chaining — connecting product groups into a chain where each dedicated line shares one flexible link with its neighbor — captures most of the pooling benefit of full flexibility at much lower cost. You do NOT need to make everything fully flexible.' },
+  { id:13, tag:'Class 4 · Flexibility', q:'Which of the following is NOT one of the four sources of flexibility value?', options:['Scale economies — flexible capacity can aggregate volume across products','Risk pooling — aggregate demand is less variable than individual product demands','Information updating — flexibility allows delaying production decisions','Vertical integration — control over multiple supply chain stages'], answer:3, exp:'The four sources of flexibility value are: (1) Scale economies, (2) Risk pooling, (3) Information updating, and (4) Flexible allocation. Vertical integration is a supply/sourcing strategy decision (Class 6), not a source of flexibility value.' },
+  { id:14, tag:'Class 4 · Flexibility', q:'The Eli Lilly case (Class 4) is primarily about:', options:['Supply chain sourcing decisions and contract type selection','Whether to invest in flexible vs. dedicated pharmaceutical manufacturing capacity','Using learning curves to reduce production costs over time','Applying revenue management principles to pharmaceutical pricing'], answer:1, exp:'Eli Lilly faced the decision: build dedicated capacity for individual drugs (cheaper per drug) or invest in flexible manufacturing that can produce multiple drugs (more expensive, but with option value). The case teaches: when demand uncertainty and drug pipeline uncertainty are high, flexible capacity has NPV > dedicated capacity.' },
+  { id:15, tag:'Class 5 · Location', q:'Ferdows' six facility roles progress from:', options:['Job shop to repetitive line, based on process type','Offshore to Lead, representing increasing levels of strategic importance and capability','Make-to-stock to make-to-order, based on production strategy','Single-source to multi-source, based on supplier concentration risk'], answer:1, exp:'Ferdows' 6 roles (Offshore → Source → Server → Contributor → Outpost → Lead) represent increasing levels of strategic autonomy and capability. Offshore is purely low-cost; Lead creates knowledge and capability for the entire company. Most firms start offshore and evolve toward higher roles as they develop.' },
+  { id:16, tag:'Class 5 · Location', q:'Total Landed Cost (TLC) to a destination includes:', options:['Only the purchase price of goods from the supplier','Manufacturing cost, transportation, tariffs, inventory holding, and other supply chain costs to the destination','The NPV-adjusted value of all capacity investments at the source facility','Direct labor and direct materials cost only'], answer:1, exp:'TLC is the full cost of getting a product to the destination market. It includes: manufacturing/production cost, transportation cost, import tariffs and duties, inventory holding costs (in-transit and safety stock), and other supply chain costs. A location with a low manufacturing cost may have high TLC due to transportation or tariffs.' },
+  { id:17, tag:'Class 6 · RM & Sourcing', q:'Littlewood's Rule states that the optimal number of seats (x) to protect for the high-fare class satisfies:', options:['P(D₁ > x) = r₁/r₂','P(D₁ > x) = r₂/r₁','P(D₁ > x) = (r₁ − r₂)/r₁','P(D₁ > x) = 1 − r₂/r₁'], answer:1, exp:'Littlewood's Rule: protect the last seat for high-fare (Class 1) as long as the probability of high-fare demand exceeding the protection level times the high fare ≥ low fare. This simplifies to P(D₁ > x) = r₂/r₁. At the optimal x*, the probability of selling the marginal seat to a high-fare customer equals the fare ratio.' },
+  { id:18, tag:'Class 6 · RM & Sourcing', q:'Which set of conditions is MOST important for effective Revenue Management?', options:['Standardized products with stable, transparent prices across all channels','Customers with homogeneous, similar willingness to pay for the product','Perishable capacity, heterogeneous customer valuations, and ability to segment','High product variety with low fixed capacity costs'], answer:2, exp:'RM works when: (1) Capacity is perishable (empty seat = permanently lost revenue), (2) Demand is heterogeneous (different customers have different WTP — business vs. leisure travelers), and (3) You can segment them (prevent high-WTP customers from buying at discounted prices). All three are necessary.' },
+  { id:19, tag:'Class 6 · RM & Sourcing', q:'Overbooking (selling more than available capacity) is an example of:', options:['A price control strategy — using price variation to influence demand','A capacity control strategy — restricting supply to influence demand mix','A competitive strategy-driven cost reduction (CS)','A dynamic pricing technique to clear excess inventory'], answer:1, exp:'Overbooking is a capacity control technique, not a price control. It works by over-selling capacity to hedge against no-shows and cancellations. The optimal overbooking level balances the cost of an oversold seat (denied boarding cost) against the cost of an empty seat (lost revenue).' },
+  { id:20, tag:'Class 6 · RM & Sourcing', q:'A "buyback contract" in supply chain management means:', options:['The buyer can cancel orders at any time with a full refund from the supplier','The supplier agrees to repurchase unsold units from the retailer at a specified buyback price','Both parties can adjust order quantities based on actual realized demand','The buyer has the option to acquire the supplier through vertical integration'], answer:1, exp:'In a buyback contract, the supplier sets a wholesale price w and agrees to buy back unsold units at a buyback price b > salvage value s. This shifts some demand risk from retailer to supplier, inducing the retailer to order more. Buyback contracts can coordinate the supply chain to achieve optimal total profit.' },
+  { id:21, tag:'Class 6 · RM & Sourcing', q:'In the make-vs-buy framework, a firm should typically keep activities in-house when:', options:['External suppliers can perform the activity at lower cost','The activity is core to competitive advantage and involves tacit, hard-to-codify knowledge','The activity requires significant capital investment regardless of competitive impact','The activity benefits from large economies of scale available to outside suppliers'], answer:1, exp:'Core activities that create competitive advantage — especially those involving tacit knowledge (know-how that can't easily be written down or transferred) — should be kept in-house. Outsourcing these risks: IP leakage, loss of learning, supplier dependency, and erosion of the very capabilities that differentiate the firm.' },
+  { id:22, tag:'Class 6 · RM & Sourcing', q:'Toyota's CCC21 (Construction of Cost Competitiveness for the 21st Century) is an example of:', options:['Revenue management through dynamic pricing of vehicle models','Flexible capacity through resource chaining across production lines','Strategic sourcing through systematic cost reduction programs with suppliers','Technology innovation through concurrent engineering and DFM'], answer:2, exp:'CCC21 was Toyota's program to achieve 30% cost reductions across 170+ components over 3 years by working systematically with suppliers. It is a prime example of strategic sourcing/supply management — not revenue management or capacity flexibility. It demonstrates how buyer-supplier collaboration can drive supply chain cost reduction.' },
+  { id:23, tag:'Class 7 · Tech & Learning', q:'The learning curve formula C(Q) = C₁ × Q^(−β) implies that:', options:['Unit cost increases as cumulative production volume increases','The marginal cost of producing the Q-th unit decreases as Q rises (cost declines with experience)','Learning effects only begin after the first 100 units are produced','The learning exponent β must be greater than 1 for any learning to occur'], answer:1, exp:'Since β > 0, the exponent −β is negative, so Q^(−β) is a decreasing function of Q. As cumulative volume Q increases, C(Q) decreases. Each additional unit produced adds to cumulative experience, driving down unit cost. This is "learning by doing" — the empirical observation that the workforce gets more efficient with repetition.' },
+  { id:24, tag:'Class 7 · Tech & Learning', q:'Moderna's mRNA "platform strategy" (treating mRNA as an operating system) primarily illustrates which concept?', options:['Resource chaining and flexible capacity allocation across production lines','Copy best practice as a medium-risk radical improvement strategy','How a shared technology platform enables learning spillovers across multiple products simultaneously','Overbooking as a demand management tool for capacity-constrained biotech manufacturing'], answer:2, exp:'Moderna's key insight: mRNA is a platform like an OS — once you master delivering genetic instructions to cells, you can build many different "apps" (vaccines/drugs) on top. Learnings from one drug spill directly into others. This accelerated COVID vaccine development to ~10 months. Platform strategy + vertical integration + concurrent engineering = speed advantage.' },
+];
+
+let selectedAnswers = {};
+let examSubmitted = false;
+
+function buildExam() {
+  const container = document.getElementById('exam-questions-container');
+  if (!container) return;
+  let html = '';
+  EXAM_QUESTIONS.forEach((q, i) => {
+    const letters = ['A','B','C','D'];
+    const opts = q.options.map((opt, j) => `
+      <button class="q-option" onclick="selectOption(${i},${j})">
+        <span class="q-option-letter">${letters[j]}</span>
+        ${opt}
+      </button>`).join('');
+    html += `
+    <div class="q-card" id="qcard-${i}">
+      <div class="q-number">Q${i+1} &middot; ${q.tag}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options" id="qopts-${i}">${opts}</div>
+      <div class="q-explanation" id="qexp-${i}"><strong>Explanation:</strong> ${q.exp}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function selectOption(qIdx, optIdx) {
+  if (examSubmitted) return;
+  selectedAnswers[qIdx] = optIdx;
+  document.querySelectorAll('#qopts-' + qIdx + ' .q-option').forEach((btn, j) => {
+    btn.classList.toggle('selected', j === optIdx);
+  });
+  const answered = Object.keys(selectedAnswers).length;
+  const btn = document.getElementById('exam-submit-btn');
+  if (btn) btn.textContent = 'Submit Exam (' + answered + '/' + EXAM_QUESTIONS.length + ' answered)';
+}
+
+function submitExam() {
+  if (Object.keys(selectedAnswers).length === 0) {
+    alert('Please answer at least one question before submitting.');
+    return;
+  }
+  examSubmitted = true;
+  let score = 0;
+  EXAM_QUESTIONS.forEach((q, i) => {
+    const card = document.getElementById('qcard-' + i);
+    const opts = document.querySelectorAll('#qopts-' + i + ' .q-option');
+    const userAns = selectedAnswers[i];
+    const correct = (userAns === q.answer);
+    if (correct) score++;
+    opts.forEach((opt, j) => {
+      opt.onclick = null;
+      if (j === q.answer) opt.classList.add('right');
+      else if (j === userAns && !correct) opt.classList.add('wrong');
+    });
+    if (card) card.classList.add(correct ? 'correct' : 'incorrect');
+    const exp = document.getElementById('qexp-' + i);
+    if (exp) exp.classList.add('visible');
+  });
+  const pct = Math.round(score / EXAM_QUESTIONS.length * 100);
+  const scoreEl = document.getElementById('exam-result-score');
+  if (scoreEl) scoreEl.innerHTML = score + '<span>/' + EXAM_QUESTIONS.length + '</span>';
+  const labelEl = document.getElementById('exam-result-label');
+  if (labelEl) labelEl.textContent = pct + '% — ' + (pct>=90?'Excellent':pct>=80?'Good':pct>=70?'Passing':'Keep Reviewing');
+  const gradeEl = document.getElementById('exam-result-grade');
+  if (gradeEl) {
+    if (pct>=90) { gradeEl.textContent='A — Excellent'; gradeEl.className='exam-result-grade grade-a'; }
+    else if (pct>=80) { gradeEl.textContent='B — Good'; gradeEl.className='exam-result-grade grade-b'; }
+    else if (pct>=70) { gradeEl.textContent='C — Passing'; gradeEl.className='exam-result-grade grade-c'; }
+    else { gradeEl.textContent='D — Keep Reviewing'; gradeEl.className='exam-result-grade grade-d'; }
+  }
+  const resultCard = document.getElementById('exam-result-card');
+  if (resultCard) {
+    resultCard.classList.add('visible');
+    resultCard.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  const submitRow = document.getElementById('exam-submit-row');
+  if (submitRow) submitRow.style.display = 'none';
+}
+
+function resetExam() {
+  selectedAnswers = {};
+  examSubmitted = false;
+  buildExam();
+  const resultCard = document.getElementById('exam-result-card');
+  if (resultCard) resultCard.classList.remove('visible');
+  const submitRow = document.getElementById('exam-submit-row');
+  if (submitRow) submitRow.style.display = '';
+  const btn = document.getElementById('exam-submit-btn');
+  if (btn) btn.textContent = 'Submit Exam';
+}
+
+// ═══════════════════════════════════════════════════════
+// SAMPLE QUESTIONS DATA
+// ═══════════════════════════════════════════════════════
+const SAMPLE_QUESTIONS = [
+  { tag:'c1', tagLabel:'Class 1 · Framework', q:'Apply the OS Framework to compare the traditional Swiss watchmakers and Seiko. Cover all three views (Process, Resource, Competency). What core alignment lesson does this case teach?', answer:`
+<div class="sq-section">TRADITIONAL SWISS WATCHMAKERS</div>
+<ul><li><strong>Competency view:</strong> Superb quality and flexibility (luxury/precision)</li><li><strong>Resource view:</strong> Small scale; manual job shop; Switzerland only; ~60% labor cost</li><li><strong>Process view:</strong> Vertically integrated supply chain in Switzerland; mechanical/artisanal technology; design-driven innovation; producer-driven demand (customers buy at set premium prices)</li><li><strong>Business strategy:</strong> Quality and Variety</li></ul>
+<div class="sq-section">SEIKO / JAPANESE WATCHMAKERS</div>
+<ul><li><strong>Competency view:</strong> Very low cost at acceptable quality</li><li><strong>Resource view:</strong> Large scale (economies of scale); repetitive line (automated); Japan + offshore (HK, Singapore, Malaysia); reduced labor to ~35% of cost</li><li><strong>Process view:</strong> Vertically integrated in design, outsourced fabrication/assembly; quartz/electronic technology; standardized movements; competitive low pricing (demand-driven)</li><li><strong>Business strategy:</strong> Price (with acceptable quality)</li></ul>
+<div class="sq-section">ALIGNMENT LESSON</div>
+<p>The traditional Swiss were aligned for luxury (quality/variety) but completely misaligned for the mass market that emerged. Seiko built an entire operational system aligned with a low-price, high-volume strategy. The crisis occurred when the market shifted toward price — the Swiss had no operational capability to compete on cost. <strong>Hayek's solution:</strong> Create a new operational system (Swatch, 51 parts, automated, &lt;10% labor) that could compete on cost while leveraging the "Swiss Made" brand premium — a new alignment.</p>` },
+  { tag:'c2', tagLabel:'Class 2 · Trade-offs', q:'ACC has a unit cost of $0.47 and DJC has a unit cost of $0.26. Volume cost differentials: Cv,ACC = $0.05, Cv,DJC = $0.02. Competitive strategy differential: CS = $0.06 (ACC produces higher-variety products). Calculate COE and interpret the competitive threat.', answer:`
+<div class="sq-section">CALCULATION</div>
+<div class="sq-formula">ΔC = ACC cost − DJC cost = $0.47 − $0.26 = $0.21
+COE = ΔC + Cv,DJC − Cv,ACC − CS
+COE = $0.21 + $0.02 − $0.05 − $0.06
+COE = $0.12 per unit</div>
+<div class="sq-section">INTERPRETATION</div>
+<p>COE = <strong>$0.12/unit</strong>. This means even if both firms operated at their target utilizations AND ACC produced the same standardized product as DJC (eliminating the CS difference), DJC's operational systems would still cost $0.12/unit less. This is an <strong>existential operational threat</strong> — it cannot be explained away by volume or strategy. ACC must fundamentally improve its operational efficiency (move its trade-off curve outward) or risk being undercut on both price and margin.</p>` },
+  { tag:'c3', tagLabel:'Class 3 · Capacity', q:'A pharmaceutical manufacturer sells a drug at $150/unit, produces at $50/unit, and unsold units have a salvage value of $20/unit. Demand is Normal(10,000, 2,000²). Using the newsvendor model, find the optimal production quantity Q*.', answer:`
+<div class="sq-section">SETUP</div>
+<div class="sq-formula">Cu = p − c = $150 − $50 = $100  (cost of understocking: lost profit)
+Co = c − s = $50 − $20 = $30   (cost of overstocking: net cost of unsold unit)
+Critical Ratio = Cu / (Cu + Co) = 100 / (100 + 30) = 100/130 ≈ 0.769</div>
+<div class="sq-section">OPTIMAL QUANTITY</div>
+<div class="sq-formula">P(D ≤ Q*) = 0.769
+Z such that Φ(Z) = 0.769  →  Z ≈ 0.74  (from standard normal table)
+Q* = μ + Z × σ = 10,000 + 0.74 × 2,000 ≈ 11,480 units</div>
+<div class="sq-section">INTERPRETATION</div>
+<p>The optimal production quantity of ~<strong>11,480 units</strong> is above the expected demand of 10,000 because the profit margin on selling (Cu = $100) is much greater than the loss from overproduction (Co = $30). The high critical ratio (76.9%) means the firm should stock up to the 76.9th percentile of demand — accept some overproduction risk to avoid losing high-margin sales.</p>` },
+  { tag:'c4', tagLabel:'Class 4 · Flexibility', q:'Describe the four sources of flexibility value. Under what conditions does flexible capacity have significantly higher NPV than dedicated capacity? When might dedicated capacity be preferred?', answer:`
+<div class="sq-section">4 SOURCES OF FLEXIBILITY VALUE</div>
+<ul><li><strong>Scale economies:</strong> Flexible capacity can serve multiple products, aggregating their volumes to achieve better utilization and amortize fixed costs more efficiently</li><li><strong>Risk pooling:</strong> Aggregate demand across multiple products is less variable than individual product demands (σ_pool ≤ σ₁ + σ₂). Less variability means less safety capacity required</li><li><strong>Information updating:</strong> Flexibility allows postponing production decisions until better demand forecasts are available, reducing costly mismatches</li><li><strong>Flexible allocation:</strong> Capacity can be directed to the highest-value product at any point in time, maximizing revenue yield</li></ul>
+<div class="sq-section">WHEN FLEXIBLE &gt; DEDICATED (NPV)</div>
+<ul><li>Demand uncertainty is high (hard-to-forecast, volatile)</li><li>Product demands are negatively or weakly correlated (pooling benefit is maximized)</li><li>Forecasts improve significantly closer to production time (information updating value is high)</li><li>Broad product portfolio with uncertain which drugs/products will succeed (e.g., Eli Lilly pharmaceutical pipeline)</li></ul>
+<div class="sq-section">WHEN DEDICATED MAY BE PREFERRED</div>
+<ul><li>Scale economies from dedicated lines are very large (high volume, standardized products)</li><li>Demand is stable, predictable, and long-lived (no uncertainty to hedge)</li><li>Flexible capacity costs significantly more than dedicated (high premium for flexibility)</li><li>Dedicated capacity achieves near-full utilization, eliminating waste</li></ul>` },
+  { tag:'c6', tagLabel:'Class 6 · RM & Sourcing', q:'An airline has two fare classes. High fare r₁ = $600, low fare r₂ = $200. High-fare demand D₁ ~ Normal(μ=50, σ=12). Using Littlewood's Rule, find the optimal protection level x* for high-fare seats.', answer:`
+<div class="sq-section">LITTLEWOOD'S RULE</div>
+<div class="sq-formula">Protect x seats for Class 1 (high-fare) such that:
+P(D₁ > x) = r₂/r₁ = 200/600 = 0.333
+
+Therefore: P(D₁ ≤ x) = 1 − 0.333 = 0.667</div>
+<div class="sq-section">FINDING x*</div>
+<div class="sq-formula">Find Z such that Φ(Z) = 0.667  →  Z ≈ 0.43
+
+x* = μ + Z × σ = 50 + 0.43 × 12 ≈ 50 + 5.2 ≈ 55 seats</div>
+<div class="sq-section">INTERPRETATION</div>
+<p>Protect <strong>55 seats</strong> for high-fare passengers. Only sell the remaining seats to economy (low-fare) class. The logic: at x = 55, there's a 33.3% chance a high-fare customer wants that marginal seat. At $600 vs $200, the expected revenue from that seat is 0.333 × $600 = $200 = r₂. Below this protection level, the expected marginal value exceeds r₂, so protecting it is worth it.</p>` },
+  { tag:'c6', tagLabel:'Class 6 · RM & Sourcing', q:'A pharmaceutical company is deciding whether to outsource clinical trial operations to a CRO (Contract Research Organization). Using the make-vs-buy framework, identify the key factors. What TCO components must be analyzed?', answer:`
+<div class="sq-section">MAKE-VS-BUY FRAMEWORK</div>
+<ul><li><strong>Core competency test:</strong> If clinical trial expertise is central to competitive advantage (drug development speed, regulatory mastery), keep in-house. If it is non-core logistics, outsource</li><li><strong>Tacit knowledge:</strong> Clinical trial know-how (protocol design, patient recruitment, adverse event handling) is hard to codify. Outsourcing risks losing institutional knowledge</li><li><strong>Strategic risk:</strong> CRO dependency creates risks: capacity competition with other pharma clients, CRO quality issues, regulatory compliance gaps</li><li><strong>IP protection:</strong> CROs have visibility into your drug pipeline — this creates IP leakage risk</li><li><strong>Speed and scale:</strong> Specialized CROs may have superior global patient networks and regulatory expertise, accelerating timelines</li></ul>
+<div class="sq-section">TCO COMPONENTS TO ANALYZE</div>
+<ul><li><strong>Direct cost:</strong> CRO fees vs. in-house salary/overhead for equivalent trial capacity</li><li><strong>Transaction costs:</strong> Contract negotiation, monitoring, auditing CRO performance</li><strong>Quality costs:</strong> Risk of trial failure/re-do due to CRO errors (expensive to fix late)</li><li><strong>Learning loss:</strong> Value of clinical trial expertise you fail to develop in-house</li><li><strong>Switching costs:</strong> Cost to change CROs or bring back in-house if the relationship fails</li></ul>
+<p><strong>Recommendation framework:</strong> If the drug is early-stage and you need speed/global reach → CRO. If the drug is a core platform technology and clinical execution is strategic → keep in-house or hybrid. TCO analysis must account for all hidden costs.</p>` },
+  { tag:'c7', tagLabel:'Class 7 · Tech & Learning', q:'A new manufacturer produces its 1st unit at $80,000 cost. After 64 units, cost drops to $20,000. (a) Find β (learning exponent). (b) Predict cost of the 512th unit. (c) Find the learning rate.', answer:`
+<div class="sq-section">(a) FIND β</div>
+<div class="sq-formula">C(Q) = C₁ × Q^(−β)
+C(64) = 80,000 × 64^(−β) = 20,000
+
+64^(−β) = 20,000/80,000 = 0.25
+−β × ln(64) = ln(0.25)
+−β × 4.158 = −1.386
+β = 1.386/4.158 ≈ 0.333 = 1/3</div>
+<div class="sq-section">(b) COST OF 512TH UNIT</div>
+<div class="sq-formula">C(512) = 80,000 × 512^(−1/3)
+512^(1/3) = 8, so 512^(−1/3) = 1/8 = 0.125
+C(512) = 80,000 × 0.125 = $10,000</div>
+<div class="sq-section">(c) LEARNING RATE</div>
+<div class="sq-formula">LR = 1 − 2^(−β) = 1 − 2^(−1/3)
+2^(1/3) ≈ 1.260, so 2^(−1/3) ≈ 0.794
+LR = 1 − 0.794 ≈ 20.6%</div>
+<p>Each time cumulative production <strong>doubles</strong>, unit cost decreases by approximately <strong>20.6%</strong>. Notice: from unit 1 to 64 (6 doublings), cost went from $80K → $20K, which is a factor of 4 = 2^(6×1/3) = 2^2. ✓</p>` },
+  { tag:'c2', tagLabel:'Class 2 · Trade-offs', q:'Two competitors operate in the same industry. Firm X uses a job shop (200 variants, $8/unit). Firm Y uses a repetitive line (5 variants, $3/unit). Both operate on their respective curves. A new entrant, Firm Z, offers 200 variants at $4/unit using a new flexible technology. What does this mean for both firms?', answer:`
+<div class="sq-section">BEFORE FIRM Z: EFFICIENT FRONTIER</div>
+<p>Both X and Y may be on the efficient frontier — the frontier is the envelope of all operational systems. Job shop's sweet spot = high variety/high cost; repetitive line's sweet spot = low variety/low cost. Both can be efficient at their respective operating points if no existing system beats them.</p>
+<div class="sq-section">FIRM Z'S IMPACT</div>
+<ul><li><strong>Frontier shift:</strong> Firm Z has created a new operational system that achieves a previously unattainable combination (high variety at only $4/unit). This pushes the efficient frontier <em>outward</em> at the high-variety end</li><li><strong>Impact on Firm X:</strong> Firm Z matches X's variety at $4 vs X's $8 — COE ≈ $4/unit (X is now operationally inefficient). This is an existential threat. X must either adopt the new technology, radically improve its own systems, or exit the market</li><li><strong>Impact on Firm Y:</strong> If Y's standardized segment is still best served by its repetitive line at $3/unit and Z's system cannot match this for low variety, Y may still be efficient at its operating point. However, Z's success may give it scale/learning advantages that eventually threaten Y too</li></ul>
+<div class="sq-section">KEY INSIGHT</div>
+<p>Technological innovation can shift the entire efficient frontier, rendering previously efficient firms operationally inefficient overnight. This is exactly what quartz technology did to Swiss watchmakers in the 1970s.</p>` },
+  { tag:'c1', tagLabel:'Class 1 · Alignment', q:'Using the SOA (Strategic Operational Audit), analyze a fast-food chain that decides to add a premium "chef-crafted" meal service alongside its existing fast-food operation. Identify at least two gaps this creates.', answer:`
+<div class="sq-section">VALUE PROPOSITION</div>
+<p>Fast food: Speed, consistency, low price (Responsiveness and Price). Premium service: Quality, variety, customization (Quality and Variety). The chain is now promising TWO value propositions simultaneously.</p>
+<div class="sq-section">STRATEGY GAP</div>
+<p>The deliverable value may not match the premium promise: customers expecting chef-crafted quality at a fast-food location may perceive a mismatch (brand image, preparation environment, service staff training). The fast-food brand equity may actually <em>undermine</em> the premium value proposition.</p>
+<div class="sq-section">COMPETENCY GAP</div>
+<p>Fast food requires: speed capability, standardization, cost efficiency. Premium service requires: culinary skill, customization capability, quality focus. These capabilities conflict — a kitchen optimized for speed cannot simultaneously deliver artisanal quality. New competencies must be built (trained chefs, premium ingredients sourcing, quality-control processes).</p>
+<div class="sq-section">RESOURCE & PROCESS GAP</div>
+<p>The existing fast-food operational system (repetitive line, standardized processes, limited SKUs) is misaligned for premium customized meals. Resources needed: separate kitchen equipment, higher-quality ingredient supply chain, higher-skilled labor. The shared facility creates focused vs. unfocused operation tension — classic focus challenge from Class 2.</p>
+<div class="sq-section">RECOMMENDATION</div>
+<p>Consider operationally separating the two offerings (separate brands, separate facilities, or separate preparation areas) — the "divide and conquer" approach to operational focus.</p>` },
+  { tag:'c5', tagLabel:'Class 5 · Location', q:'A global apparel company is deciding between (A) consolidating to one large Asian facility or (B) distributing across three regional hubs (Americas, Europe, Asia). Using the six location driver categories, identify key trade-offs.', answer:`
+<div class="sq-section">CENTRALIZED (Option A): ONE LARGE ASIAN FACILITY</div>
+<ul><li><strong>Technology:</strong> Large economies of scale; lower per-unit CapEx; shared learning; lower TLC per unit if product value is high relative to shipping</li><li><strong>Supply markets:</strong> Access to Asian textile/manufacturing ecosystem; lower labor costs</li><li><strong>Macro-economic:</strong> Exposed to exchange rate risk on a single currency; tariff risk (trade wars, e.g., US-China tariffs); political risk concentration</li><li><strong>Product markets:</strong> Long lead times to US/Europe; can't respond quickly to fast-fashion trends; high in-transit inventory costs</li></ul>
+<div class="sq-section">DISTRIBUTED (Option B): THREE REGIONAL HUBS</div>
+<ul><li><strong>Product markets:</strong> Proximity to customers reduces lead times; can respond to local fashion trends and seasonal demand faster</li><li><strong>Macro-economic:</strong> Natural hedge against currency and tariff risks (produce in the market you sell to)</li><li><strong>Technology:</strong> No scale economies; higher per-unit production cost; duplication of overhead</li><li><strong>Competitive strategy:</strong> Supports responsiveness value proposition if competing on speed-to-market</li></ul>
+<div class="sq-section">KEY DECISION FACTORS</div>
+<p>Choose A (centralized) if: competing on price, stable demand, product design is slow-changing, scale economies are large. Choose B (distributed) if: competing on responsiveness/variety, fast fashion, tariff uncertainty is high, or regional customization matters. Most large apparel companies use a hybrid: core basics centralized, fashion items regional.</p>` },
+];
+
+function buildSampleQuestions() {
+  renderSQ('all');
+}
+
+function filterSQ(tag, btn) {
+  document.querySelectorAll('.sq-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSQ(tag);
+}
+
+function renderSQ(tag) {
+  const container = document.getElementById('sq-container');
+  if (!container) return;
+  const filtered = (tag === 'all') ? SAMPLE_QUESTIONS : SAMPLE_QUESTIONS.filter(q => q.tag === tag);
+  let html = '';
+  filtered.forEach((q, i) => {
+    const uid = 'sq-' + tag + '-' + i;
+    html += '<div class="sq-card" id="' + uid + '">' +
+      '<div class="sq-header" onclick="toggleSQ('' + uid + '')">' +
+      '<span class="sq-tag">' + q.tagLabel + '</span>' +
+      '<span class="sq-question-text">' + q.q + '</span>' +
+      '<span class="sq-toggle" id="tog-' + uid + '">Show Answer</span>' +
+      '</div>' +
+      '<div class="sq-answer"><div class="sq-answer-inner">' + q.answer + '</div></div>' +
+      '</div>';
+  });
+  if (filtered.length === 0) html = '<p style="color:var(--text-mute);padding:20px 0;">No questions for this filter.</p>';
+  container.innerHTML = html;
+}
+
+function toggleSQ(uid) {
+  const card = document.getElementById(uid);
+  if (!card) return;
+  card.classList.toggle('open');
+  const tog = document.getElementById('tog-' + uid);
+  if (tog) tog.textContent = card.classList.contains('open') ? 'Hide Answer' : 'Show Answer';
+}
 
 </script>
 
