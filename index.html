@@ -727,6 +727,7 @@
     <button class="nav-btn" id="tab-exam" onclick="showPage('exam')">Practice Exam</button>
     <button class="nav-btn" id="tab-sample" onclick="showPage('sample')">Sample Questions</button>
     <button class="nav-btn" id="tab-review" onclick="showPage('review')">Last-Minute Review</button>
+    <button class="nav-btn" id="tab-exam2" onclick="showPage('exam2')">Hard Exam</button>
   </div>
 </nav>
 
@@ -838,6 +839,28 @@
   <div id="exam-questions-container"></div>
   <div class="exam-submit-row" id="exam-submit-row">
     <button class="exam-submit-btn" id="exam-submit-btn" onclick="submitExam()">Submit Exam</button>
+  </div>
+</div>
+
+<!-- PAGE: HARD EXAM (EXAM 2) -->
+<div class="page" id="page-exam2">
+  <div class="page-header">
+    <h1>Hard Exam</h1>
+    <p>25 advanced questions &middot; Application, calculation &amp; cross-topic integration &middot; Select answers and submit to see your score</p>
+  </div>
+  <div class="exam-meta">
+    <span><strong>25</strong> questions &nbsp;&middot;&nbsp; Higher difficulty</span>
+    <span id="exam2-score-badge" class="exam-score-badge"></span>
+  </div>
+  <div class="exam-result-card" id="exam2-result-card">
+    <div class="exam-result-score" id="exam2-result-score"></div>
+    <div class="exam-result-label" id="exam2-result-label"></div>
+    <div class="exam-result-grade" id="exam2-result-grade"></div>
+    <button class="exam-retry-btn" onclick="resetExam2()">&#8634; Reset &amp; Retry</button>
+  </div>
+  <div id="exam2-questions-container"></div>
+  <div class="exam-submit-row" id="exam2-submit-row">
+    <button class="exam-submit-btn" id="exam2-submit-btn" onclick="submitExam2()">Submit Exam</button>
   </div>
 </div>
 
@@ -4617,6 +4640,7 @@ function shuffleAndRestart() {
 document.addEventListener('DOMContentLoaded', () => {
   buildDeckSelector();
   buildExam();
+  buildExam2();
   buildSampleQuestions();
   // Auto-load Class 1 deck on startup
   const firstBtn = document.querySelector('.deck-btn');
@@ -4743,6 +4767,128 @@ function resetExam() {
   const submitRow = document.getElementById('exam-submit-row');
   if (submitRow) submitRow.style.display = '';
   const btn = document.getElementById('exam-submit-btn');
+  if (btn) btn.textContent = 'Submit Exam';
+}
+
+// ═══════════════════════════════════════════════════════
+// HARD EXAM (EXAM 2) DATA
+// ═══════════════════════════════════════════════════════
+const EXAM_QUESTIONS_2 = [
+  { id:0, tag:'Class 1 · Framework', q:'A company promises high product variety (make-to-order) in its value proposition but uses a repetitive assembly line with almost no changeover capability. Which gap in the Strategic Operational Audit (SOA) does this represent, and what is the direct operational consequence?', options:['Strategy Gap — the firm cannot communicate its value proposition to customers','Resource & Process Gap — the operational system cannot deliver the promised variety','Competency Gap — management lacks skills to run job-shop processes','Competitive Gap — rivals offer better variety at lower cost'], answer:1, exp:'The SOA identifies three gaps: (1) Strategy Gap (between value proposition and deliverable value), (2) Competency Gap, and (3) Resource & Process Gap. A repetitive line optimised for standardised, high-volume products is fundamentally mismatched with a high-variety, make-to-order promise — this is a Resource & Process Gap. The immediate consequence: the firm either refuses custom orders or fulfils them at enormous cost, eroding both margin and customer satisfaction.' },
+  { id:1, tag:'Class 1 · Framework', q:'In the Product-Process Matrix, a firm in the upper-left region has high process flexibility but produces a narrow, standardised product range. What is the PRIMARY competitive disadvantage of this off-diagonal position?', options:['It cannot produce standardised products at all','It pays for flexibility it does not use, resulting in unnecessarily high unit costs','Quality suffers because flexible processes cannot hold tight tolerances','It cannot scale volume to serve mass markets'], answer:1, exp:'The PPM diagonal represents alignment: flexibility paid for should match variety needed. Upper-left means the firm has invested heavily in flexible capacity (e.g., job-shop equipment) for a product that does not need it. The result is high unit cost from low utilisation and general-purpose equipment — a purely strategic misalignment that no amount of operational efficiency can fully cure without repositioning.' },
+  { id:2, tag:'Class 2 · Trade-offs', q:'ACC has unit cost $0.47 and DJC has unit cost $0.26. Volume differentials: Cv,ACC = $0.04, Cv,DJC = $0.03. Competitive strategy differential CS = $0.08. Calculate COE and select the correct interpretation.', options:['COE = $0.04/unit — a manageable short-term efficiency gap','COE = $0.08/unit — strategic choice explains most of the difference','COE = $0.12/unit — an existential operational efficiency threat that cannot be explained away by volume or strategy','COE = $0.21/unit — the entire cost gap is pure inefficiency'], answer:2, exp:'Formula: COE = ΔC + Cv,DJC − Cv,ACC − CS = (0.47−0.26) + 0.03 − 0.04 − 0.08 = 0.21 + 0.03 − 0.04 − 0.08 = $0.12/unit. COE is the residual cost disadvantage that remains even after controlling for volume differences (Cv) and deliberate strategic choices (CS). At $0.12/unit COE, DJC\'s operational systems are simply more efficient — this is an existential threat because it cannot be rationalised away.' },
+  { id:3, tag:'Class 2 · Trade-offs', q:'OE improvement (shifting the trade-off curve outward) is fundamentally different from "operational repositioning." Which statement correctly captures this distinction?', options:['OE improvement only reduces cost; repositioning only changes flexibility','OE improvement shifts the entire trade-off curve outward, creating better options at every flexibility level; repositioning means moving ALONG the same curve to trade cost for flexibility (or vice versa)','Repositioning is always faster and cheaper than OE improvement','OE improvement requires changing the business strategy; repositioning only affects operations'], answer:1, exp:'A trade-off curve defines the best cost achievable at each flexibility level for a given operational system. OE improvement pushes the entire curve outward — the firm can now achieve more flexibility at the same cost, or the same flexibility at lower cost, or some combination. Repositioning (changing the product mix or process type) moves the firm to a different position, typically along a different curve, without making the original curve better. Only OE improvement makes the firm more competitive across the board.' },
+  { id:4, tag:'Class 2 · Trade-offs', q:'A firm switches from a repetitive line to a batch process with NO increase in operational efficiency. What happens to its trade-off curve?', options:['The curve shifts outward — better options across all flexibility levels','The firm moves to a DIFFERENT trade-off curve: higher flexibility but also higher unit cost — trading cost efficiency for variety capability','The firm moves DOWN the same trade-off curve to a lower-cost, lower-flexibility point','No change — only OE improvement can alter the trade-off curve'], answer:1, exp:'Process type (repetitive line, batch, job shop) defines which trade-off curve the firm sits on. Switching from repetitive line to batch moves the firm to a different operational system with different inherent trade-offs — typically higher cost but higher flexibility. Without OE improvement, neither curve is better than the other in the abstract; each is appropriate for different strategic positions. The firm has repositioned, not improved.' },
+  { id:5, tag:'Class 3 · Capacity', q:'A fashion retailer sells a seasonal item at $200 per unit, production cost is $80/unit, and unsold units are donated (salvage value = $0). Using the newsvendor model, what is the critical ratio CR?', options:['0.40','0.50','0.60','0.80'], answer:2, exp:'Cu = p − c = $200 − $80 = $120 (cost of understocking: lost profit margin). Co = c − s = $80 − $0 = $80 (cost of overstocking: unrecoverable production cost). CR = Cu / (Cu + Co) = 120 / (120 + 80) = 120 / 200 = 0.60. The firm should stock to the 60th percentile of demand — reflecting that the profit upside of selling exceeds the downside of leftover units, but not by a dramatic margin.' },
+  { id:6, tag:'Class 3 · Capacity', q:'Using the economies of scale formula CapEx(K) = CapEx(K₀) × (K/K₀)^0.6, if a 100-unit plant costs $10M, approximately how much does a 400-unit plant cost?', options:['$16M','$23M','$32M','$40M (directly proportional)'], answer:1, exp:'K/K₀ = 400/100 = 4. CapEx = $10M × 4^0.6. To compute 4^0.6: ln(4) ≈ 1.386; 0.6 × 1.386 = 0.832; e^0.832 ≈ 2.30. So CapEx ≈ $10M × 2.30 ≈ $23M. This is substantially less than the directly proportional $40M, illustrating the "six-tenths rule" — doubling capacity costs much less than double to build, incentivising building larger rather than multiple small facilities.' },
+  { id:7, tag:'Class 3 · Capacity', q:'The "option value of waiting" in capacity investment is HIGHEST when which conditions hold?', options:['Demand is stable and predictable; capacity is cheap to build and easily reversible','Demand is highly uncertain; the investment is large and irreversible; forecasts improve significantly over time','Competition is intense and first-mover advantage is critical','Economies of scale are very large, making early investment strongly NPV-positive'], answer:1, exp:'Option value arises from combining (a) uncertainty about future demand with (b) irreversibility of the investment. If you can wait, you may gain more information and avoid a costly mistake. The value is highest when: demand is volatile (high uncertainty to resolve), the investment is large and hard to reverse (high stakes), and forecasts improve materially with time (so waiting actually helps). When demand is certain or the investment is reversible, the option value of waiting is near zero.' },
+  { id:8, tag:'Class 3 · Capacity', q:'The capacity-inventory-waiting triangle states that a firm facing a mismatch between supply and demand must:', options:['Always choose the lowest-cost option among the three','Invest in all three simultaneously to achieve service-level targets','Choose some mix of building extra capacity, holding more inventory as a buffer, or accepting customer waiting — there is no free elimination of this trade-off','Eliminate inventory and waiting by investing in flexible capacity'], answer:2, exp:'The triangle is an irreducible trade-off: when supply and demand fluctuate, a firm can absorb mismatches through (1) spare capacity (costly but fast), (2) inventory buffers (costly, only for tangible goods), or (3) customer waiting (damages service but free to the firm in some sense). No operational system eliminates the trade-off; the art is choosing the right mix given cost structures, service level requirements, and product characteristics.' },
+  { id:9, tag:'Class 4 · Flexibility', q:'In resource chaining, which statement about "a little flexibility goes a long way" is most precise?', options:['Full flexibility is unattainable so partial flexibility is the only realistic option','Adding just one flexible link between each pair of adjacent dedicated lines captures most of the risk-pooling benefit of full flexibility, at far lower investment cost','Partial flexibility always provides exactly 50% of the benefit of full flexibility','Only 10% of a firm\'s capacity needs to be flexible to eliminate all demand uncertainty'], answer:1, exp:'The key insight from chaining research: you do NOT need every product to be producible on every line to get most of the pooling benefit. A "chain" — where each dedicated line shares one flexible link with its neighbour — creates a connected network across which demand shocks propagate and buffer each other. The diminishing returns to flexibility are sharp: a chain captures ~80–90% of the full-flexibility benefit at a fraction of the investment cost. The exact percentage depends on the number of products and correlation structure.' },
+  { id:10, tag:'Class 4 · Flexibility', q:'Eli Lilly\'s "flexible-then-specialised" capacity strategy (build flexible first, then add dedicated lines later) has the highest NPV over "dedicated from the start" under which conditions?', options:['Drug demand is stable and the pipeline is well understood over the planning horizon','Regulatory approval is fast and drug failure rates are low','Demand and pipeline uncertainty are high — many drugs may fail, demand is hard to forecast, and information updates significantly as drugs advance through trials','Scale economies from dedicated lines outweigh all other considerations'], answer:2, exp:'The flexible-then-specialised strategy\'s value comes entirely from optionality: (a) if a drug fails, flexible capacity can be redirected without write-off; (b) if a drug succeeds, better demand forecasts are available before committing to dedicated capacity. This option value is maximised when: (1) failure probability is high (pharma: ~90% of compounds never reach market), (2) demand is hard to forecast early, (3) forecasts improve markedly late in trials. When the pipeline is clear and demand stable, dedicated capacity\'s lower unit cost dominates.' },
+  { id:11, tag:'Class 4 · Flexibility', q:'Risk pooling through flexible capacity is LEAST beneficial when:', options:['Demands across products are negatively correlated','Demands across products are perfectly positively correlated (ρ = +1)','Product margins are different across the portfolio','Demand variability is high relative to average demand'], answer:1, exp:'Risk pooling works by aggregating demand variability: σ_pool ≤ σ₁ + σ₂. The inequality becomes an equality when ρ = +1 (perfect positive correlation) — both products boom and bust simultaneously, so pooling them provides no reduction in volatility. There is nothing for the flexible capacity to "smooth." The benefit is maximised when ρ is negative (one product\'s upswing offsets the other\'s downswing) and large when ρ is low or zero.' },
+  { id:12, tag:'Class 5 · Location', q:'A manufacturing plant accesses local R&D talent, adapts products for the regional market, and feeds design innovations back to global headquarters — but is not the global authority for any product line. Which Ferdows facility role best describes this plant?', options:['Offshore — cost-motivated, minimal local mandate','Server — serves local market, no development role','Contributor — has some local development authority and feeds knowledge upward','Lead — full strategic autonomy to create innovations for the world'], answer:2, exp:'Ferdows\' six roles progress from purely cost-driven (Offshore) to full strategic autonomy (Lead). A Contributor has been granted local development authority: it can adapt products, solve engineering problems, and share innovations back — but it still operates within a global framework set by headquarters. Server facilities serve local markets but purely execute decisions made elsewhere. Contributor is the first role at which a plant actively creates knowledge, not just absorbs it.' },
+  { id:13, tag:'Class 5 · Location', q:'Compared to a distributed (multi-site) global production network, a centralised (single large facility) network typically offers:', options:['Lower transportation costs and greater local market responsiveness','Scale economies, lower per-unit capital cost, and a simpler inventory footprint — but at the cost of flexibility and higher transport/tariff exposure','Reduced currency exchange risk and greater supply chain resilience','Faster response to local demand shocks and lower tariff exposure'], answer:1, exp:'Centralisation\'s advantage is concentration of volume: one large plant achieves economies of scale (capital cost per unit falls) and is simpler to manage. Its weaknesses are the mirror image: all output must be transported to distant markets (higher TLC), tariffs may bite, a single point of failure creates resilience risk, and responsiveness to local demand variation is poor. The right choice depends on economies of scale, product value-to-weight ratio, tariff environment, and service level requirements.' },
+  { id:14, tag:'Class 5 · Location', q:'A firm offshores production from Germany (labour €15/hr) to Vietnam (labour €1/hr). Which factor is MOST likely to REDUCE the expected total cost savings?', options:['Lower economies of scale from the smaller Vietnamese facility','Higher transportation costs, longer lead times, in-transit inventory holding, and quality/IP risks that increase Total Landed Cost (TLC)','Reduced tariff exposure from regional free-trade agreements','Faster production cycles reducing safety stock requirements'], answer:1, exp:'Total Landed Cost = manufacturing cost + transportation + tariffs + in-transit inventory + safety stock + coordination costs. The €14/hr labour saving is substantial, but long ocean transit (6–8 weeks vs. hours from Germany) increases in-transit inventory, requires higher safety stocks to buffer lead time variability, raises coordination overhead, and introduces IP and quality risks. In high-mix, fast-changing markets (fashion, electronics), these costs often eat most of the labour saving — which is why TLC analysis regularly reverses the naïve "cheapest labour" conclusion.' },
+  { id:15, tag:'Class 6 · RM & Sourcing', q:'An airline has 180 seats. High fare r₁ = $600, low fare r₂ = $180. High-fare demand D₁ ~ Normal(μ = 50, σ = 15). Using Littlewood\'s Rule, what is the optimal protection level x* for high-fare seats? (Use Z ≈ 0.47 for Φ(Z) = 0.68.)', options:['35 seats','50 seats (expected demand only)','57 seats','64 seats'], answer:2, exp:'Littlewood\'s Rule: protect seats for Class 1 until P(D₁ > x) = r₂/r₁ = 180/600 = 0.30. Therefore P(D₁ ≤ x*) = 0.70. Find Z: Φ(Z) = 0.70 → Z ≈ 0.52. x* = μ + Z × σ = 50 + 0.52 × 15 = 50 + 7.8 ≈ 58 seats — closest answer is 57. Intuition: because high-fare revenue (r₁) is 3.33× the low fare, the airline should protect significantly above expected demand to ensure high-fare seats are available; the "fair" protection level is where the marginal expected value of the protected seat equals the certain low-fare revenue.' },
+  { id:16, tag:'Class 6 · RM & Sourcing', q:'The optimal overbooking level in Revenue Management balances which two costs?', options:['The price markup on premium fares against the discount offered on economy fares','The expected revenue of an otherwise empty seat against the cost of denied boarding (compensation, rebooking, goodwill damage)','The probability of full occupancy against total flight revenue','The wholesale price paid to a slot broker against retail revenue per seat'], answer:1, exp:'Overbooking is a capacity control technique that uses marginal analysis: sell one extra seat if E[revenue from that seat] ≥ E[cost of denial]. The cost of selling one seat too many is the denied boarding cost (DB): cash compensation + alternative transport + reputation damage. The benefit is avoiding an empty seat when a no-show occurs. Optimal overbooking level Q*: P(no-shows ≥ overbooking level) × r₁ = P(no-shows < overbooking level) × DB. This is structurally identical to the newsvendor critical ratio.' },
+  { id:17, tag:'Class 6 · RM & Sourcing', q:'In a buyback supply contract with wholesale price w = $70, buyback price b = $40, production cost c = $50, retail price p = $100, salvage value s = $10, which statement is TRUE?', options:['The retailer bears the full demand risk because it pays $70 per unit upfront','The buyback shifts demand risk from retailer to supplier, inducing the retailer to order more than under a wholesale-price-only contract — and the channel can be coordinated','The buyback price should equal the salvage value to prevent double marginalization','Buyback contracts only work when both parties have identical demand forecasts'], answer:1, exp:'Under a wholesale-price-only contract, the retailer faces the full overstocking cost (buys at $70, salvage is only $10 = $60 loss per unsold unit). This induces under-ordering. The buyback at $40 reduces the retailer\'s effective overstocking cost (now $70 − $40 = $30 vs. $70 − $10 = $60 without buyback), so the retailer orders more, closer to the channel-optimal quantity. The supplier absorbs the unsold inventory at $40 but benefits from the higher order volume. When parameters are set correctly, the buyback fully coordinates the channel — total channel profit equals that of a vertically integrated firm.' },
+  { id:18, tag:'Class 6 · RM & Sourcing', q:'When applying the make-vs-buy framework, a firm should KEEP an activity in-house when:', options:['External suppliers can perform the activity at lower direct cost','The activity is core to competitive advantage and involves tacit knowledge that is hard to codify or transfer without risking capability erosion and IP leakage','The activity requires large capital investment regardless of its competitive importance','The activity can benefit from scale economies available to outside specialists'], answer:1, exp:'The make-vs-buy decision is not just about cost. Activities that (a) generate competitive advantage, (b) rely on tacit know-how (skills and routines embedded in people and systems, not documented procedures), and (c) create learning spillovers into adjacent activities should be kept in-house. Outsourcing them risks: supplier dependency, loss of learning trajectory, IP leakage, and hollowing out the very capability that differentiates the firm. Toyota\'s CCC21 programme illustrates the opposite principle for commodity components: collaborate deeply with suppliers on cost, but keep proprietary know-how internal.' },
+  { id:19, tag:'Class 7 · Tech & Learning', q:'Using the learning curve C(Q) = C₁ × Q^(−β) with an 80% learning rate (β ≈ 0.322), if the first unit costs $1,000, what does the 8th unit cost?', options:['$800 — cost at the 2nd unit','$640 — cost at the 4th unit','$512','$256 — overstated learning'], answer:2, exp:'An 80% learning rate means cost falls to 80% with each doubling of cumulative output. Unit 1: $1,000. Unit 2 (first doubling): $1,000 × 0.80 = $800. Unit 4 (second doubling): $800 × 0.80 = $640. Unit 8 (third doubling): $640 × 0.80 = $512. Equivalently: C(8) = $1,000 × 8^(−0.322) = $1,000 × 2^(3 × −0.322) = $1,000 × 2^(−0.966) ≈ $1,000 × 0.512 = $512. Each doubling compounds the 20% cost reduction.' },
+  { id:20, tag:'Class 7 · Tech & Learning', q:'"Learning before doing" (prototyping, R&D) and "learning by doing" (actual production) generate different types of learning. Which mapping is correct?', options:['Learning before doing → operational learning (how); learning by doing → conceptual learning (why)','Learning before doing → conceptual learning (why things work); learning by doing → operational learning (how to execute efficiently)','Both types generate identical learning outcomes; only speed differs','Learning by doing is always superior because it requires no separate R&D investment'], answer:1, exp:'Conceptual learning = understanding WHY something works — the principles, theory, and cause-effect relationships (gained through R&D, prototyping, simulation). Operational learning = understanding HOW to execute reliably at speed and scale — the tacit know-how embedded in practiced routines (gained through actual production). Both are necessary: conceptual learning directs improvement efforts; operational learning makes those improvements stick in execution. Moderna\'s strategy combined both: deep mRNA science (conceptual) with repeated manufacturing campaigns (operational) to scale COVID vaccine production.' },
+  { id:21, tag:'Class 7 · Tech & Learning', q:'A firm is deciding whether to pioneer a new process technology or wait and adopt it after competitors have proven it. The FOLLOWER strategy is preferred when:', options:['First-mover learning advantages are large and technology costs fall rapidly with cumulative adoption','The technology is well understood, failure risk is low, and the first-mover advantage in learning is modest — so observing pioneer outcomes reduces adoption risk at little cost','The firm has the highest R&D capability in the industry','The technology has high complementarity with the firm\'s existing operational system'], answer:1, exp:'Pioneering offers potential learning advantages (first on the experience curve, shape technology standards) but bears the risk of backing a failing technology (high adoption cost, wasted investment). The follower strategy is rational when: (a) the technology matures quickly so pioneers\' learning advantage erodes, (b) failure risk is high enough that observing pioneers saves more in avoided failures than is lost in delayed learning, and (c) the firm\'s competitive advantage is not primarily based on technology leadership. "Copy best practice" (Class 7) is an extreme version of the follower strategy.' },
+  { id:22, tag:'Class 7 · Tech & Learning', q:'Moderna\'s mRNA "platform strategy" — treating mRNA as an operating system on which multiple drugs are "apps" — primarily creates value through which mechanism?', options:['Resource chaining across production lines, achieving risk pooling across drug programmes','Copy best practice adoption to reduce mRNA production costs','Learning spillovers across programmes: knowledge gained from one mRNA drug accelerates development of all others, compressing timelines and reducing per-drug R&D cost','Overbooking production capacity to hedge against individual drug approval failures'], answer:2, exp:'The platform insight: once you master the mRNA delivery problem (getting genetic instructions safely into cells), the biological "payload" is modular. Engineering improvements, manufacturing know-how, regulatory learnings, and safety data from one programme spill directly into others. This creates non-linear learning: the 10th mRNA drug benefits from nine prior programmes\' worth of cumulative learning. The COVID-19 vaccine was developed in ~10 months partly because Moderna had already accumulated years of mRNA platform learning from prior oncology and rare-disease programmes.' },
+  { id:23, tag:'Class 5 · Location', q:'Which combination of location drivers most strongly FAVOURS a distributed (multi-site) production network over a centralised one?', options:['Very high economies of scale; standardised global product; low transportation cost relative to product value','High product customisation for local markets; perishable or time-sensitive products; significant trade tariffs; high transportation cost relative to product value','Stable global demand; deep labour cost differentials between regions; strong IP protection everywhere','Volatile exchange rates; large minimum efficient scale; capital-intensive production'], answer:1, exp:'Distributed networks are costly to build and operate (more plants, more management overhead). They are justified when: (1) local markets require customisation (one central plant cannot efficiently serve many different specifications), (2) products are perishable or time-sensitive (transport time destroys value), (3) tariffs or trade barriers penalise imports, and (4) transport costs are high relative to product value. When the reverse is true — large scale economies, standardised product, cheap transport — centralisation dominates. Food production (fresh), medical services, and construction are archetypal distributed models.' },
+  { id:24, tag:'Cross-topic Integration', q:'A firm faces high demand uncertainty, a broad product portfolio with varying margins, and long lead times for capacity expansion. Which COMBINATION of operations strategy decisions is most internally coherent?', options:['Dedicated capacity + lag strategy + single-source supply + simple markup pricing','Flexible capacity + information-updating (delay production commitment) + buyback contracts to share demand risk with suppliers + resource chaining for risk pooling','Repetitive line + lead strategy + vertical integration + dynamic price markdowns','Full outsourcing + fixed-price supply contracts + price-based Revenue Management only'], answer:1, exp:'Each element reinforces the others: (1) Flexible capacity handles portfolio breadth and demand uncertainty without the waste of dedicated lines. (2) Information updating: delaying commitment until better forecasts are available is only possible with flexible capacity. (3) Buyback contracts: sharing overstocking risk with suppliers encourages higher ordering without bearing full downside — essential when demand is uncertain. (4) Resource chaining: connects dedicated lines through flexible links, capturing risk pooling for the highest-volume products. These four tools were designed for exactly this environment and form a coherent operations strategy for high-variety, uncertain demand.' },
+];
+
+let selectedAnswers2 = {};
+let examSubmitted2 = false;
+
+function buildExam2() {
+  const container = document.getElementById('exam2-questions-container');
+  if (!container) return;
+  let html = '';
+  EXAM_QUESTIONS_2.forEach((q, i) => {
+    const letters = ['A','B','C','D'];
+    const opts = q.options.map((opt, j) => `
+      <button class="q-option" onclick="selectOption2(${i},${j})">
+        <span class="q-option-letter">${letters[j]}</span>
+        ${opt}
+      </button>`).join('');
+    html += `
+    <div class="q-card" id="qcard2-${i}">
+      <div class="q-number">Q${i+1} &middot; ${q.tag}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options" id="qopts2-${i}">${opts}</div>
+      <div class="q-explanation" id="qexp2-${i}"><strong>Explanation:</strong> ${q.exp}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function selectOption2(qIdx, optIdx) {
+  if (examSubmitted2) return;
+  selectedAnswers2[qIdx] = optIdx;
+  document.querySelectorAll('#qopts2-' + qIdx + ' .q-option').forEach((btn, j) => {
+    btn.classList.toggle('selected', j === optIdx);
+  });
+  const answered = Object.keys(selectedAnswers2).length;
+  const btn = document.getElementById('exam2-submit-btn');
+  if (btn) btn.textContent = 'Submit Exam (' + answered + '/' + EXAM_QUESTIONS_2.length + ' answered)';
+}
+
+function submitExam2() {
+  if (Object.keys(selectedAnswers2).length === 0) {
+    alert('Please answer at least one question before submitting.');
+    return;
+  }
+  examSubmitted2 = true;
+  let score = 0;
+  EXAM_QUESTIONS_2.forEach((q, i) => {
+    const card = document.getElementById('qcard2-' + i);
+    const opts = document.querySelectorAll('#qopts2-' + i + ' .q-option');
+    const userAns = selectedAnswers2[i];
+    const correct = (userAns === q.answer);
+    if (correct) score++;
+    opts.forEach((opt, j) => {
+      opt.onclick = null;
+      if (j === q.answer) opt.classList.add('right');
+      else if (j === userAns && !correct) opt.classList.add('wrong');
+    });
+    if (card) card.classList.add(correct ? 'correct' : 'incorrect');
+    const exp = document.getElementById('qexp2-' + i);
+    if (exp) exp.classList.add('visible');
+  });
+  const pct = Math.round(score / EXAM_QUESTIONS_2.length * 100);
+  const scoreEl = document.getElementById('exam2-result-score');
+  if (scoreEl) scoreEl.innerHTML = score + '<span>/' + EXAM_QUESTIONS_2.length + '</span>';
+  const labelEl = document.getElementById('exam2-result-label');
+  if (labelEl) labelEl.textContent = pct + '% — ' + (pct>=90?'Excellent':pct>=80?'Good':pct>=70?'Passing':'Keep Reviewing');
+  const gradeEl = document.getElementById('exam2-result-grade');
+  if (gradeEl) {
+    if (pct>=90) { gradeEl.textContent='A — Excellent'; gradeEl.className='exam-result-grade grade-a'; }
+    else if (pct>=80) { gradeEl.textContent='B — Good'; gradeEl.className='exam-result-grade grade-b'; }
+    else if (pct>=70) { gradeEl.textContent='C — Passing'; gradeEl.className='exam-result-grade grade-c'; }
+    else { gradeEl.textContent='D — Keep Reviewing'; gradeEl.className='exam-result-grade grade-d'; }
+  }
+  const resultCard = document.getElementById('exam2-result-card');
+  if (resultCard) {
+    resultCard.classList.add('visible');
+    resultCard.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  const submitRow = document.getElementById('exam2-submit-row');
+  if (submitRow) submitRow.style.display = 'none';
+}
+
+function resetExam2() {
+  selectedAnswers2 = {};
+  examSubmitted2 = false;
+  buildExam2();
+  const resultCard = document.getElementById('exam2-result-card');
+  if (resultCard) resultCard.classList.remove('visible');
+  const submitRow = document.getElementById('exam2-submit-row');
+  if (submitRow) submitRow.style.display = '';
+  const btn = document.getElementById('exam2-submit-btn');
   if (btn) btn.textContent = 'Submit Exam';
 }
 
